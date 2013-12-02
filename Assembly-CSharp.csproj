@@ -44,10 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Script\Components\Debug\PathFinderDebug.cs" />
-     <Compile Include="Assets\Script\Components\Debug\Utils\DisplaySettings.cs" />
-     <Compile Include="Assets\Script\Components\Debug\Utils\GizmoSettings.cs" />
-     <Compile Include="Assets\Script\Components\Master\PathFinderMaster.cs" />
+     <Compile Include="Assets\Script\Components\Terrain.cs" />
      <Compile Include="Assets\Script\PathFinderGlobal.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

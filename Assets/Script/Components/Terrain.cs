@@ -4,8 +4,6 @@ namespace Assets.Script.Components
 {
     public class Terrain : MonoBehaviour
     {
-        public GameObject BlockFinderPrefab;
-
         public void Start()
         {
             PathFinderGlobal.Terrain = gameObject;
@@ -30,7 +28,7 @@ namespace Assets.Script.Components
             var iMax = PathFinderGlobal.TerrainFieldWidth;
             var jMax = PathFinderGlobal.TerrainFieldHeight;
 
-            var cubeSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth);
+            var cubeSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
 
             for (var i = 0; i < iMax; i++)
             {
@@ -42,7 +40,7 @@ namespace Assets.Script.Components
                         : Color.green;
                     
                     var z = startZ + PathFinderGlobal.CellWidth * j + correction;
-                    var startPosition = new Vector3(x, 0.5f, z);
+                    var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
                     Gizmos.DrawWireCube(startPosition, cubeSize);
                 }
             }
@@ -50,7 +48,17 @@ namespace Assets.Script.Components
 
         private void updateGrid()
         {
-            Instantiate(BlockFinderPrefab, Vector3.zero, Quaternion.identity);
+            var blocks = (Block[])FindObjectsOfType(typeof(Block));
+            
+            foreach (var block in blocks)
+            {
+                var blockGameObject = block.gameObject;
+
+                var x = (int)((blockGameObject.transform.position.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
+                var z = (int)((blockGameObject.transform.position.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+                
+                PathFinderGlobal.TerrainField[x, z].Blocked = true;
+            }
         }
     }
 }

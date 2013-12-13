@@ -28,7 +28,7 @@ namespace Assets.Script.Components
             var iMax = PathFinderGlobal.TerrainFieldWidth;
             var jMax = PathFinderGlobal.TerrainFieldHeight;
 
-            var cubeSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
+            var cubeGizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
 
             for (var i = 0; i < iMax; i++)
             {
@@ -41,7 +41,7 @@ namespace Assets.Script.Components
                     
                     var z = startZ + PathFinderGlobal.CellWidth * j + correction;
                     var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
-                    Gizmos.DrawWireCube(startPosition, cubeSize);
+                    Gizmos.DrawWireCube(startPosition, cubeGizmoSize);
                 }
             }
         }

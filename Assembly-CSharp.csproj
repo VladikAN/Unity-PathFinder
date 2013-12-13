@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\Script\Components\Block.cs" />
      <Compile Include="Assets\Script\Components\Terrain.cs" />
+     <Compile Include="Assets\Script\Finder\IFinder.cs" />
      <Compile Include="Assets\Script\PathFinderGlobal.cs" />
      <Compile Include="Assets\Script\Point.cs" />
   </ItemGroup>

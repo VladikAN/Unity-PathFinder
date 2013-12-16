@@ -1,4 +1,5 @@
-﻿using Assets.Script.Finder;
+﻿using System.Linq;
+using Assets.Script.Finder;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -10,7 +11,7 @@ namespace Assets.Script.Components
             PathFinderGlobal.Terrain = gameObject;
             updateGrid();
 
-            PathFinderGlobal.Find(new AFinder(), new Vector3(-3, 0, -3), new Vector3(3, 0, 3));
+            PathFinderGlobal.Find(new AFinder(), new Vector3(-5, 0, -5), new Vector3(4, 0, 4));
         }
 
         public void Update()
@@ -49,8 +50,12 @@ namespace Assets.Script.Components
             }
 
             /* Temp */
-            if (PathFinderGlobal.LastResult != null)
+            if (PathFinderGlobal.LastResult != null && PathFinderGlobal.LastResult.Any())
             {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(PathFinderGlobal.LastResult.First() + new Vector3(correction, 0, correction), .2f);
+                Gizmos.DrawWireSphere(PathFinderGlobal.LastResult.Last() + new Vector3(correction, 0, correction), .2f);
+
                 Gizmos.color = Color.yellow;
                 foreach (var point in PathFinderGlobal.LastResult)
                 {

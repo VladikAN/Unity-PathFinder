@@ -33,10 +33,14 @@ namespace Assets.Script.Finder
                         break;
                     }
 
-                    mark(point.X - 1, point.Y, weight, ref map, point, thisIteration);
-                    mark(point.X + 1, point.Y, weight, ref map, point, thisIteration);
-                    mark(point.X, point.Y - 1, weight, ref map, point, thisIteration);
-                    mark(point.X, point.Y + 1, weight, ref map, point, thisIteration);
+                    mark(-1, -1, weight, ref map, point, thisIteration);
+                    mark(0, -1, weight, ref map, point, thisIteration);
+                    mark(1, -1, weight, ref map, point, thisIteration);
+                    mark(1, 0, weight, ref map, point, thisIteration);
+                    mark(1, 1, weight, ref map, point, thisIteration);
+                    mark(0, 1, weight, ref map, point, thisIteration);
+                    mark(-1, 1, weight, ref map, point, thisIteration);
+                    mark(-1, 0, weight, ref map, point, thisIteration);
                 }
 
                 if (!thisIteration.Any())
@@ -64,27 +68,35 @@ namespace Assets.Script.Finder
             return null;
         }
 
-        private void mark(int x, int y, uint weight, ref uint?[,] map, LinkedPath parent, ICollection<LinkedPath> iteration)
+        private void mark(int xMove, int yMove, uint weight, ref uint?[,] map, LinkedPath parent, ICollection<LinkedPath> iteration)
         {
-            if (x < 0 || x >= PathFinderGlobal.TerrainFieldWidth)
+            var newX = parent.X + xMove;
+            var newY = parent.Y + yMove;
+
+            if ((newX < 0 || newX >= PathFinderGlobal.TerrainFieldWidth)
+                || (newY < 0 || newY >= PathFinderGlobal.TerrainFieldHeight))
             {
                 return;
             }
 
-            if (y < 0 || y >= PathFinderGlobal.TerrainFieldHeight)
+            if (map[newX, newY] != null || PathFinderGlobal.TerrainField[newX, newY].Blocked)
             {
                 return;
             }
 
-            if (map[x, y] != null)
+            if (xMove == 0 || yMove == 0)
             {
-                return;
+                map[newX, newY] = weight;
+                iteration.Add(new LinkedPath(newX, newY, parent));
             }
-
-            if (!PathFinderGlobal.TerrainField[x, y].Blocked)
+            else
             {
-                map[x, y] = weight;
-                iteration.Add(new LinkedPath(x, y, parent));
+                if (!PathFinderGlobal.TerrainField[newX, parent.Y].Blocked
+                    && !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
+                {
+                    map[newX, newY] = weight;
+                    iteration.Add(new LinkedPath(newX, newY, parent));
+                }
             }
         }
 

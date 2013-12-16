@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Script.Finder;
+using UnityEngine;
 
 namespace Assets.Script
 {
@@ -44,6 +45,19 @@ namespace Assets.Script
         public static float TerrainFieldStartHeight { get { return Terrain.renderer.bounds.extents.z * 2; } }
         public static float TerrainFieldStartX { get { return Terrain.transform.position.x - Terrain.renderer.bounds.extents.x; } }
         public static float TerrainFieldStartZ { get { return Terrain.transform.position.z - Terrain.renderer.bounds.extents.z; } }
+
+        #endregion
+
+        #region IFinder
+
+        public static Vector3[] LastResult = null;
+        public static Vector3[] Find(IFinder finder, Vector3 start, Vector3 end)
+        {
+            var result = finder.Find(start, end);
+            LastResult = result;
+
+            return result;
+        }
 
         #endregion
     }

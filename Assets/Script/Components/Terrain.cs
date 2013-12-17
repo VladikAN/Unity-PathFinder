@@ -11,7 +11,7 @@ namespace Assets.Script.Components
             PathFinderGlobal.Terrain = gameObject;
             updateGrid();
 
-            PathFinderGlobal.Find(new AFinder(), new Vector3(-5, 0, -5), new Vector3(4, 0, 4));
+            PathFinderGlobal.Find(new WaveFinder(), new Vector3(-5, 0, -5), new Vector3(4, 0, 4));
         }
 
         public void Update()

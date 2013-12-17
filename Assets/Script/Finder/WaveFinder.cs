@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Script.Finder
 {
-    public class AFinder : IFinder
+    public class WaveFinder : IFinder
     {
         public Vector3[] Find(Vector3 start, Vector3 end)
         {
@@ -14,10 +14,8 @@ namespace Assets.Script.Finder
             var endX = (int)((end.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
             var endY = (int)((end.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
 
-            uint weight = 0;
-
-            var map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
-            map[startX, startY] = weight++;
+            var map = new bool[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
+            map[startX, startY] = true;
 
             var lastIteration = new List<LinkedPath> { new LinkedPath(startX, startY, null) };
             LinkedPath lastPoint = null;
@@ -33,14 +31,14 @@ namespace Assets.Script.Finder
                         break;
                     }
 
-                    mark(-1, -1, weight, ref map, point, thisIteration);
-                    mark(0, -1, weight, ref map, point, thisIteration);
-                    mark(1, -1, weight, ref map, point, thisIteration);
-                    mark(1, 0, weight, ref map, point, thisIteration);
-                    mark(1, 1, weight, ref map, point, thisIteration);
-                    mark(0, 1, weight, ref map, point, thisIteration);
-                    mark(-1, 1, weight, ref map, point, thisIteration);
-                    mark(-1, 0, weight, ref map, point, thisIteration);
+                    createStep(-1, -1, ref map, point, thisIteration);
+                    createStep(0, -1, ref map, point, thisIteration);
+                    createStep(1, -1, ref map, point, thisIteration);
+                    createStep(1, 0, ref map, point, thisIteration);
+                    createStep(1, 1, ref map, point, thisIteration);
+                    createStep(0, 1, ref map, point, thisIteration);
+                    createStep(-1, 1, ref map, point, thisIteration);
+                    createStep(-1, 0, ref map, point, thisIteration);
                 }
 
                 if (!thisIteration.Any())
@@ -48,7 +46,6 @@ namespace Assets.Script.Finder
                     break;
                 }
 
-                weight++;
                 lastIteration = thisIteration;
             }
 
@@ -68,7 +65,7 @@ namespace Assets.Script.Finder
             return null;
         }
 
-        private void mark(int xMove, int yMove, uint weight, ref uint?[,] map, LinkedPath parent, ICollection<LinkedPath> iteration)
+        private void createStep(int xMove, int yMove, ref bool[,] map, LinkedPath parent, ICollection<LinkedPath> iteration)
         {
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
@@ -79,14 +76,14 @@ namespace Assets.Script.Finder
                 return;
             }
 
-            if (map[newX, newY] != null || PathFinderGlobal.TerrainField[newX, newY].Blocked)
+            if (map[newX, newY] || PathFinderGlobal.TerrainField[newX, newY].Blocked)
             {
                 return;
             }
 
             if (xMove == 0 || yMove == 0)
             {
-                map[newX, newY] = weight;
+                map[newX, newY] = true;
                 iteration.Add(new LinkedPath(newX, newY, parent));
             }
             else
@@ -94,7 +91,7 @@ namespace Assets.Script.Finder
                 if (!PathFinderGlobal.TerrainField[newX, parent.Y].Blocked
                     && !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
                 {
-                    map[newX, newY] = weight;
+                    map[newX, newY] = true;
                     iteration.Add(new LinkedPath(newX, newY, parent));
                 }
             }

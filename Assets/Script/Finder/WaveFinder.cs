@@ -6,109 +6,146 @@ namespace Assets.Script.Finder
 {
     public class WaveFinder : IFinder
     {
-        public Vector3[] Find(Vector3 start, Vector3 end)
+        private uint?[,] _map;
+
+        public FinderResult Find(Vector3 start, Vector3 end)
         {
             var startX = (int)((start.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
             var startY = (int)((start.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+            var startPoint = new Point(startX, startY);
 
             var endX = (int)((end.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
             var endY = (int)((end.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+            var endPoint = new Point(endX, endY);
 
-            var map = new bool[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
-            map[startX, startY] = true;
+            _map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
 
-            var lastIteration = new List<LinkedPath> { new LinkedPath(startX, startY, null) };
-            LinkedPath lastPoint = null;
-            while (true)
+            uint weight = 0;
+            _map[startPoint.X, startPoint.Y] = weight;
+
+            var founded = false;
+            var lastIteration = new List<Point> { startPoint };
+            while (!founded)
             {
-                var thisIteration = new List<LinkedPath>();
+                weight++;
+                var thisIteration = new List<Point>();
 
                 foreach (var point in lastIteration)
                 {
-                    if (point.X == endX && point.Y == endY)
+                    if (point.X == endPoint.X && point.Y == endPoint.Y)
                     {
-                        lastPoint = point;
+                        founded = true;
                         break;
                     }
 
-                    createStep(-1, -1, ref map, point, thisIteration);
-                    createStep(0, -1, ref map, point, thisIteration);
-                    createStep(1, -1, ref map, point, thisIteration);
-                    createStep(1, 0, ref map, point, thisIteration);
-                    createStep(1, 1, ref map, point, thisIteration);
-                    createStep(0, 1, ref map, point, thisIteration);
-                    createStep(-1, 1, ref map, point, thisIteration);
-                    createStep(-1, 0, ref map, point, thisIteration);
+                    thisIteration.Add(CreateNextStep(point, -1, -1, weight));
+                    thisIteration.Add(CreateNextStep(point, 0, -1, weight));
+                    thisIteration.Add(CreateNextStep(point, 1, -1, weight));
+                    thisIteration.Add(CreateNextStep(point, 1, 0, weight));
+                    thisIteration.Add(CreateNextStep(point, 1, 1, weight));
+                    thisIteration.Add(CreateNextStep(point, 0, 1, weight));
+                    thisIteration.Add(CreateNextStep(point, -1, 1, weight));
+                    thisIteration.Add(CreateNextStep(point, -1, 0, weight));
                 }
 
-                if (!thisIteration.Any())
+                if (thisIteration.Count(x => x != null) == 0)
                 {
                     break;
                 }
 
-                lastIteration = thisIteration;
+                lastIteration = thisIteration.Where(x => x != null).ToList();
             }
 
-            if (lastPoint != null)
+            IList<Vector3> path = null;
+            if (founded)
             {
-                var result = new List<Vector3>();
-                while (lastPoint.Parent != null)
+                path = new List<Vector3>();
+
+                while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    result.Add(new Vector3(lastPoint.X * PathFinderGlobal.CellWidth + PathFinderGlobal.TerrainFieldStartX, 0, lastPoint.Y * PathFinderGlobal.CellWidth + PathFinderGlobal.TerrainFieldStartZ));
-                    lastPoint = lastPoint.Parent;
+                    path.Add(endPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
+                    endPoint = FindNearestPoints(endPoint.X, endPoint.Y, _map[endPoint.X, endPoint.Y].Value).First();
                 }
 
-                result.Reverse();
-                return result.ToArray();
+                path.Add(startPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
+                path.Reverse();
             }
 
-            return null;
+            var result = new FinderResult
+            {
+                Path = path,
+                Map = _map
+            };
+
+            return result;
         }
 
-        private void createStep(int xMove, int yMove, ref bool[,] map, LinkedPath parent, ICollection<LinkedPath> iteration)
+        private IEnumerable<Point> FindNearestPoints(int x, int y, uint weight)
+        {
+            var targetWeight = weight - 1;
+            var result = new List<Point>
+            {
+                GetPoint(x - 1, y - 1, targetWeight),
+                GetPoint(x, y - 1, targetWeight),
+                GetPoint(x + 1, y - 1, targetWeight),
+                GetPoint(x + 1, y, targetWeight),
+                GetPoint(x + 1, y + 1, targetWeight),
+                GetPoint(x, y + 1, targetWeight),
+                GetPoint(x - 1, y + 1, targetWeight),
+                GetPoint(x - 1, y, targetWeight)
+            };
+
+            result = result.Where(item => item != null).ToList();
+            return result.ToArray();
+        }
+
+        private Point GetPoint(int x, int y, uint targetWeight)
+        {
+            if (!Valid(x, y) || _map[x, y] != targetWeight)
+            {
+                return null;
+            }
+
+            return new Point(x, y);
+        }
+
+        private Point CreateNextStep(Point parent, int xMove, int yMove, uint weight)
         {
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
 
-            if ((newX < 0 || newX >= PathFinderGlobal.TerrainFieldWidth)
-                || (newY < 0 || newY >= PathFinderGlobal.TerrainFieldHeight))
+            if (!Valid(newX, newY))
             {
-                return;
+                return null;
             }
 
-            if (map[newX, newY] || PathFinderGlobal.TerrainField[newX, newY].Blocked)
+            if (_map[newX, newY] != null || PathFinderGlobal.TerrainField[newX, newY].Blocked)
             {
-                return;
+                return null;
             }
 
+            Point result = null;
             if (xMove == 0 || yMove == 0)
             {
-                map[newX, newY] = true;
-                iteration.Add(new LinkedPath(newX, newY, parent));
+                _map[newX, newY] = weight;
+                result = new Point(newX, newY);
             }
             else
             {
                 if (!PathFinderGlobal.TerrainField[newX, parent.Y].Blocked
                     && !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
                 {
-                    map[newX, newY] = true;
-                    iteration.Add(new LinkedPath(newX, newY, parent));
+                    _map[newX, newY] = weight;
+                    result = new Point(newX, newY);
                 }
             }
+
+            return result;
         }
 
-        private class LinkedPath
+        private bool Valid(int x, int y)
         {
-            public LinkedPath(int x, int y, LinkedPath parent)
-            {
-                X = x;
-                Y = y;
-                Parent = parent;
-            }
-
-            public int X { get; private set; }
-            public int Y { get; private set; }
-            public LinkedPath Parent { get; private set; }
+            return !((x < 0 || x >= PathFinderGlobal.TerrainFieldWidth) || (y < 0 || y >= PathFinderGlobal.TerrainFieldHeight));
         }
     }
 }

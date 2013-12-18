@@ -44,9 +44,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Script\Cell.cs" />
      <Compile Include="Assets\Script\Components\Block.cs" />
      <Compile Include="Assets\Script\Components\Terrain.cs" />
      <Compile Include="Assets\Script\Demo\FinderCamera.cs" />
+     <Compile Include="Assets\Script\Finder\FinderResult.cs" />
      <Compile Include="Assets\Script\Finder\IFinder.cs" />
      <Compile Include="Assets\Script\Finder\WaveFinder.cs" />
      <Compile Include="Assets\Script\PathFinderGlobal.cs" />

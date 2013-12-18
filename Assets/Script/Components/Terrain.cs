@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Assets.Script.Finder;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -8,13 +8,12 @@ namespace Assets.Script.Components
     {
         public bool DisplayFieldGizmo = false;
         public bool DisplayPathGizmo = false;
+        public bool DisplayMapGizmo = false;
 
         public void Start()
         {
             PathFinderGlobal.Terrain = gameObject;
             updateGrid();
-
-            PathFinderGlobal.Find(new WaveFinder(), new Vector3(-9, 0, -9), new Vector3(9, 0, 9));
         }
 
         public void Update()
@@ -28,22 +27,20 @@ namespace Assets.Script.Components
                 return;
             }
 
-            var correction = PathFinderGlobal.CellCorrection;
+            var startX = PathFinderGlobal.TerrainFieldStartX;
+            var startZ = PathFinderGlobal.TerrainFieldStartZ;
+
+            var fieldWidth = PathFinderGlobal.TerrainFieldWidth;
+            var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
+            var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
 
             if (DisplayFieldGizmo)
             {
-                var startX = PathFinderGlobal.TerrainFieldStartX;
-                var startZ = PathFinderGlobal.TerrainFieldStartZ;
-                
-                var iMax = PathFinderGlobal.TerrainFieldWidth;
-                var jMax = PathFinderGlobal.TerrainFieldHeight;
-
-                var cubeGizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
-
-                for (var i = 0; i < iMax; i++)
+                var correction = PathFinderGlobal.CellCorrection;
+                for (var i = 0; i < fieldWidth; i++)
                 {
                     var x = startX + PathFinderGlobal.CellWidth * i + correction;
-                    for (var j = 0; j < jMax; j++)
+                    for (var j = 0; j < fieldHeight; j++)
                     {
                         Gizmos.color = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked
                             ? Color.red
@@ -51,23 +48,46 @@ namespace Assets.Script.Components
 
                         var z = startZ + PathFinderGlobal.CellWidth * j + correction;
                         var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
-                        Gizmos.DrawWireCube(startPosition, cubeGizmoSize);
+                        Gizmos.DrawWireCube(startPosition, gizmoSize);
                     }
                 }
             }
 
-            if (DisplayPathGizmo)
+            if (DisplayPathGizmo || DisplayMapGizmo)
             {
-                if (PathFinderGlobal.LastResult != null && PathFinderGlobal.LastResult.Any())
+                var finderResult = PathFinderGlobal.LastResult;
+                if (finderResult != null)
                 {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawWireSphere(PathFinderGlobal.LastResult.First() + new Vector3(correction, 0, correction), .2f);
-                    Gizmos.DrawWireSphere(PathFinderGlobal.LastResult.Last() + new Vector3(correction, 0, correction), .2f);
-
-                    Gizmos.color = Color.red;
-                    foreach (var point in PathFinderGlobal.LastResult)
+                    if (DisplayPathGizmo && (finderResult.Path != null && finderResult.Path.Any()))
                     {
-                        Gizmos.DrawWireSphere(point + new Vector3(correction, 0, correction), .1f);
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawWireSphere(finderResult.Path.First(), .2f);
+                        Gizmos.DrawWireSphere(finderResult.Path.Last(), .2f);
+
+                        Gizmos.color = Color.red;
+                        foreach (var point in finderResult.Path)
+                        {
+                            Gizmos.DrawWireSphere(point, .1f);
+                        }
+                    }
+                    
+                    if (DisplayMapGizmo)
+                    {
+                        for (var i = 0; i < fieldWidth; i++)
+                        {
+                            var x = startX + PathFinderGlobal.CellWidth * i;
+                            for (var j = 0; j < fieldHeight; j++)
+                            {
+                                if (finderResult.Map[i, j] == null)
+                                {
+                                    continue;
+                                }
+
+                                var z = startZ + PathFinderGlobal.CellWidth * j;
+                                var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
+                                Handles.Label(startPosition, finderResult.Map[i, j].Value.ToString());
+                            }
+                        }
                     }
                 }
             }

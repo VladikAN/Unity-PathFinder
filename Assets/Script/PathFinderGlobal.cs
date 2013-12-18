@@ -5,7 +5,7 @@ namespace Assets.Script
 {
     public static class PathFinderGlobal
     {
-        private static Point[,] _terrainField;
+        private static Cell[,] _terrainField;
 
         #region Cell
 
@@ -17,7 +17,7 @@ namespace Assets.Script
         #region Terrain
 
         public static GameObject Terrain;
-        public static Point[,] TerrainField
+        public static Cell[,] TerrainField
         {
             get
             {
@@ -26,12 +26,12 @@ namespace Assets.Script
                     var x = ((int)TerrainFieldStartWidth) / CellWidth;
                     var z = ((int)TerrainFieldStartHeight) / CellWidth;
 
-                    _terrainField = new Point[x, z];
+                    _terrainField = new Cell[x, z];
                     for (var i = 0; i < x; i++)
                     {
                         for (var j = 0; j < z; j++)
                         {
-                            _terrainField[i, j] = new Point();
+                            _terrainField[i, j] = new Cell();
                         }
                     }
                 }
@@ -50,8 +50,8 @@ namespace Assets.Script
 
         #region IFinder
 
-        public static Vector3[] LastResult = null;
-        public static Vector3[] Find(IFinder finder, Vector3 start, Vector3 end)
+        public static FinderResult LastResult = null;
+        public static FinderResult Find(IFinder finder, Vector3 start, Vector3 end)
         {
             var result = finder.Find(start, end);
             LastResult = result;

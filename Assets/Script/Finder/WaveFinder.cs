@@ -64,7 +64,7 @@ namespace Assets.Script.Finder
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
                     path.Add(endPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
-                    endPoint = FindNearestPoints(endPoint.X, endPoint.Y, _map[endPoint.X, endPoint.Y].Value).First();
+                    endPoint = FindNearestPoints(endPoint, startPoint, _map[endPoint.X, endPoint.Y].Value).First();
                 }
 
                 path.Add(startPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
@@ -80,20 +80,146 @@ namespace Assets.Script.Finder
             return result;
         }
 
-        private IEnumerable<Point> FindNearestPoints(int x, int y, uint weight)
+        private IEnumerable<Point> FindNearestPoints(Point current, Point target, uint weight)
         {
             var targetWeight = weight - 1;
-            var result = new List<Point>
+            List<Point> result = null;
+
+            /* center top */
+            if (current.X == target.X && current.Y > target.Y)
             {
-                GetPoint(x - 1, y - 1, targetWeight),
-                GetPoint(x, y - 1, targetWeight),
-                GetPoint(x + 1, y - 1, targetWeight),
-                GetPoint(x + 1, y, targetWeight),
-                GetPoint(x + 1, y + 1, targetWeight),
-                GetPoint(x, y + 1, targetWeight),
-                GetPoint(x - 1, y + 1, targetWeight),
-                GetPoint(x - 1, y, targetWeight)
-            };
+                Debug.Log("center top");
+                result = new List<Point>
+                {
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                };
+            }
+
+            /* right top */
+            if (current.X < target.X && current.Y > target.Y)
+            {
+                Debug.Log("right top");
+                result = new List<Point>
+                {
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                };
+            }
+
+            /* right center */
+            if (current.X < target.X && current.Y == target.Y)
+            {
+                Debug.Log("right center");
+                result = new List<Point>
+                {
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                };
+            }
+
+            /* right bottom */
+            if (current.X < target.X && current.Y < target.Y)
+            {
+                Debug.Log("right bottom");
+                result = new List<Point>
+                {
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                };
+            }
+
+            /* center bottom */
+            if (current.X == target.X && current.Y < target.Y)
+            {
+                Debug.Log("center bottom");
+                result = new List<Point>
+                {
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                };
+            }
+
+            /* left bottom */
+            if (current.X > target.X && current.Y < target.Y)
+            {
+                Debug.Log("left bottom");
+                result = new List<Point>
+                {
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                };
+            }
+
+            /* left center */
+            if (current.X > target.X && current.Y == target.Y)
+            {
+                Debug.Log("left center");
+                result = new List<Point>
+                {
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                };
+            }
+
+            /* left top */
+            if (current.X > target.X && current.Y > target.Y)
+            {
+                Debug.Log("left top");
+                result = new List<Point>
+                {
+                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
+                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
+                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
+                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
+                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
+                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
+                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
+                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
+                };
+            }
 
             result = result.Where(item => item != null).ToList();
             return result.ToArray();

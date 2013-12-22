@@ -10,13 +10,8 @@ namespace Assets.Script.Finder
 
         public FinderResult Find(Vector3 start, Vector3 end)
         {
-            var startX = (int)((start.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
-            var startY = (int)((start.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
-            var startPoint = new Point(startX, startY);
-
-            var endX = (int)((end.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
-            var endY = (int)((end.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
-            var endPoint = new Point(endX, endY);
+            var startPoint = ToPoint(start);
+            var endPoint = ToPoint(end);
 
             _map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
 
@@ -63,11 +58,11 @@ namespace Assets.Script.Finder
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(endPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
+                    path.Add(ToVector3(endPoint));
                     endPoint = FindNearestPoints(endPoint, startPoint, _map[endPoint.X, endPoint.Y].Value).First();
                 }
 
-                path.Add(startPoint.ToVector3() * PathFinderGlobal.CellWidth + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection));
+                path.Add(ToVector3(startPoint));
                 path.Reverse();
             }
 
@@ -83,13 +78,11 @@ namespace Assets.Script.Finder
         private IEnumerable<Point> FindNearestPoints(Point current, Point target, uint weight)
         {
             var targetWeight = weight - 1;
-            List<Point> result = null;
-
+            
             /* center top */
             if (current.X == target.X && current.Y > target.Y)
             {
-                Debug.Log("center top");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
@@ -100,13 +93,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* right top */
             if (current.X < target.X && current.Y > target.Y)
             {
-                Debug.Log("right top");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
@@ -117,13 +112,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* right center */
             if (current.X < target.X && current.Y == target.Y)
             {
-                Debug.Log("right center");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
@@ -134,13 +131,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* right bottom */
             if (current.X < target.X && current.Y < target.Y)
             {
-                Debug.Log("right bottom");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
@@ -151,13 +150,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* center bottom */
             if (current.X == target.X && current.Y < target.Y)
             {
-                Debug.Log("center bottom");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
@@ -168,13 +169,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* left bottom */
             if (current.X > target.X && current.Y < target.Y)
             {
-                Debug.Log("left bottom");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
@@ -185,13 +188,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* left center */
             if (current.X > target.X && current.Y == target.Y)
             {
-                Debug.Log("left center");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
@@ -202,13 +207,15 @@ namespace Assets.Script.Finder
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
             /* left top */
             if (current.X > target.X && current.Y > target.Y)
             {
-                Debug.Log("left top");
-                result = new List<Point>
+                var result = new List<Point>
                 {
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
@@ -219,10 +226,12 @@ namespace Assets.Script.Finder
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
                 };
+
+                result = result.Where(item => item != null).ToList();
+                return result.ToArray();
             }
 
-            result = result.Where(item => item != null).ToList();
-            return result.ToArray();
+            return null;
         }
 
         private Point GetPoint(int x, int y, uint targetWeight)
@@ -272,6 +281,23 @@ namespace Assets.Script.Finder
         private bool Valid(int x, int y)
         {
             return !((x < 0 || x >= PathFinderGlobal.TerrainFieldWidth) || (y < 0 || y >= PathFinderGlobal.TerrainFieldHeight));
+        }
+
+        private Point ToPoint(Vector3 vector)
+        {
+            var x = (int)((vector.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
+            var y = (int)((vector.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+
+            return new Point(x, y);
+        }
+
+        private Vector3 ToVector3(Point point)
+        {
+            var result = point.ToVector3() 
+                * PathFinderGlobal.CellWidth
+                + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection);
+
+            return result;
         }
     }
 }

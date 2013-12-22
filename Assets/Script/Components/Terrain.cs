@@ -27,8 +27,8 @@ namespace Assets.Script.Components
                 return;
             }
 
-            var startX = PathFinderGlobal.TerrainFieldStartX;
-            var startZ = PathFinderGlobal.TerrainFieldStartZ;
+            var startX = PathFinderGlobal.TerrainStartX;
+            var startZ = PathFinderGlobal.TerrainStartZ;
 
             var fieldWidth = PathFinderGlobal.TerrainFieldWidth;
             var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
@@ -101,8 +101,8 @@ namespace Assets.Script.Components
             {
                 var blockGameObject = block.gameObject;
 
-                var x = (int)((blockGameObject.transform.position.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
-                var z = (int)((blockGameObject.transform.position.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+                var x = (int)((blockGameObject.transform.position.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
+                var z = (int)((blockGameObject.transform.position.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
                 
                 PathFinderGlobal.TerrainField[x, z].Blocked = true;
             }

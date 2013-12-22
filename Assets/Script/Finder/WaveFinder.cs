@@ -22,6 +22,11 @@ namespace Assets.Script.Finder
             var lastIteration = new List<Point> { startPoint };
             while (!founded)
             {
+                if (!lastIteration.Any())
+                {
+                    break;
+                }
+
                 weight++;
                 var thisIteration = new List<Point>();
 
@@ -41,11 +46,6 @@ namespace Assets.Script.Finder
                     thisIteration.Add(CreateNextStep(point, 0, 1, weight));
                     thisIteration.Add(CreateNextStep(point, -1, 1, weight));
                     thisIteration.Add(CreateNextStep(point, -1, 0, weight));
-                }
-
-                if (thisIteration.Count(x => x != null) == 0)
-                {
-                    break;
                 }
 
                 lastIteration = thisIteration.Where(x => x != null).ToList();
@@ -285,8 +285,8 @@ namespace Assets.Script.Finder
 
         private Point ToPoint(Vector3 vector)
         {
-            var x = (int)((vector.x - PathFinderGlobal.TerrainFieldStartX) / PathFinderGlobal.CellWidth);
-            var y = (int)((vector.z - PathFinderGlobal.TerrainFieldStartZ) / PathFinderGlobal.CellWidth);
+            var x = (int)((vector.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
+            var y = (int)((vector.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
 
             return new Point(x, y);
         }
@@ -295,7 +295,7 @@ namespace Assets.Script.Finder
         {
             var result = point.ToVector3() 
                 * PathFinderGlobal.CellWidth
-                + new Vector3(PathFinderGlobal.TerrainFieldStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainFieldStartZ + PathFinderGlobal.CellCorrection);
+                + new Vector3(PathFinderGlobal.TerrainStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainStartZ + PathFinderGlobal.CellCorrection);
 
             return result;
         }

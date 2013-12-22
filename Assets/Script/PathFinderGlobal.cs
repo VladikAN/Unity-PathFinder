@@ -23,8 +23,8 @@ namespace Assets.Script
             {
                 if (Terrain != null && _terrainField == null)
                 {
-                    var x = ((int)TerrainFieldStartWidth) / CellWidth;
-                    var z = ((int)TerrainFieldStartHeight) / CellWidth;
+                    var x = ((int)TerrainWidth) / CellWidth;
+                    var z = ((int)TerrainHeight) / CellWidth;
 
                     _terrainField = new Cell[x, z];
                     for (var i = 0; i < x; i++)
@@ -41,10 +41,10 @@ namespace Assets.Script
         }
         public static int TerrainFieldWidth { get { return TerrainField.GetLength(0); } }
         public static int TerrainFieldHeight { get { return TerrainField.GetLength(1); } }
-        public static float TerrainFieldStartWidth { get { return Terrain.renderer.bounds.extents.x * 2; } }
-        public static float TerrainFieldStartHeight { get { return Terrain.renderer.bounds.extents.z * 2; } }
-        public static float TerrainFieldStartX { get { return Terrain.transform.position.x - Terrain.renderer.bounds.extents.x; } }
-        public static float TerrainFieldStartZ { get { return Terrain.transform.position.z - Terrain.renderer.bounds.extents.z; } }
+        public static float TerrainWidth { get { return Terrain.renderer.bounds.extents.x * 2; } }
+        public static float TerrainHeight { get { return Terrain.renderer.bounds.extents.z * 2; } }
+        public static float TerrainStartX { get { return Terrain.transform.position.x - Terrain.renderer.bounds.extents.x; } }
+        public static float TerrainStartZ { get { return Terrain.transform.position.z - Terrain.renderer.bounds.extents.z; } }
 
         #endregion
 

@@ -43,8 +43,8 @@ namespace Assets.Script.Components
                     for (var j = 0; j < fieldHeight; j++)
                     {
                         Gizmos.color = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked
-                            ? Color.red
-                            : Color.green;
+                            ? new Color(125, 0, 0)
+                            : new Color(0, 125, 0);
 
                         var z = startZ + PathFinderGlobal.CellWidth * j + correction;
                         var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);

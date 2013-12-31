@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Script.Components
 {
@@ -8,50 +9,51 @@ namespace Assets.Script.Components
 
         public void Start ()
         {
+            _done = false;
         }
 
         public void Update ()
         {
             if (!_done && PathFinderGlobal.TerrainField != null)
             {
-                var width = (int)(transform.gameObject.renderer.bounds.extents.x * 2 / PathFinderGlobal.CellWidth);
-                var height = (int)(transform.gameObject.renderer.bounds.extents.z * 2 / PathFinderGlobal.CellWidth);
-
-                Gizmos.color = Color.green;
-                for (var i = 0; i < width; i++)
+                var points = getPoints();
+                foreach (var point in points)
                 {
-                    for (var j = 0; j < height; j++)
-                    {
-                        var position = new Vector3(i * PathFinderGlobal.CellWidth, 0, j * PathFinderGlobal.CellWidth);
-                    }
+                    var x = (int)((point.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
+                    var z = (int)((point.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
+
+                    PathFinderGlobal.TerrainField[x, z].Blocked = true;
                 }
 
                 _done = true;
             }
         }
 
-        public void OnDrawGizmosSelected()
+        private IEnumerable<Vector3> getPoints()
         {
+            var result = new List<Vector3>();
             if (PathFinderGlobal.TerrainField != null)
             {
                 var scale = transform.localScale;
-                var width = (int)(scale.x / PathFinderGlobal.CellWidth);
-                var height = (int)(scale.z / PathFinderGlobal.CellWidth);
+                var fieldWidth = PathFinderGlobal.CellWidth / 2f;
+
+                var width = (int)(scale.x / fieldWidth);
+                var height = (int)(scale.z / fieldWidth);
 
                 Gizmos.color = Color.green;
                 for (var i = 0; i < width; i++)
                 {
                     for (var j = 0; j < height; j++)
                     {
-                        var position = new Vector3(i * PathFinderGlobal.CellWidth + PathFinderGlobal.CellWidth / 2f, 0, j * PathFinderGlobal.CellWidth + PathFinderGlobal.CellWidth / 2f);
-                        position = position - scale / 2;
-                        position = transform.InverseTransformPoint(position);
-                        position = new Vector3(position.x * transform.lossyScale.x, 0, position.z * transform.lossyScale.z);
-
-                        Gizmos.DrawWireSphere(position, .3f);
+                        var position = new Vector3(i * fieldWidth, 0, j * fieldWidth) - scale / 2;
+                        position = transform.TransformDirection(position);
+                        position = position + transform.position;
+                        result.Add(position);
                     }
                 }
             }
+
+            return result;
         }
     }
 }

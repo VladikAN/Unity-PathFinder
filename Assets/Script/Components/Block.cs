@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Script.Components
 {
-    public class Block : MonoBehaviour
+    public class Block : BaseBlock
 	{
         public void Start()
         {
@@ -10,6 +11,11 @@ namespace Assets.Script.Components
 
         public void Update()
         {
+        }
+
+        public override IEnumerable<Vector3> GetPoints()
+        {
+            return new[] { transform.position };
         }
 	}
 }

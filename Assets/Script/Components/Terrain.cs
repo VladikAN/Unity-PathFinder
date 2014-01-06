@@ -95,14 +95,13 @@ namespace Assets.Script.Components
 
         private void updateGrid()
         {
-            var blocks = (Block[])FindObjectsOfType(typeof(Block));
-            
-            foreach (var block in blocks)
-            {
-                var blockGameObject = block.gameObject;
+            var blocks = (BaseBlock[])FindObjectsOfType(typeof(BaseBlock));
+            var points = blocks.SelectMany(x => x.GetPoints());
 
-                var x = (int)((blockGameObject.transform.position.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
-                var z = (int)((blockGameObject.transform.position.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
+            foreach (var point in points)
+            {
+                var x = (int)((point.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
+                var z = (int)((point.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
                 
                 PathFinderGlobal.TerrainField[x, z].Blocked = true;
             }

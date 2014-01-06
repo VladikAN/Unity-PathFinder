@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\Cell.cs" />
+     <Compile Include="Assets\Script\Components\BaseBlock.cs" />
      <Compile Include="Assets\Script\Components\Block.cs" />
      <Compile Include="Assets\Script\Components\SimpleBlock.cs" />
      <Compile Include="Assets\Script\Components\Terrain.cs" />

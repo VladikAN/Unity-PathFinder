@@ -3,33 +3,17 @@ using UnityEngine;
 
 namespace Assets.Script.Components
 {
-    public class SimpleBlock : MonoBehaviour
+    public class SimpleBlock : BaseBlock
     {
-        private bool _done;
-
         public void Start ()
         {
-            _done = false;
         }
 
         public void Update ()
         {
-            if (!_done && PathFinderGlobal.TerrainField != null)
-            {
-                var points = getPoints();
-                foreach (var point in points)
-                {
-                    var x = (int)((point.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
-                    var z = (int)((point.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
-
-                    PathFinderGlobal.TerrainField[x, z].Blocked = true;
-                }
-
-                _done = true;
-            }
         }
 
-        private IEnumerable<Vector3> getPoints()
+        public override IEnumerable<Vector3> GetPoints()
         {
             var result = new List<Vector3>();
             if (PathFinderGlobal.TerrainField != null)

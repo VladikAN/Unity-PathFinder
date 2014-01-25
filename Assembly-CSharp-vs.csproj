@@ -45,16 +45,17 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\Cell.cs" />
-     <Compile Include="Assets\Script\Components\BaseBlock.cs" />
-     <Compile Include="Assets\Script\Components\Block.cs" />
-     <Compile Include="Assets\Script\Components\SimpleBlock.cs" />
+     <Compile Include="Assets\Script\Components\Block\BaseBlock.cs" />
+     <Compile Include="Assets\Script\Components\Block\SimpleAutoBlock.cs" />
+     <Compile Include="Assets\Script\Components\Block\SimpleBlock.cs" />
      <Compile Include="Assets\Script\Components\Terrain.cs" />
      <Compile Include="Assets\Script\Demo\FinderCamera.cs" />
-     <Compile Include="Assets\Script\Finder\FinderResult.cs" />
+     <Compile Include="Assets\Script\Finder\BaseFinderResult.cs" />
      <Compile Include="Assets\Script\Finder\IFinder.cs" />
-     <Compile Include="Assets\Script\Finder\WaveFinder.cs" />
+     <Compile Include="Assets\Script\Finder\Point.cs" />
+     <Compile Include="Assets\Script\Finder\Wave\WaveFinder.cs" />
+     <Compile Include="Assets\Script\Finder\Wave\WaveFinderResult.cs" />
      <Compile Include="Assets\Script\PathFinderGlobal.cs" />
-     <Compile Include="Assets\Script\Point.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

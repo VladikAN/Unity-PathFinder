@@ -2,13 +2,13 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.Script.Finder
+namespace Assets.Script.Finder.Wave
 {
     public class WaveFinder : IFinder
     {
         private uint?[,] _map;
 
-        public FinderResult Find(Vector3 start, Vector3 end)
+        public BaseFinderResult Find(Vector3 start, Vector3 end)
         {
             var startPoint = ToPoint(start);
             var endPoint = ToPoint(end);
@@ -66,7 +66,7 @@ namespace Assets.Script.Finder
                 path.Reverse();
             }
 
-            var result = new FinderResult
+            var result = new WaveFinderResult
             {
                 Path = path,
                 Map = _map

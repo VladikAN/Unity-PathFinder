@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Components
+namespace Assets.Script.Components.Block
 {
     public abstract class BaseBlock : MonoBehaviour
     {

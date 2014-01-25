@@ -1,4 +1,5 @@
 ﻿using Assets.Script.Finder;
+using Assets.Script.Finder.Wave;
 using UnityEngine;
 
 namespace Assets.Script.Demo

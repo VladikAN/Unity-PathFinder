@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Components
+namespace Assets.Script.Components.Block
 {
-    public class SimpleBlock : BaseBlock
+    public class SimpleAutoBlock : BaseBlock
     {
-        public void Start ()
+        public void Start()
         {
         }
 
-        public void Update ()
+        public void Update()
         {
         }
 

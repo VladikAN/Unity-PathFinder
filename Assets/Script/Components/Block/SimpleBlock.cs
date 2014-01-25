@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Components
+namespace Assets.Script.Components.Block
 {
-    public class Block : BaseBlock
+    public class SimpleBlock : BaseBlock
 	{
         public void Start()
         {

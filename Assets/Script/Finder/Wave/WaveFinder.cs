@@ -236,7 +236,7 @@ namespace Assets.Script.Finder.Wave
 
         private WavePoint GetPoint(int x, int y, uint targetWeight)
         {
-            if (!Valid(x, y) || _map[x, y] != targetWeight)
+            if (!ValidateEdges(x, y) || _map[x, y] != targetWeight)
             {
                 return null;
             }
@@ -249,7 +249,7 @@ namespace Assets.Script.Finder.Wave
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
 
-            if (!Valid(newX, newY))
+            if (!ValidateEdges(newX, newY))
             {
                 return null;
             }
@@ -276,11 +276,6 @@ namespace Assets.Script.Finder.Wave
             }
 
             return result;
-        }
-
-        private bool Valid(int x, int y)
-        {
-            return !((x < 0 || x >= PathFinderGlobal.TerrainFieldWidth) || (y < 0 || y >= PathFinderGlobal.TerrainFieldHeight));
         }
     }
 }

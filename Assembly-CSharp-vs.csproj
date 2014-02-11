@@ -51,11 +51,13 @@
      <Compile Include="Assets\Script\Components\Terrain.cs" />
      <Compile Include="Assets\Script\Demo\FinderCamera.cs" />
      <Compile Include="Assets\Script\Finder\BaseFinder.cs" />
+     <Compile Include="Assets\Script\Finder\BasePoint.cs" />
      <Compile Include="Assets\Script\Finder\BaseResult.cs" />
      <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" />
+     <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointPoint.cs" />
      <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointResult.cs" />
-     <Compile Include="Assets\Script\Finder\Point.cs" />
      <Compile Include="Assets\Script\Finder\Wave\WaveFinder.cs" />
+     <Compile Include="Assets\Script\Finder\Wave\WavePoint.cs" />
      <Compile Include="Assets\Script\Finder\Wave\WaveResult.cs" />
      <Compile Include="Assets\Script\PathFinderGlobal.cs" />
   </ItemGroup>

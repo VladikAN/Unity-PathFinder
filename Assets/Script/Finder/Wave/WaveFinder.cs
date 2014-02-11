@@ -10,8 +10,8 @@ namespace Assets.Script.Finder.Wave
 
         public override BaseResult Find(Vector3 start, Vector3 end)
         {
-            var startPoint = ToPoint(start);
-            var endPoint = ToPoint(end);
+            var startPoint = ToPoint<WavePoint>(start);
+            var endPoint = ToPoint<WavePoint>(end);
 
             _map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
 
@@ -19,7 +19,7 @@ namespace Assets.Script.Finder.Wave
             _map[startPoint.X, startPoint.Y] = weight;
 
             var founded = false;
-            var lastIteration = new List<Point> { startPoint };
+            var lastIteration = new List<WavePoint> { startPoint };
             while (!founded)
             {
                 if (!lastIteration.Any())
@@ -28,7 +28,7 @@ namespace Assets.Script.Finder.Wave
                 }
 
                 weight++;
-                var thisIteration = new List<Point>();
+                var thisIteration = new List<WavePoint>();
 
                 foreach (var point in lastIteration)
                 {
@@ -75,14 +75,14 @@ namespace Assets.Script.Finder.Wave
             return result;
         }
 
-        private IEnumerable<Point> FindNearestPoints(Point current, Point target, uint weight)
+        private IEnumerable<WavePoint> FindNearestPoints(WavePoint current, WavePoint target, uint weight)
         {
             var targetWeight = weight - 1;
             
             /* center top */
             if (current.X == target.X && current.Y > target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
@@ -101,7 +101,7 @@ namespace Assets.Script.Finder.Wave
             /* right top */
             if (current.X < target.X && current.Y > target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
@@ -120,7 +120,7 @@ namespace Assets.Script.Finder.Wave
             /* right center */
             if (current.X < target.X && current.Y == target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
@@ -139,7 +139,7 @@ namespace Assets.Script.Finder.Wave
             /* right bottom */
             if (current.X < target.X && current.Y < target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
@@ -158,7 +158,7 @@ namespace Assets.Script.Finder.Wave
             /* center bottom */
             if (current.X == target.X && current.Y < target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
@@ -177,7 +177,7 @@ namespace Assets.Script.Finder.Wave
             /* left bottom */
             if (current.X > target.X && current.Y < target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
@@ -196,7 +196,7 @@ namespace Assets.Script.Finder.Wave
             /* left center */
             if (current.X > target.X && current.Y == target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
@@ -215,7 +215,7 @@ namespace Assets.Script.Finder.Wave
             /* left top */
             if (current.X > target.X && current.Y > target.Y)
             {
-                var result = new List<Point>
+                var result = new List<WavePoint>
                 {
                     GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
                     GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
@@ -234,17 +234,17 @@ namespace Assets.Script.Finder.Wave
             return null;
         }
 
-        private Point GetPoint(int x, int y, uint targetWeight)
+        private WavePoint GetPoint(int x, int y, uint targetWeight)
         {
             if (!Valid(x, y) || _map[x, y] != targetWeight)
             {
                 return null;
             }
 
-            return new Point(x, y);
+            return new WavePoint(x, y);
         }
 
-        private Point CreateNextStep(Point parent, int xMove, int yMove, uint weight)
+        private WavePoint CreateNextStep(WavePoint parent, int xMove, int yMove, uint weight)
         {
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
@@ -259,11 +259,11 @@ namespace Assets.Script.Finder.Wave
                 return null;
             }
 
-            Point result = null;
+            WavePoint result = null;
             if (xMove == 0 || yMove == 0)
             {
                 _map[newX, newY] = weight;
-                result = new Point(newX, newY);
+                result = new WavePoint(newX, newY);
             }
             else
             {
@@ -271,7 +271,7 @@ namespace Assets.Script.Finder.Wave
                     && !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
                 {
                     _map[newX, newY] = weight;
-                    result = new Point(newX, newY);
+                    result = new WavePoint(newX, newY);
                 }
             }
 

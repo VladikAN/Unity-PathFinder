@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Assets.Script.Finder.Wave
 {
-    public class WaveFinder : IFinder
+    public class WaveFinder : BaseFinder
     {
         private uint?[,] _map;
 
-        public BaseFinderResult Find(Vector3 start, Vector3 end)
+        public override BaseResult Find(Vector3 start, Vector3 end)
         {
             var startPoint = ToPoint(start);
             var endPoint = ToPoint(end);
@@ -66,7 +66,7 @@ namespace Assets.Script.Finder.Wave
                 path.Reverse();
             }
 
-            var result = new WaveFinderResult
+            var result = new WaveResult
             {
                 Path = path,
                 Map = _map
@@ -281,23 +281,6 @@ namespace Assets.Script.Finder.Wave
         private bool Valid(int x, int y)
         {
             return !((x < 0 || x >= PathFinderGlobal.TerrainFieldWidth) || (y < 0 || y >= PathFinderGlobal.TerrainFieldHeight));
-        }
-
-        private Point ToPoint(Vector3 vector)
-        {
-            var x = (int)((vector.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
-            var y = (int)((vector.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
-
-            return new Point(x, y);
-        }
-
-        private Vector3 ToVector3(Point point)
-        {
-            var result = point.ToVector3() 
-                * PathFinderGlobal.CellWidth
-                + new Vector3(PathFinderGlobal.TerrainStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainStartZ + PathFinderGlobal.CellCorrection);
-
-            return result;
         }
     }
 }

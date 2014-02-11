@@ -50,8 +50,8 @@ namespace Assets.Script
 
         #region IFinder
 
-        public static BaseFinderResult LastResult = null;
-        public static BaseFinderResult Find(IFinder finder, Vector3 start, Vector3 end)
+        public static BaseResult LastResult = null;
+        public static BaseResult Find(BaseFinder finder, Vector3 start, Vector3 end)
         {
             var result = finder.Find(start, end);
             LastResult = result;

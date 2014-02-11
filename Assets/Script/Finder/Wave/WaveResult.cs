@@ -1,6 +1,6 @@
 ﻿namespace Assets.Script.Finder.Wave
 {
-    public class WaveFinderResult : BaseFinderResult
+    public class WaveResult : BaseResult
     {
     }
 }

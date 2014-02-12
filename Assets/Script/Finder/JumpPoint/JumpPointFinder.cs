@@ -6,106 +6,152 @@ namespace Assets.Script.Finder.JumpPoint
 {
     public class JumpPointFinder : BaseFinder
     {
+        private IList<JumpPointPoint> _points;
+
         public override BaseResult Find(Vector3 start, Vector3 end)
         {
-//            var startPoint = ToPoint<JumpPointPoint>(start);
-//            var endPoint = ToPoint<JumpPointPoint>(end);
+            var startPoint = ToPoint<JumpPointPoint>(start);
+            var endPoint = ToPoint<JumpPointPoint>(end);
+
+            _points = new List<JumpPointPoint>();
+            AddToStack(startPoint, null);
 
             throw new System.NotImplementedException();
         }
 
+        private void GoDiagonally(JumpPointPoint start, bool left, bool up)
+        {
+            var stepH = left ? -1 : 1;
+            var stepV = up ? -1 : 1;
+
+            var investigate = new JumpPointPoint(start.X, start.Y);
+            while (true)
+            {
+                if (!ValidateEdges(investigate) || IsBlocked(investigate))
+                {
+                    start.NextStep();
+                    break;
+                }
+
+                var gotHorizontally = GoHorizontally(investigate, !investigate.FromLeft);
+                var gotVertically = GoVertically(investigate, !investigate.FromUp);
+                if (gotHorizontally != null || gotVertically != null)
+                {
+                    if (!AlreadyInStack(investigate))
+                    {
+                        AddToStack(investigate, start);
+                        break;
+                    }
+
+                    if (gotHorizontally != null && !AlreadyInStack(gotHorizontally))
+                    {
+                        AddToStack(gotHorizontally, investigate); /* think */
+                    }
+
+                    if (gotVertically != null && !AlreadyInStack(gotVertically))
+                    {
+                        AddToStack(gotVertically, investigate); /* think */
+                    }
+                }
+
+                // Next step
+                investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
+            }
+        }
+
         private JumpPointPoint GoHorizontally(JumpPointPoint start, bool left)
         {
-            var neighbors = GoHV(start, left, null);
-            return null;
+            return GoHV(start, left, null);
         }
 
         private JumpPointPoint GoVertically(JumpPointPoint start, bool up)
         {
-            var neighbors = GoHV(start, null, up);
-            return null;
+            return GoHV(start, null, up);
         }
 
-        private IEnumerable<JumpPointPoint> GoHV(JumpPointPoint start, bool? left, bool? up)
+        private JumpPointPoint GoHV(JumpPointPoint start, bool? left, bool? up)
         {
             if (left.HasValue && up.HasValue)
             {
-                Debug.Log("Only one must have a value!");
+                Debug.LogError("Only one must have a value!");
             }
 
             var stepH = left.HasValue ? (left.Value ? -1 : 1) : 0;
             var stepV = up.HasValue ? (up.Value ? -1 : 1) : 0;
 
             var investigate = new JumpPointPoint(start.X, start.Y);
-
             while (true)
             {
                 if (!ValidateEdges(investigate) || IsBlocked(investigate))
                 {
+                    investigate = null;
                     break;
                 }
 
                 // Check neighbors
-                IEnumerable<JumpPointPoint> result;
                 if (left.HasValue)
                 {
-                    result = new List<JumpPointPoint>
+                    if (HaveForcedNeighbor(investigate, true, left.Value, true) || HaveForcedNeighbor(investigate, true, left.Value, false))
                     {
-                        CheckNeighborHV(investigate, true, left.Value, true),
-                        CheckNeighborHV(investigate, true, left.Value, false)
-                    };
+                        break;
+                    }
                 }
                 else
                 {
-                    result = new List<JumpPointPoint>
+                    if (HaveForcedNeighbor(investigate, false, true, up.Value) || HaveForcedNeighbor(investigate, false, false, up.Value))
                     {
-                        CheckNeighborHV(investigate, false, true, up.Value),
-                        CheckNeighborHV(investigate, false, false, up.Value)
-                    };
-                }
-
-                if (result.Any(x => x != null))
-                {
-                    result = result.Where(x => x != null);
-                    return result;
+                        break;
+                    }
                 }
 
                 // Next step
                 investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
             }
 
+            if (investigate != null)
+            {
+                if (!AlreadyInStack(start))
+                {
+                    return start;
+                }
+
+                if (!AlreadyInStack(investigate))
+                {
+                    return investigate;
+                }
+            }
+
             return null;
         }
 
-        private JumpPointPoint CheckNeighborHV(JumpPointPoint investigate, bool horizontally, bool left, bool up)
+        private bool HaveForcedNeighbor(JumpPointPoint investigate, bool horizontally, bool left, bool up)
         {
             var stepH = left ? -1 : 1;
             var stepV = up ? -1 : 1;
 
             if (!ValidateEdges(investigate.X + stepH, investigate.Y + stepV))
             {
-                return null;
+                return false;
             }
 
-            /* horizontally */
-            if (horizontally
-                && IsBlocked(investigate.X, investigate.Y + stepV)
-                && !IsBlocked(investigate.X + stepH, investigate.Y + stepV)
-                && !IsBlocked(investigate.X + stepH, investigate.Y))
+            if (horizontally)
             {
-                return null;    /* think */
+                return IsBlocked(investigate.X, investigate.Y + stepV) && (!IsBlocked(investigate.X + stepH, investigate.Y + stepV) && !IsBlocked(investigate.X + stepH, investigate.Y));
             }
-
-            /* Vertically */
-            if (!horizontally
-                && IsBlocked(investigate.X + stepH, investigate.Y)
-                && !IsBlocked(investigate.X + stepH, investigate.Y + stepV)
-                && !IsBlocked(investigate.X, investigate.Y + stepV))
+            else
             {
-                return null;    /* think */
+                return IsBlocked(investigate.X + stepH, investigate.Y) && (!IsBlocked(investigate.X + stepH, investigate.Y + stepV) && !IsBlocked(investigate.X, investigate.Y + stepV));
             }
+        }
 
-            return null;
+        private bool AlreadyInStack(JumpPointPoint point)
+        {
+            return _points.Any(pt => pt.X == point.X && pt.Y == point.Y);
+        }
+
+        private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
+        {
+            _points.Add(new JumpPointPoint(point.X, point.Y, parent));
         }
     }
 }

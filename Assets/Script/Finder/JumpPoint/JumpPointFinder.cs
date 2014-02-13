@@ -10,19 +10,18 @@ namespace Assets.Script.Finder.JumpPoint
 
         private JumpPointPoint _start;
         private JumpPointPoint _end;
-        private bool _pathFounded;
 
         public override BaseResult Find(Vector3 start, Vector3 end)
         {
             _start = ToPoint<JumpPointPoint>(start);
             _end = ToPoint<JumpPointPoint>(end);
-            _pathFounded = false;
-
+            
             _points = new List<JumpPointPoint>();
             AddToStack(_start, null);
 
+            var pathFounded = false;
             JumpPointPoint investigate = null;
-            while (!_pathFounded)
+            while (!pathFounded)
             {
                 investigate = _points.FirstOrDefault(point => (point.X == _end.X && point.Y == _end.Y) || point.Step != 0);
                 if (investigate == null)
@@ -33,7 +32,7 @@ namespace Assets.Script.Finder.JumpPoint
 
                 if (investigate.X == _end.X && investigate.Y == _end.Y)
                 {
-                    _pathFounded = true;
+                    pathFounded = true;
                     break;
                 }
 
@@ -46,7 +45,7 @@ namespace Assets.Script.Finder.JumpPoint
             }
 
             var path = new List<Vector3>();
-            if (_pathFounded)
+            if (pathFounded)
             {
                 while (investigate.Parent != null)
                 {
@@ -58,14 +57,19 @@ namespace Assets.Script.Finder.JumpPoint
                 path.Reverse();
             }
 
-            var result = new JumpPointResult { Path = path, Neighbors = _points.Select(x => ToVector3(x)) };
+            var result = new JumpPointResult
+            {
+                Path = path,
+                Neighbors = _points.Select(x => ToVector3(x))
+            };
+            
             return result;
         }
 
-        private void GoDiagonally(JumpPointPoint start, bool left, bool up)
+        private void GoDiagonally(JumpPointPoint start, bool goLeft, bool goUp)
         {
-            var stepH = left ? -1 : 1;
-            var stepV = up ? -1 : 1;
+            var stepH = goLeft ? -1 : 1;
+            var stepV = goUp ? -1 : 1;
 
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
@@ -101,25 +105,25 @@ namespace Assets.Script.Finder.JumpPoint
             }
         }
 
-        private JumpPointPoint GoHorizontally(JumpPointPoint start, bool left)
+        private JumpPointPoint GoHorizontally(JumpPointPoint start, bool goLeft)
         {
-            return GoHV(start, left, null);
+            return GoHV(start, goLeft, null);
         }
 
-        private JumpPointPoint GoVertically(JumpPointPoint start, bool up)
+        private JumpPointPoint GoVertically(JumpPointPoint start, bool goUp)
         {
-            return GoHV(start, null, up);
+            return GoHV(start, null, goUp);
         }
 
-        private JumpPointPoint GoHV(JumpPointPoint start, bool? left, bool? up)
+        private JumpPointPoint GoHV(JumpPointPoint start, bool? goLeft, bool? goUp)
         {
-            if (left.HasValue && up.HasValue)
+            if (goLeft.HasValue && goUp.HasValue)
             {
                 Debug.LogError("Only one must have a value!");
             }
 
-            var stepH = left.HasValue ? (left.Value ? -1 : 1) : 0;
-            var stepV = up.HasValue ? (up.Value ? -1 : 1) : 0;
+            var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
+            var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
 
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
@@ -137,16 +141,16 @@ namespace Assets.Script.Finder.JumpPoint
                 }
 
                 // Check neighbors
-                if (left.HasValue)
+                if (goLeft.HasValue)
                 {
-                    if (HaveForcedNeighbor(investigate, true, left.Value, true) || HaveForcedNeighbor(investigate, true, left.Value, false))
+                    if (HaveForcedNeighbor(investigate, true, goLeft.Value, true) || HaveForcedNeighbor(investigate, true, goLeft.Value, false))
                     {
                         break;
                     }
                 }
                 else
                 {
-                    if (HaveForcedNeighbor(investigate, false, true, up.Value) || HaveForcedNeighbor(investigate, false, false, up.Value))
+                    if (HaveForcedNeighbor(investigate, false, true, goUp.Value) || HaveForcedNeighbor(investigate, false, false, goUp.Value))
                     {
                         break;
                     }
@@ -172,10 +176,10 @@ namespace Assets.Script.Finder.JumpPoint
             return null;
         }
 
-        private bool HaveForcedNeighbor(JumpPointPoint investigate, bool horizontally, bool left, bool up)
+        private bool HaveForcedNeighbor(JumpPointPoint investigate, bool horizontally, bool goLeft, bool goUp)
         {
-            var stepH = left ? -1 : 1;
-            var stepV = up ? -1 : 1;
+            var stepH = goLeft ? -1 : 1;
+            var stepV = goUp ? -1 : 1;
 
             if (!ValidateEdges(investigate.X + stepH, investigate.Y + stepV))
             {

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Script.Components.Block;
 using Assets.Script.Finder.JumpPoint;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -33,23 +34,29 @@ namespace Assets.Script.Components
 
             var fieldWidth = PathFinderGlobal.TerrainFieldWidth;
             var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
-            var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) - new Vector3(0.1f, 0f, 0.1f);
+            var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) * 0.9f;
 
             if (DisplayFieldGizmo)
             {
-                var correction = PathFinderGlobal.CellCorrection;
+                var labelCorrection = new Vector3(0.1f, 0, 0.35f);
+                var gizmoCorrection = new Vector3(PathFinderGlobal.CellCorrection, 0.5f, PathFinderGlobal.CellCorrection);
                 for (var i = 0; i < fieldWidth; i++)
                 {
-                    var x = startX + PathFinderGlobal.CellWidth * i + correction;
                     for (var j = 0; j < fieldHeight; j++)
                     {
-                        Gizmos.color = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked
+                        var x = startX + PathFinderGlobal.CellWidth * i;
+                        var z = startZ + PathFinderGlobal.CellWidth * j;
+
+                        var labelPosition = new Vector3(x, 0, z) + labelCorrection;
+                        var gizmoPosition = new Vector3(x, 0, z) + gizmoCorrection;
+                        
+                        var color = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked
                             ? new Color(125, 0, 0)
                             : new Color(0, 125, 0);
+                        Gizmos.color = color;
 
-                        var z = startZ + PathFinderGlobal.CellWidth * j + correction;
-                        var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
-                        Gizmos.DrawWireCube(startPosition, gizmoSize);
+                        Gizmos.DrawWireCube(gizmoPosition, gizmoSize);
+                        Handles.Label(labelPosition, string.Format("{0} x {1}", i, j));
                     }
                 }
             }

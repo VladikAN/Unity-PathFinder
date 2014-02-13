@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Assets.Script.Components.Block;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -66,13 +65,16 @@ namespace Assets.Script.Components
                         Gizmos.DrawWireSphere(finderResult.Path.Last(), .2f);
 
                         Gizmos.color = Color.red;
+                        var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
                         {
                             Gizmos.DrawWireSphere(point, .1f);
+                            Gizmos.DrawLine(prev, point);
+                            prev = point;
                         }
                     }
                     
-                    if (DisplayMapGizmo)
+                    /*if (DisplayMapGizmo)
                     {
                         for (var i = 0; i < fieldWidth; i++)
                         {
@@ -89,7 +91,7 @@ namespace Assets.Script.Components
                                 Handles.Label(startPosition, finderResult.Map[i, j].Value.ToString());
                             }
                         }
-                    }
+                    }*/
                 }
             }
         }

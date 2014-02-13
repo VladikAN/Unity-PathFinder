@@ -8,15 +8,56 @@ namespace Assets.Script.Finder.JumpPoint
     {
         private IList<JumpPointPoint> _points;
 
+        private JumpPointPoint _start;
+        private JumpPointPoint _end;
+        private bool _pathFounded;
+
         public override BaseResult Find(Vector3 start, Vector3 end)
         {
-            var startPoint = ToPoint<JumpPointPoint>(start);
-            var endPoint = ToPoint<JumpPointPoint>(end);
+            _start = ToPoint<JumpPointPoint>(start);
+            _end = ToPoint<JumpPointPoint>(end);
+            _pathFounded = false;
 
             _points = new List<JumpPointPoint>();
-            AddToStack(startPoint, null);
+            AddToStack(_start, null);
 
-            throw new System.NotImplementedException();
+            JumpPointPoint investigate = null;
+            while (!_pathFounded)
+            {
+                investigate = _points.FirstOrDefault(x => x.Step != 0);
+                if (investigate == null)
+                {
+                    Debug.Log("Path not founded");
+                    break;
+                }
+
+                if (investigate.X == _end.X && investigate.Y == _end.Y)
+                {
+                    _pathFounded = true;
+                    break;
+                }
+
+                while (investigate.Step != 0)
+                {
+                    GoDiagonally(investigate, !investigate.FromLeft, !investigate.FromUp);
+                    investigate.NextStep();
+                }
+            }
+
+            var path = new List<Vector3>();
+            if (_pathFounded)
+            {
+                while (investigate.X != _start.X & investigate.Y != _start.Y)
+                {
+                    path.Add(ToVector3(investigate));
+                    investigate = investigate.Parent;
+                }
+
+                path.Reverse();
+            }
+
+            var result = new JumpPointResult { Path = path };
+            return result;
         }
 
         private void GoDiagonally(JumpPointPoint start, bool left, bool up)
@@ -29,7 +70,6 @@ namespace Assets.Script.Finder.JumpPoint
             {
                 if (!ValidateEdges(investigate) || IsBlocked(investigate))
                 {
-                    start.NextStep();
                     break;
                 }
 
@@ -45,12 +85,12 @@ namespace Assets.Script.Finder.JumpPoint
 
                     if (gotHorizontally != null && !AlreadyInStack(gotHorizontally))
                     {
-                        AddToStack(gotHorizontally, investigate); /* think */
+                        AddToStack(gotHorizontally, investigate);
                     }
 
                     if (gotVertically != null && !AlreadyInStack(gotVertically))
                     {
-                        AddToStack(gotVertically, investigate); /* think */
+                        AddToStack(gotVertically, investigate);
                     }
                 }
 
@@ -85,6 +125,12 @@ namespace Assets.Script.Finder.JumpPoint
                 if (!ValidateEdges(investigate) || IsBlocked(investigate))
                 {
                     investigate = null;
+                    break;
+                }
+
+                if (investigate.X == _end.X && investigate.Y == _end.Y)
+                {
+                    /* Force exit */
                     break;
                 }
 

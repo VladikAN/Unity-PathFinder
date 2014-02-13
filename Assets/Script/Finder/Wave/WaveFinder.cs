@@ -66,12 +66,7 @@ namespace Assets.Script.Finder.Wave
                 path.Reverse();
             }
 
-            var result = new WaveResult
-            {
-                Path = path,
-                Map = _map
-            };
-
+            var result = new WaveResult { Path = path };
             return result;
         }
 

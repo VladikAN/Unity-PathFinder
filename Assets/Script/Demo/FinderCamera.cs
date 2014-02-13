@@ -1,4 +1,5 @@
 ﻿using Assets.Script.Finder;
+using Assets.Script.Finder.JumpPoint;
 using Assets.Script.Finder.Wave;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace Assets.Script.Demo
             if (Input.GetMouseButtonUp(0) && Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 31))
             {
                 _endPoint = hit.point;
-                PathFinderGlobal.Find(new WaveFinder(), _startPoint, _endPoint);
+                PathFinderGlobal.Find(new JumpPointFinder(), _startPoint, _endPoint);
                 _startPoint = _endPoint;
             }
         }

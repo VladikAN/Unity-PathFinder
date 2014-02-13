@@ -24,7 +24,7 @@ namespace Assets.Script.Finder.JumpPoint
             JumpPointPoint investigate = null;
             while (!_pathFounded)
             {
-                investigate = _points.FirstOrDefault(x => x.Step != 0);
+                investigate = _points.FirstOrDefault(point => (point.X == _end.X && point.Y == _end.Y) || point.Step != 0);
                 if (investigate == null)
                 {
                     Debug.Log("Path not founded");
@@ -39,6 +39,7 @@ namespace Assets.Script.Finder.JumpPoint
 
                 while (investigate.Step != 0)
                 {
+//                    Debug.Log(investigate.X + " x " + investigate.Y + " s:" + investigate.Step);
                     GoDiagonally(investigate, !investigate.FromLeft, !investigate.FromUp);
                     investigate.NextStep();
                 }
@@ -47,16 +48,17 @@ namespace Assets.Script.Finder.JumpPoint
             var path = new List<Vector3>();
             if (_pathFounded)
             {
-                while (investigate.X != _start.X & investigate.Y != _start.Y)
+                while (investigate.Parent != null)
                 {
                     path.Add(ToVector3(investigate));
                     investigate = investigate.Parent;
                 }
 
+                path.Add(ToVector3(investigate));
                 path.Reverse();
             }
 
-            var result = new JumpPointResult { Path = path };
+            var result = new JumpPointResult { Path = path, Neighbors = _points.Select(x => ToVector3(x)) };
             return result;
         }
 

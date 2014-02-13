@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Assets.Script.Components.Block;
+using Assets.Script.Finder.JumpPoint;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -61,16 +62,26 @@ namespace Assets.Script.Components
                     if (DisplayPathGizmo && (finderResult.Path != null && finderResult.Path.Any()))
                     {
                         Gizmos.color = Color.blue;
-                        Gizmos.DrawWireSphere(finderResult.Path.First(), .2f);
-                        Gizmos.DrawWireSphere(finderResult.Path.Last(), .2f);
+                        Gizmos.DrawWireSphere(finderResult.Path.First(), .4f);
+                        Gizmos.DrawWireSphere(finderResult.Path.Last(), .4f);
 
                         Gizmos.color = Color.red;
                         var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
                         {
-                            Gizmos.DrawWireSphere(point, .1f);
+                            Gizmos.DrawWireSphere(point, .35f);
                             Gizmos.DrawLine(prev, point);
                             prev = point;
+                        }
+
+                        if (finderResult is JumpPointResult)
+                        {
+                            Gizmos.color = Color.yellow;
+                            var jumpPointResult = finderResult as JumpPointResult;
+                            foreach (var neighbor in jumpPointResult.Neighbors)
+                            {
+                                Gizmos.DrawWireSphere(neighbor, .3f);
+                            }
                         }
                     }
                     

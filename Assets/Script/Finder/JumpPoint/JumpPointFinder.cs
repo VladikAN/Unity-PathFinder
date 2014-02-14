@@ -9,31 +9,26 @@ namespace Assets.Script.Finder.JumpPoint
     {
         private IList<JumpPointPoint> _points;
         private bool[,] _wallMap;
-        private bool[,] _doneMap;
 
         private bool _endPointFounded;
 
         private JumpPointPoint _start;
         private JumpPointPoint _end;
 
-        public override BaseResult Find(Vector3 start, Vector3 end)
+        public override BaseResult Find(Vector3 startVector3, Vector3 endVector3)
         {
             _points = new List<JumpPointPoint>();
             _wallMap = PathFinderGlobal.TerrainField.ToBoolMap();
-            _doneMap = PathFinderGlobal.TerrainField.ToBoolMap();
 
             _endPointFounded = false;
 
-            _start = ToPoint<JumpPointPoint>(start);
-            _end = ToPoint<JumpPointPoint>(end);
+            _start = ToPoint<JumpPointPoint>(startVector3);
+            _end = ToPoint<JumpPointPoint>(endVector3);
             
             AddToStack(_start, null);
-
-            var pathFounded = false;
-            JumpPointPoint investigate = null;
-            while (!pathFounded)
+            while (!_endPointFounded)
             {
-                investigate = _points.FirstOrDefault(point => (point.X == _end.X && point.Y == _end.Y) || point.Step != 0);
+                var investigate = _points.FirstOrDefault(point => point.Step != 0);
                 if (investigate == null)
                 {
                     Debug.Log("Path not founded");
@@ -41,33 +36,23 @@ namespace Assets.Script.Finder.JumpPoint
                 }
 
                 Debug.Log("-> " + investigate.X + " x " + investigate.Y + " s:" + investigate.Step);
-                if (investigate.X == _end.X && investigate.Y == _end.Y)
-                {
-                    pathFounded = true;
-                    break;
-                }
-
-                while (investigate.Step != 0)
+                while (!_endPointFounded && investigate.Step != 0)
                 {
                     MakeStep(investigate, !investigate.FromLeft, !investigate.FromUp);
-
-                    if (_endPointFounded)
-                    {
-                        break;
-                    }
                 }
             }
 
             var path = new List<Vector3>();
-            if (pathFounded)
+            if (_endPointFounded)
             {
-                while (investigate.Parent != null)
+                var endPoint = _points.First(point => point.X == _end.X && point.Y == _end.Y);
+                while (endPoint.Parent != null)
                 {
-                    path.Add(ToVector3(investigate));
-                    investigate = investigate.Parent;
+                    path.Add(ToVector3(endPoint));
+                    endPoint = endPoint.Parent;
                 }
 
-                path.Add(ToVector3(investigate));
+                path.Add(ToVector3(endPoint));
                 path.Reverse();
             }
 
@@ -146,11 +131,16 @@ namespace Assets.Script.Finder.JumpPoint
             var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
             var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
 
-            var markAsDone = !goLeft.HasValue;
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
             {
-                if (!ValidateInvestigation(investigate)/* || _doneMap[investigate.X, investigate.Y]*/)
+                if (AlreadyInStack(investigate))
+                {
+                    investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
+                    continue;
+                }
+
+                if (!ValidateInvestigation(investigate))
                 {
                     investigate = null;
                     break;
@@ -179,13 +169,7 @@ namespace Assets.Script.Finder.JumpPoint
                 }
 
                 /* Next step */
-                if (markAsDone)
-                {
-                    _doneMap[investigate.X, investigate.Y] = true;
-                }
-                
                 investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
-                markAsDone = true;
             }
 
             if (investigate != null)
@@ -236,10 +220,7 @@ namespace Assets.Script.Finder.JumpPoint
         {
             Debug.Log("R: " + point.X + " x " + point.Y + " s:" + point.Step);
             _points.Add(new JumpPointPoint(point.X, point.Y, parent));
-            if (point.X == _end.X && point.Y == _end.Y)
-            {
-                _endPointFounded = true;
-            }
+            _endPointFounded = _endPointFounded || point.X == _end.X && point.Y == _end.Y;
         }
 
         private bool ValidateInvestigation(JumpPointPoint point)
@@ -249,12 +230,7 @@ namespace Assets.Script.Finder.JumpPoint
                 return false;
             }
 
-            if (_wallMap[point.X, point.Y])
-            {
-                return false;
-            }
-
-            return true;
+            return !_wallMap[point.X, point.Y];
         }
     }
 }

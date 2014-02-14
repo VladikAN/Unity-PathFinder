@@ -8,10 +8,10 @@ namespace Assets.Script.Finder.Wave
     {
         private uint?[,] _map;
 
-        public override BaseResult Find(Vector3 start, Vector3 end)
+        public override BaseResult Find(Vector3 startVector3, Vector3 endVector3)
         {
-            var startPoint = ToPoint<WavePoint>(start);
-            var endPoint = ToPoint<WavePoint>(end);
+            var startPoint = ToPoint<WavePoint>(startVector3);
+            var endPoint = ToPoint<WavePoint>(endVector3);
 
             _map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
 

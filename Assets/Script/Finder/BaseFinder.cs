@@ -4,7 +4,7 @@ namespace Assets.Script.Finder
 {
     public abstract class BaseFinder
     {
-        public abstract BaseResult Find(Vector3 start, Vector3 end);
+        public abstract BaseResult Find(Vector3 startVector3, Vector3 endVector3);
 
         protected TPoint ToPoint<TPoint>(Vector3 vector) where TPoint : BasePoint, new()
         {

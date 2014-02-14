@@ -50,6 +50,7 @@
      <Compile Include="Assets\Script\Components\Block\SimpleBlock.cs" />
      <Compile Include="Assets\Script\Components\Terrain.cs" />
      <Compile Include="Assets\Script\Demo\FinderCamera.cs" />
+     <Compile Include="Assets\Script\Extensions\FieldExtensions.cs" />
      <Compile Include="Assets\Script\Finder\BaseFinder.cs" />
      <Compile Include="Assets\Script\Finder\BasePoint.cs" />
      <Compile Include="Assets\Script\Finder\BaseResult.cs" />

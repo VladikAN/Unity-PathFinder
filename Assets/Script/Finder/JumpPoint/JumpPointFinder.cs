@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.Extensions;
 using UnityEngine;
 
 namespace Assets.Script.Finder.JumpPoint
@@ -7,16 +8,25 @@ namespace Assets.Script.Finder.JumpPoint
     public class JumpPointFinder : BaseFinder
     {
         private IList<JumpPointPoint> _points;
+        private bool[,] _wallMap;
+        private bool[,] _doneMap;
+
+        private bool _endPointFounded;
 
         private JumpPointPoint _start;
         private JumpPointPoint _end;
 
         public override BaseResult Find(Vector3 start, Vector3 end)
         {
+            _points = new List<JumpPointPoint>();
+            _wallMap = PathFinderGlobal.TerrainField.ToBoolMap();
+            _doneMap = PathFinderGlobal.TerrainField.ToBoolMap();
+
+            _endPointFounded = false;
+
             _start = ToPoint<JumpPointPoint>(start);
             _end = ToPoint<JumpPointPoint>(end);
             
-            _points = new List<JumpPointPoint>();
             AddToStack(_start, null);
 
             var pathFounded = false;
@@ -30,6 +40,7 @@ namespace Assets.Script.Finder.JumpPoint
                     break;
                 }
 
+                Debug.Log("-> " + investigate.X + " x " + investigate.Y + " s:" + investigate.Step);
                 if (investigate.X == _end.X && investigate.Y == _end.Y)
                 {
                     pathFounded = true;
@@ -38,9 +49,12 @@ namespace Assets.Script.Finder.JumpPoint
 
                 while (investigate.Step != 0)
                 {
-//                    Debug.Log(investigate.X + " x " + investigate.Y + " s:" + investigate.Step);
-                    GoDiagonally(investigate, !investigate.FromLeft, !investigate.FromUp);
-                    investigate.NextStep();
+                    MakeStep(investigate, !investigate.FromLeft, !investigate.FromUp);
+
+                    if (_endPointFounded)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -66,7 +80,7 @@ namespace Assets.Script.Finder.JumpPoint
             return result;
         }
 
-        private void GoDiagonally(JumpPointPoint start, bool goLeft, bool goUp)
+        private void MakeStep(JumpPointPoint start, bool goLeft, bool goUp)
         {
             var stepH = goLeft ? -1 : 1;
             var stepV = goUp ? -1 : 1;
@@ -74,7 +88,7 @@ namespace Assets.Script.Finder.JumpPoint
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
             {
-                if (!ValidateEdges(investigate) || IsBlocked(investigate))
+                if (!ValidateInvestigation(investigate))
                 {
                     break;
                 }
@@ -98,11 +112,18 @@ namespace Assets.Script.Finder.JumpPoint
                     {
                         AddToStack(gotVertically, investigate);
                     }
+
+                    if (_endPointFounded)
+                    {
+                        return;
+                    }
                 }
 
-                // Next step
+                /* Next step */
                 investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
             }
+
+            start.NextStep();
         }
 
         private JumpPointPoint GoHorizontally(JumpPointPoint start, bool goLeft)
@@ -125,10 +146,11 @@ namespace Assets.Script.Finder.JumpPoint
             var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
             var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
 
+            var markAsDone = !goLeft.HasValue;
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
             {
-                if (!ValidateEdges(investigate) || IsBlocked(investigate))
+                if (!ValidateInvestigation(investigate)/* || _doneMap[investigate.X, investigate.Y]*/)
                 {
                     investigate = null;
                     break;
@@ -140,7 +162,7 @@ namespace Assets.Script.Finder.JumpPoint
                     break;
                 }
 
-                // Check neighbors
+                /* Check neighbors */
                 if (goLeft.HasValue)
                 {
                     if (HaveForcedNeighbor(investigate, true, goLeft.Value, true) || HaveForcedNeighbor(investigate, true, goLeft.Value, false))
@@ -156,8 +178,14 @@ namespace Assets.Script.Finder.JumpPoint
                     }
                 }
 
-                // Next step
+                /* Next step */
+                if (markAsDone)
+                {
+                    _doneMap[investigate.X, investigate.Y] = true;
+                }
+                
                 investigate = new JumpPointPoint(investigate.X + stepH, investigate.Y + stepV);
+                markAsDone = true;
             }
 
             if (investigate != null)
@@ -186,14 +214,17 @@ namespace Assets.Script.Finder.JumpPoint
                 return false;
             }
 
-            if (horizontally)
+            if (horizontally && _wallMap[investigate.X, investigate.Y + stepV])
             {
-                return IsBlocked(investigate.X, investigate.Y + stepV) && (!IsBlocked(investigate.X + stepH, investigate.Y + stepV) && !IsBlocked(investigate.X + stepH, investigate.Y));
+                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X + stepH, investigate.Y];
             }
-            else
+            
+            if (!horizontally && _wallMap[investigate.X + stepH, investigate.Y])
             {
-                return IsBlocked(investigate.X + stepH, investigate.Y) && (!IsBlocked(investigate.X + stepH, investigate.Y + stepV) && !IsBlocked(investigate.X, investigate.Y + stepV));
+                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X, investigate.Y + stepV];
             }
+
+            return false;
         }
 
         private bool AlreadyInStack(JumpPointPoint point)
@@ -203,7 +234,27 @@ namespace Assets.Script.Finder.JumpPoint
 
         private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
         {
+            Debug.Log("R: " + point.X + " x " + point.Y + " s:" + point.Step);
             _points.Add(new JumpPointPoint(point.X, point.Y, parent));
+            if (point.X == _end.X && point.Y == _end.Y)
+            {
+                _endPointFounded = true;
+            }
+        }
+
+        private bool ValidateInvestigation(JumpPointPoint point)
+        {
+            if (!ValidateEdges(point))
+            {
+                return false;
+            }
+
+            if (_wallMap[point.X, point.Y])
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

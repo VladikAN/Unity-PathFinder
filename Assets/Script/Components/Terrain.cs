@@ -42,9 +42,9 @@ namespace Assets.Script.Components
                 var gizmoCorrection = new Vector3(PathFinderGlobal.CellCorrection, 0.5f, PathFinderGlobal.CellCorrection);
                 for (var i = 0; i < fieldWidth; i++)
                 {
+                    var x = startX + PathFinderGlobal.CellWidth * i;
                     for (var j = 0; j < fieldHeight; j++)
                     {
-                        var x = startX + PathFinderGlobal.CellWidth * i;
                         var z = startZ + PathFinderGlobal.CellWidth * j;
 
                         var labelPosition = new Vector3(x, 0, z) + labelCorrection;
@@ -91,25 +91,6 @@ namespace Assets.Script.Components
                             }
                         }
                     }
-                    
-                    /*if (DisplayMapGizmo)
-                    {
-                        for (var i = 0; i < fieldWidth; i++)
-                        {
-                            var x = startX + PathFinderGlobal.CellWidth * i;
-                            for (var j = 0; j < fieldHeight; j++)
-                            {
-                                if (finderResult.Map[i, j] == null)
-                                {
-                                    continue;
-                                }
-
-                                var z = startZ + PathFinderGlobal.CellWidth * j;
-                                var startPosition = new Vector3(x, 0.5f, z) + new Vector3(0.1f, 0f, 0.1f);
-                                Handles.Label(startPosition, finderResult.Map[i, j].Value.ToString());
-                            }
-                        }
-                    }*/
                 }
             }
         }

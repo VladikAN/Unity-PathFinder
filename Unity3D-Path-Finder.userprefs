@@ -2,15 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\Finder\JumpPoint\JumpPointFinder.cs">
     <Files>
-      <File FileName="Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" Line="31" Column="27" />
+      <File FileName="Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" Line="80" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Vlad\Github\Unity3D-Path-Finder\Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" line="27" column="1" />
-      <Breakpoint file="C:\Vlad\Github\Unity3D-Path-Finder\Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" line="36" column="1" />
-      <Breakpoint file="C:\Vlad\Github\Unity3D-Path-Finder\Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" line="134" column="1" />
-      <Breakpoint file="C:\Vlad\Github\Unity3D-Path-Finder\Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" line="17" column="1" />
+      <Breakpoint file="C:\Vlad\Github\Unity3D-Path-Finder\Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" line="139" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

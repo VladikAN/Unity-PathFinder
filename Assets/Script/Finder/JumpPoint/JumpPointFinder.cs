@@ -166,13 +166,6 @@ namespace Assets.Script.Finder.JumpPoint
                     {
                         break;
                     }
-
-                    if (leftDone)
-                    {
-                        _doneMap[investigate.X, investigate.Y] = true;
-                    }
-
-                    leftDone = true;
                 }
                 else
                 {
@@ -180,7 +173,10 @@ namespace Assets.Script.Finder.JumpPoint
                     {
                         break;
                     }
+                }
 
+                if (investigate.X != start.X || investigate.Y != start.Y)
+                {
                     _doneMap[investigate.X, investigate.Y] = true;
                 }
 

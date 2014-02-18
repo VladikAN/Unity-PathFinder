@@ -1,4 +1,6 @@
-﻿namespace Assets.Script.Extensions
+﻿using Assets.Script.Core;
+
+namespace Assets.Script.Extensions
 {
     public static class FieldExtensions
     {

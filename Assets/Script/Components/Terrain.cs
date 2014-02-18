@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Assets.Script.Components.Block;
-using Assets.Script.Finder.JumpPoint;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,16 +9,18 @@ namespace Assets.Script.Components
     {
         public bool DisplayFieldGizmo = false;
         public bool DisplayPathGizmo = false;
-        public bool DisplayMapGizmo = false;
 
         public void Start()
         {
-            PathFinderGlobal.Terrain = gameObject;
-            updateGrid();
         }
 
         public void Update()
         {
+            if (PathFinderGlobal.TerrainField == null)
+            {
+                PathFinderGlobal.Terrain = gameObject;
+                updateGrid();
+            }
         }
 
         public void OnDrawGizmosSelected()
@@ -29,8 +30,8 @@ namespace Assets.Script.Components
                 return;
             }
 
-            var startX = PathFinderGlobal.TerrainStartX;
-            var startZ = PathFinderGlobal.TerrainStartZ;
+            var startX = PathFinderGlobal.TerrainGameObjectStartX;
+            var startZ = PathFinderGlobal.TerrainGameObjectStartZ;
 
             var fieldWidth = PathFinderGlobal.TerrainFieldWidth;
             var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
@@ -61,7 +62,7 @@ namespace Assets.Script.Components
                 }
             }
 
-            if (DisplayPathGizmo || DisplayMapGizmo)
+            if (DisplayPathGizmo)
             {
                 var finderResult = PathFinderGlobal.LastResult;
                 if (finderResult != null)
@@ -81,14 +82,10 @@ namespace Assets.Script.Components
                             prev = point;
                         }
 
-                        if (finderResult is JumpPointResult)
+                        var baseGizmo = PathFinderGlobal.GetFinderGizmo(finderResult.GetType());
+                        if (baseGizmo != null)
                         {
-                            Gizmos.color = Color.yellow;
-                            var jumpPointResult = finderResult as JumpPointResult;
-                            foreach (var neighbor in jumpPointResult.Neighbors)
-                            {
-                                Gizmos.DrawWireSphere(neighbor, .3f);
-                            }
+                            baseGizmo.DisplayGizmo(finderResult);
                         }
                     }
                 }
@@ -102,8 +99,8 @@ namespace Assets.Script.Components
 
             foreach (var point in points)
             {
-                var x = (int)((point.x - PathFinderGlobal.TerrainStartX) / PathFinderGlobal.CellWidth);
-                var z = (int)((point.z - PathFinderGlobal.TerrainStartZ) / PathFinderGlobal.CellWidth);
+                var x = (int)((point.x - PathFinderGlobal.TerrainGameObjectStartX) / PathFinderGlobal.CellWidth);
+                var z = (int)((point.z - PathFinderGlobal.TerrainGameObjectStartZ) / PathFinderGlobal.CellWidth);
                 
                 PathFinderGlobal.TerrainField[x, z].Blocked = true;
             }

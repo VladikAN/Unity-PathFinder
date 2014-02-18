@@ -1,4 +1,4 @@
-﻿namespace Assets.Script
+﻿namespace Assets.Script.Core
 {
 	public class Cell
 	{

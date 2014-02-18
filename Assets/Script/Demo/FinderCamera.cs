@@ -1,5 +1,5 @@
-﻿using Assets.Script.Finder;
-using Assets.Script.Finder.JumpPoint;
+﻿using Assets.Script.Finder.JumpPoint;
+using Assets.Script.Finder.JumpPoint.Gizmo;
 using Assets.Script.Finder.Wave;
 using UnityEngine;
 
@@ -7,13 +7,17 @@ namespace Assets.Script.Demo
 {
     public class FinderCamera : MonoBehaviour
     {
-        public FinderType UseFinderType = FinderType.JumpPoint;
+        public DemoFinderType UseFinderType = DemoFinderType.JumpPoint;
 
         private Vector3 _startPoint = new Vector3(0, 0, 0);
         private Vector3 _endPoint = new Vector3(0, 0, 0);
 
         public void Start()
         {
+            PathFinderGlobal.CellWidth = 1;
+            PathFinderGlobal.RegisterFinder(new WaveFinder());
+            PathFinderGlobal.RegisterFinder(new JumpPointFinder());
+            PathFinderGlobal.RegisterGizmo<JumpPointResult, JumpPointGizmo>(new JumpPointGizmo());
         }
 	
         public void Update()
@@ -23,24 +27,28 @@ namespace Assets.Script.Demo
 
             if (Input.GetMouseButtonUp(0) && Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 31))
             {
-                BaseFinder finder = null;
+                _endPoint = hit.point;
                 switch (UseFinderType)
                 {
-                    case FinderType.Wave:
-                        finder = new WaveFinder();
+                    case DemoFinderType.Wave:
+                        PathFinderGlobal.Find<WaveFinder>(_startPoint, _endPoint);
                         break;
-                    case FinderType.JumpPoint:
-                        finder = new JumpPointFinder();
+                    case DemoFinderType.JumpPoint:
+                        PathFinderGlobal.Find<JumpPointFinder>(_startPoint, _endPoint);
                         break;
                     default:
                         Debug.Log("Not supported finder type");
                         break;
                 }
 
-                _endPoint = hit.point;
-                PathFinderGlobal.Find(finder, _startPoint, _endPoint);
                 _startPoint = _endPoint;
             }
+        }
+
+        public enum DemoFinderType
+        {
+            Wave = 1,
+            JumpPoint = 2
         }
     }
 }

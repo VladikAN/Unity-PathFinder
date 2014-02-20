@@ -7,7 +7,7 @@ namespace Assets.Script.Finder.JumpPoint
 {
     public class JumpPointFinder : BaseFinder
     {
-        private IList<JumpPointPoint> _points;
+        private IList<JumpPointPoint> _openset;
         private bool[,] _wallMap;
         private bool[,] _doneMap;
 
@@ -18,7 +18,7 @@ namespace Assets.Script.Finder.JumpPoint
 
         public override BaseResult Find(Vector3 startVector3, Vector3 endVector3)
         {
-            _points = new List<JumpPointPoint>();
+            _openset = new List<JumpPointPoint>();
             _wallMap = PathFinderGlobal.TerrainField.ToBoolMap();
             _doneMap = PathFinderGlobal.TerrainField.ToBoolMap();
 
@@ -30,7 +30,11 @@ namespace Assets.Script.Finder.JumpPoint
             AddToStack(_start, null);
             while (!_endPointFounded)
             {
-                var investigate = _points.FirstOrDefault(point => point.Step != 0);
+                var investigate = _openset
+                    .Where(x => x.Step != 0)
+                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _end.X, 2) + Mathf.Pow(point.Y - _end.Y, 2)))
+                    .FirstOrDefault();
+
                 if (investigate == null)
                 {
                     Debug.Log("Path not founded");
@@ -46,7 +50,7 @@ namespace Assets.Script.Finder.JumpPoint
             var path = new List<Vector3>();
             if (_endPointFounded)
             {
-                var endPoint = _points.First(point => point.X == _end.X && point.Y == _end.Y);
+                var endPoint = _openset.First(point => point.X == _end.X && point.Y == _end.Y);
                 while (endPoint.Parent != null)
                 {
                     path.Add(ToVector3(endPoint));
@@ -60,7 +64,7 @@ namespace Assets.Script.Finder.JumpPoint
             var result = new JumpPointResult
             {
                 Path = path,
-                Neighbors = _points.Select(x => ToVector3(x))
+                Neighbors = _openset.Select(x => ToVector3(x))
             };
             
             return result;
@@ -81,7 +85,7 @@ namespace Assets.Script.Finder.JumpPoint
 
 				if (AlreadyInStack(investigate))
 				{
-					investigate = _points.First(point => point.X == investigate.X && point.Y == investigate.Y);
+					investigate = _openset.First(point => point.X == investigate.X && point.Y == investigate.Y);
 				}
 
                 var gotHorizontally = GoHV(investigate, !investigate.FromLeft, null);
@@ -219,12 +223,12 @@ namespace Assets.Script.Finder.JumpPoint
 
         private bool AlreadyInStack(JumpPointPoint point)
         {
-            return _points.Any(pt => pt.X == point.X && pt.Y == point.Y);
+            return _openset.Any(pt => pt.X == point.X && pt.Y == point.Y);
         }
 
         private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
         {
-            _points.Add(new JumpPointPoint(point.X, point.Y, parent));
+            _openset.Add(new JumpPointPoint(point.X, point.Y, parent));
             _endPointFounded |= (point.X == _end.X && point.Y == _end.Y);
         }
 

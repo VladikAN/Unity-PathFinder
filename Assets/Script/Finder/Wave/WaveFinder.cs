@@ -254,23 +254,21 @@ namespace Assets.Script.Finder.Wave
                 return null;
             }
 
-            WavePoint result = null;
             if (xMove == 0 || yMove == 0)
             {
                 _map[newX, newY] = weight;
-                result = new WavePoint(newX, newY);
+                return new WavePoint(newX, newY);
             }
             else
             {
-                if (!PathFinderGlobal.TerrainField[newX, parent.Y].Blocked
-                    && !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
+                if (!PathFinderGlobal.TerrainField[newX, parent.Y].Blocked || !PathFinderGlobal.TerrainField[parent.X, newY].Blocked)
                 {
                     _map[newX, newY] = weight;
-                    result = new WavePoint(newX, newY);
+                    return new WavePoint(newX, newY);
                 }
             }
 
-            return result;
+            return null;
         }
     }
 }

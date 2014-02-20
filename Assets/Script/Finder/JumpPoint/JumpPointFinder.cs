@@ -84,8 +84,8 @@ namespace Assets.Script.Finder.JumpPoint
 					investigate = _points.First(point => point.X == investigate.X && point.Y == investigate.Y);
 				}
 
-                var gotHorizontally = GoHorizontally(investigate, !investigate.FromLeft);
-                var gotVertically = GoVertically(investigate, !investigate.FromUp);
+                var gotHorizontally = GoHV(investigate, !investigate.FromLeft, null);
+                var gotVertically = GoHV(investigate, null, !investigate.FromUp);
                 if (gotHorizontally != null || gotVertically != null)
                 {
                     if (!AlreadyInStack(investigate))
@@ -117,16 +117,6 @@ namespace Assets.Script.Finder.JumpPoint
             start.NextStep();
         }
 
-        private JumpPointPoint GoHorizontally(JumpPointPoint start, bool goLeft)
-        {
-            return GoHV(start, goLeft, null);
-        }
-
-        private JumpPointPoint GoVertically(JumpPointPoint start, bool goUp)
-        {
-            return GoHV(start, null, goUp);
-        }
-
         private JumpPointPoint GoHV(JumpPointPoint start, bool? goLeft, bool? goUp)
         {
             if (goLeft.HasValue && goUp.HasValue)
@@ -137,7 +127,6 @@ namespace Assets.Script.Finder.JumpPoint
             var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
             var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
 
-            var leftDone = false;
             var investigate = new JumpPointPoint(start.X, start.Y);
             while (true)
             {
@@ -236,17 +225,12 @@ namespace Assets.Script.Finder.JumpPoint
         private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
         {
             _points.Add(new JumpPointPoint(point.X, point.Y, parent));
-            _endPointFounded = _endPointFounded || point.X == _end.X && point.Y == _end.Y;
+            _endPointFounded |= (point.X == _end.X && point.Y == _end.Y);
         }
 
         private bool ValidateInvestigation(JumpPointPoint point)
         {
-            if (!ValidateEdges(point))
-            {
-                return false;
-            }
-
-            return !_wallMap[point.X, point.Y];
+            return ValidateEdges(point) && !_wallMap[point.X, point.Y];
         }
     }
 }

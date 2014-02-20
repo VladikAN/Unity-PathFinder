@@ -16,7 +16,7 @@ namespace Assets.Script.Finder
 
         protected Vector3 ToVector3(BasePoint point)
         {
-            var result = new Vector3(point.X, 0, point.Y)
+            var result =new Vector3(point.X, 0, point.Y)
                 * PathFinderGlobal.CellWidth
                 + new Vector3(PathFinderGlobal.TerrainGameObjectStartX + PathFinderGlobal.CellCorrection, 0, PathFinderGlobal.TerrainGameObjectStartZ + PathFinderGlobal.CellCorrection);
 

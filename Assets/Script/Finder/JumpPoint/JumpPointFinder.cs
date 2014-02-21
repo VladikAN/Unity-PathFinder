@@ -27,7 +27,7 @@ namespace Assets.Script.Finder.JumpPoint
             {
                 investigate = _openset
                     .Where(x => x.Step != 0)
-                    .OrderBy(point => point.Cost)
+                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _end.X, 2) + Mathf.Pow(point.Y - _end.Y, 2)))
                     .FirstOrDefault();
 
                 if (investigate == null)
@@ -206,10 +206,8 @@ namespace Assets.Script.Finder.JumpPoint
 
         private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
         {
-            var toEnd = Mathf.Sqrt(Mathf.Pow(point.X - _end.X, 2) + Mathf.Pow(point.Y - _end.Y, 2));
-            var toParent = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
-
-            _openset.Add(new JumpPointPoint(point.X, point.Y, parent, toEnd + toParent));
+            var cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
+            _openset.Add(new JumpPointPoint(point.X, point.Y, parent, cost));
         }
 
         private bool ValidateInvestigation(int x, int y)

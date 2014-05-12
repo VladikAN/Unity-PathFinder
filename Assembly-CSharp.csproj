@@ -46,25 +46,25 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Script\Components\Block\BaseBlock.cs" />
-     <Compile Include="Assets\Script\Components\Block\SimpleAutoBlock.cs" />
-     <Compile Include="Assets\Script\Components\Block\SimpleBlock.cs" />
-     <Compile Include="Assets\Script\Components\Terrain.cs" />
-     <Compile Include="Assets\Script\Core\Cell.cs" />
-     <Compile Include="Assets\Script\Demo\FinderCamera.cs" />
-     <Compile Include="Assets\Script\Extensions\FieldExtensions.cs" />
-     <Compile Include="Assets\Script\Finder\BaseFinder.cs" />
-     <Compile Include="Assets\Script\Finder\BaseGizmo.cs" />
-     <Compile Include="Assets\Script\Finder\BasePoint.cs" />
-     <Compile Include="Assets\Script\Finder\BaseResult.cs" />
-     <Compile Include="Assets\Script\Finder\JumpPoint\Gizmo\JumpPointGizmo.cs" />
-     <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointFinder.cs" />
-     <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointPoint.cs" />
-     <Compile Include="Assets\Script\Finder\JumpPoint\JumpPointResult.cs" />
-     <Compile Include="Assets\Script\Finder\Wave\WaveFinder.cs" />
-     <Compile Include="Assets\Script\Finder\Wave\WavePoint.cs" />
-     <Compile Include="Assets\Script\Finder\Wave\WaveResult.cs" />
-     <Compile Include="Assets\Script\PathFinderGlobal.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Components\Block\BaseBlock.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Components\Block\SimpleAutoBlock.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Components\Block\SimpleBlock.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Components\Terrain.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Core\Cell.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Demo\FinderCamera.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Extensions\FieldExtensions.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BaseFinder.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BaseGizmo.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BasePoint.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BaseResult.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\JumpPoint\Gizmo\JumpPointGizmo.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\JumpPoint\JumpPointFinder.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\JumpPoint\JumpPointPoint.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\JumpPoint\JumpPointResult.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\Wave\WaveFinder.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\Wave\WavePoint.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\Wave\WaveResult.cs" />
+     <Compile Include="Assets\Script\PathFinder\PathFinderGlobal.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

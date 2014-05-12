@@ -4,6 +4,7 @@ Unity 3D path found project, assets will look up a valid path through 2d maze. F
 ## Example
 ### Initial map
 Project have a single demo scene. Demo scene contains of: 10x10 maze, 6 walls and single camera (with possibility to switch between existed algorithms).
+
 ![Initial Map](https://raw2.github.com/VladikAN/Unity3D-Path-Finder/master/Pics/initial.png "Initial Map")
 
 Assets will detect all obstacles and allow you to explore 2d maze in debug view:

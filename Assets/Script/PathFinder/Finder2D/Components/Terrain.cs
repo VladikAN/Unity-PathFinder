@@ -7,7 +7,8 @@ namespace Assets.Script.PathFinder.Finder2D.Components
 {
     public class Terrain : MonoBehaviour
     {
-        public bool DisplayFieldGizmo = false;
+        public bool DisplayFreeCellsGizmo = false;
+        public bool DisplayBlockCellsGizmo = false;
         public bool DisplayPathGizmo = false;
 
         public void Start()
@@ -37,7 +38,7 @@ namespace Assets.Script.PathFinder.Finder2D.Components
             var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
             var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) * 0.9f;
 
-            if (DisplayFieldGizmo)
+            if (DisplayFreeCellsGizmo || DisplayBlockCellsGizmo)
             {
                 var labelCorrection = new Vector3(0.1f, 0, 0.35f);
                 var gizmoCorrection = new Vector3(PathFinderGlobal.CellCorrection, 0.5f, PathFinderGlobal.CellCorrection);
@@ -46,16 +47,18 @@ namespace Assets.Script.PathFinder.Finder2D.Components
                     var x = startX + PathFinderGlobal.CellWidth * i;
                     for (var j = 0; j < fieldHeight; j++)
                     {
+                        var blocked = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked;
+                        if ((!blocked && !DisplayFreeCellsGizmo) || (blocked && !DisplayBlockCellsGizmo))
+                        {
+                            continue;
+                        }
+
                         var z = startZ + PathFinderGlobal.CellWidth * j;
 
                         var labelPosition = new Vector3(x, 0, z) + labelCorrection;
                         var gizmoPosition = new Vector3(x, 0, z) + gizmoCorrection;
-                        
-                        var color = PathFinderGlobal.TerrainField[i, j] != null && PathFinderGlobal.TerrainField[i, j].Blocked
-                            ? new Color(125, 0, 0)
-                            : new Color(0, 125, 0);
-                        Gizmos.color = color;
 
+                        Gizmos.color = blocked ? new Color(125, 0, 0) : new Color(0, 125, 0);
                         Gizmos.DrawWireCube(gizmoPosition, gizmoSize);
                         Handles.Label(labelPosition, string.Format("{0} x {1}", i, j));
                     }

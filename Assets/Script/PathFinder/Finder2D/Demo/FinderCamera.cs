@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Assets.Script.PathFinder.Finder2D.Demo
 {
+    [AddComponentMenu("2D Path Finder/Demo/Camera")]
     public class FinderCamera : MonoBehaviour
     {
         public DemoFinderType UseFinderType = DemoFinderType.JumpPoint;

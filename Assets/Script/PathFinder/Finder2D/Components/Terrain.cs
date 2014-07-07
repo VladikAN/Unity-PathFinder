@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Assets.Script.PathFinder.Finder2D.Components
 {
+    [AddComponentMenu("2D Path Finder/Terrain")]
     public class Terrain : MonoBehaviour
     {
         public bool DisplayFreeCellsGizmo = false;

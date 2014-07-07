@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Script.PathFinder.Finder2D.Components.Block
 {
+    [AddComponentMenu("2D Path Finder/Block/Simple Auto Block")]
     public class SimpleAutoBlock : BaseBlock
     {
         public void Start()

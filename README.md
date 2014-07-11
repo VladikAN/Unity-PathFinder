@@ -16,7 +16,16 @@ Assets will detect all obstacles and allow you to explore 2d maze in debug view:
 
 ![Wave Result](https://raw2.github.com/VladikAN/Unity3D-Path-Finder/master/Pics/wave.png "Wave Result")
 
+* blue circles - start and end points;
+* red circles - target control points;
+* red line - movement path.
+
 ### Jump Point
 **Jump Point** work result:
 
 ![Jump Point Result](https://raw2.github.com/VladikAN/Unity3D-Path-Finder/master/Pics/jump-point.png "Jump Point Result")
+
+* blue circles - start and end points;
+* yellow circles - posible control points;
+* red circles - target control points;
+* red line - movement path.

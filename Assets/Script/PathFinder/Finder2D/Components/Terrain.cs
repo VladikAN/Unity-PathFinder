@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Assets.Script.PathFinder.Finder2D.Components.Block;
 using UnityEditor;
 using UnityEngine;
@@ -37,12 +38,12 @@ namespace Assets.Script.PathFinder.Finder2D.Components
 
             var fieldWidth = PathFinderGlobal.TerrainFieldWidth;
             var fieldHeight = PathFinderGlobal.TerrainFieldHeight;
-            var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, 1, PathFinderGlobal.CellWidth) * 0.9f;
+            var gizmoSize = new Vector3(PathFinderGlobal.CellWidth, Math.Min(.1f, PathFinderGlobal.CellWidth), PathFinderGlobal.CellWidth) * 0.9f;
 
             if (DisplayFreeCellsGizmo || DisplayBlockCellsGizmo)
             {
                 var labelCorrection = new Vector3(0.1f, 0, 0.35f);
-                var gizmoCorrection = new Vector3(PathFinderGlobal.CellCorrection, 0.5f, PathFinderGlobal.CellCorrection);
+                var gizmoCorrection = new Vector3(PathFinderGlobal.CellCorrection, gizmoSize.y / 2, PathFinderGlobal.CellCorrection);
                 for (var i = 0; i < fieldWidth; i++)
                 {
                     var x = startX + PathFinderGlobal.CellWidth * i;
@@ -73,10 +74,12 @@ namespace Assets.Script.PathFinder.Finder2D.Components
                 {
                     if (DisplayPathGizmo && (finderResult.Path != null && finderResult.Path.Any()))
                     {
+                        /* Draw start/end points */
                         Gizmos.color = Color.blue;
                         Gizmos.DrawWireSphere(finderResult.Path.First(), .4f);
                         Gizmos.DrawWireSphere(finderResult.Path.Last(), .4f);
 
+                        /* Draw control points */
                         Gizmos.color = Color.red;
                         var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
@@ -86,6 +89,7 @@ namespace Assets.Script.PathFinder.Finder2D.Components
                             prev = point;
                         }
 
+                        /* Draw algorithm gspecific ismos */
                         var baseGizmo = PathFinderGlobal.GetFinderGizmo(finderResult.GetType());
                         if (baseGizmo != null)
                         {

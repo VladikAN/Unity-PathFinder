@@ -53,6 +53,7 @@
      <Compile Include="Assets\Script\PathFinder\Finder2D\Core\Cell.cs" />
      <Compile Include="Assets\Script\PathFinder\Finder2D\Demo\FinderCamera.cs" />
      <Compile Include="Assets\Script\PathFinder\Finder2D\Extensions\FieldExtensions.cs" />
+     <Compile Include="Assets\Script\PathFinder\Finder2D\Extensions\PointExtensions.cs" />
      <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BaseFinder.cs" />
      <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BaseGizmo.cs" />
      <Compile Include="Assets\Script\PathFinder\Finder2D\Finder\BasePoint.cs" />

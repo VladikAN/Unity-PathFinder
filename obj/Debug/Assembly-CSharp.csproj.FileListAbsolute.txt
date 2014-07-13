@@ -1,0 +1,11 @@
+C:\Vlad\Github\Unity3D-Path-Finder\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\Assembly-CSharp.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\UnityEditor.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\UnityEngine.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\Mono.Cecil.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\nunit.framework.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\Unity.DataContract.dll
+C:\Vlad\Github\Unity3D-Path-Finder\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Vlad\Github\Unity3D-Path-Finder\obj\Debug\Assembly-CSharp.dll
+C:\Vlad\Github\Unity3D-Path-Finder\obj\Debug\Assembly-CSharp.pdb

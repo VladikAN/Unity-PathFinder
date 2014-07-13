@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.PathFinder.Finder2D.Extensions;
 using UnityEngine;
 
 namespace Assets.Script.PathFinder.Finder2D.Finder.Wave
@@ -10,8 +11,8 @@ namespace Assets.Script.PathFinder.Finder2D.Finder.Wave
 
         public override BaseResult Find(Vector3 startVector3, Vector3 endVector3)
         {
-            var startPoint = ToPoint<WavePoint>(startVector3);
-            var endPoint = ToPoint<WavePoint>(endVector3);
+            var startPoint = startVector3.ToPoint<WavePoint>();
+            var endPoint = endVector3.ToPoint<WavePoint>();
 
             _map = new uint?[PathFinderGlobal.TerrainFieldWidth, PathFinderGlobal.TerrainFieldHeight];
 
@@ -58,11 +59,11 @@ namespace Assets.Script.PathFinder.Finder2D.Finder.Wave
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(ToVector3(endPoint));
+                    path.Add(endPoint.ToVector3());
                     endPoint = FindNearestPoints(endPoint, startPoint, _map[endPoint.X, endPoint.Y].Value).First();
                 }
 
-                path.Add(ToVector3(startPoint));
+                path.Add(startPoint.ToVector3());
                 path.Reverse();
             }
 

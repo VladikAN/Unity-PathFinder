@@ -32,8 +32,7 @@ namespace Assets.Script.PathFinder
 
             if (_registeredFinders.ContainsKey(finderType))
             {
-                Debug.LogWarning(string.Format("{0} finder already registered and new registration will be ignored", finderType.Name));
-                return;
+                return; /* finder already registered and new registration will be ignored */
             }
 
             _registeredFinders.Add(finderType, finder);
@@ -51,8 +50,7 @@ namespace Assets.Script.PathFinder
 
             if (_registeredGizmos.ContainsKey(resultType))
             {
-                Debug.LogWarning(string.Format("Gizmo for {0} already registered and new registration will be ignored", resultType.Name));
-                return;
+                return; /* Gizmo already registered and new registration will be ignored */
             }
 
             _registeredGizmos.Add(resultType, gizmo);

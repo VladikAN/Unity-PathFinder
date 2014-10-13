@@ -54,14 +54,14 @@ namespace PathFinder2D.Core
 
         #region Finder Methods
 
-        public Map InitMap(GameObject terrain, uint cellWidth)
+        public Map InitMap(GameObject terrain, float cellWidth)
         {
             if (terrain == null)
             {
                 throw new ArgumentException("Null object not supported as GameObject parameter");
             }
 
-            if (cellWidth == 0)
+            if (cellWidth <= 0)
             {
                 throw new ArgumentException("Cell width must be greater then 0");
             }

@@ -9,7 +9,7 @@ namespace PathFinder2D.Core
         void RegisterFinder<TFinder>(TFinder instance) where TFinder : class, IFinder;
         TFinder ResolveFinder<TFinder>() where TFinder : class, IFinder;
 
-        Map InitMap(GameObject terrain, uint cellWidth);
+        Map InitMap(GameObject terrain, float cellWidth);
         FinderResult Find<TFinder>(int terrainId, Vector3 start, Vector3 end) where TFinder : class, IFinder;
     }
 }

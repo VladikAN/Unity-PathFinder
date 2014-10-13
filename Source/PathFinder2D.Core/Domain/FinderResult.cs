@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace PathFinder2D.Core.Domain
 {
-    public abstract class FinderResult
+    public class FinderResult
     {
-        public IEnumerable<Vector3> Path { get; set; }
+        public IEnumerable<Vector3> Path;
+
+        public FinderResult(IEnumerable<Vector3> path)
+        {
+            Path = path;
+        }
     }
 }

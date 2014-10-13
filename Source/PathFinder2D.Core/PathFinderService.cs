@@ -12,7 +12,6 @@ namespace PathFinder2D.Core
 
         private readonly IDictionary<int, Map> _registeredMaps;
         private readonly IDictionary<Type, IFinder> _registeredFinders;
-        private readonly IDictionary<Type, IGizmo> _registeredGizmos;
 
         #endregion
 
@@ -22,7 +21,6 @@ namespace PathFinder2D.Core
         {
             _registeredMaps = new Dictionary<int, Map>();
             _registeredFinders = new Dictionary<Type, IFinder>();
-            _registeredGizmos = new Dictionary<Type, IGizmo>();
         }
 
         #endregion
@@ -52,34 +50,11 @@ namespace PathFinder2D.Core
             return _registeredFinders[typeof(TFinder)] as TFinder;
         }
 
-        public void RegisterGizmo<TGizmo>(TGizmo instance) where TGizmo : class, IGizmo
-        {
-            if (instance == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            if (!_registeredGizmos.ContainsKey(typeof(TGizmo)))
-            {
-                _registeredGizmos.Add(typeof(TGizmo), instance);
-            }
-        }
-
-        public TGizmo ResolveGizmo<TGizmo>() where TGizmo : class, IGizmo
-        {
-            if (_registeredGizmos == null || !_registeredGizmos.ContainsKey(typeof(TGizmo)))
-            {
-                return null;
-            }
-
-            return _registeredGizmos[typeof(TGizmo)] as TGizmo;
-        }
-
         #endregion
 
         #region Finder Methods
 
-        public int InitMap(GameObject terrain, uint cellWidth)
+        public Map InitMap(GameObject terrain, uint cellWidth)
         {
             if (terrain == null)
             {
@@ -98,7 +73,7 @@ namespace PathFinder2D.Core
             }
 
             _registeredMaps.Add(terrainKey, new Map(terrain, cellWidth));
-            return terrainKey;
+            return _registeredMaps[terrainKey];
         }
 
         public FinderResult Find<TFinder>(int terrainId, Vector3 start, Vector3 end) where TFinder : class, IFinder

@@ -70,7 +70,7 @@ namespace PathFinder2D.Core.Finder.Wave
                 path.Reverse();
             }
 
-            var result = new WaveResult { Path = path };
+            var result = new FinderResult(path);
             return result;
         }
 

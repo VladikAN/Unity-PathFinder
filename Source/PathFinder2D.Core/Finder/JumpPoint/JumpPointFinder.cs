@@ -65,7 +65,7 @@ namespace PathFinder2D.Core.Finder.JumpPoint
                 path.Reverse();
             }
 
-            var result = new JumpPointResult { Path = path, ControlPoints = _openset.Select(point => map.ToVector3(point)) };
+            var result = new FinderResult(path);
             return result;
         }
 

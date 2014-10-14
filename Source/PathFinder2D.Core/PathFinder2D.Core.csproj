@@ -42,20 +42,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Map.cs" />
-    <Compile Include="Domain\MapCell.cs" />
+    <Compile Include="Initializer\IMapInitializer.cs" />
+    <Compile Include="Domain\Map\MapDefinition.cs" />
+    <Compile Include="Domain\Map\MapCell.cs" />
     <Compile Include="Extensions\FinderExtensions.cs" />
     <Compile Include="Extensions\MapExtensions.cs" />
-    <Compile Include="Domain\FinderPoint.cs" />
-    <Compile Include="Domain\FinderResult.cs" />
+    <Compile Include="Domain\Finder\FinderPoint.cs" />
+    <Compile Include="Domain\Finder\FinderResult.cs" />
     <Compile Include="Finder\IFinder.cs" />
-    <Compile Include="Finder\JumpPoint\JumpPointFinder.cs" />
-    <Compile Include="Finder\JumpPoint\JumpPointPoint.cs" />
-    <Compile Include="Finder\Wave\WaveFinder.cs" />
-    <Compile Include="Finder\Wave\WavePoint.cs" />
+    <Compile Include="Finder\JumpPointFinder.cs" />
+    <Compile Include="Domain\Finder\JumpPointPoint.cs" />
+    <Compile Include="Finder\WaveFinder.cs" />
+    <Compile Include="Domain\Finder\WavePoint.cs" />
     <Compile Include="IPathFinderService.cs" />
+    <Compile Include="Initializer\MapInitializer.cs" />
     <Compile Include="PathFinderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Domain\Terrain\ITerrain.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

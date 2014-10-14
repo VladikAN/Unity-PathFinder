@@ -1,4 +1,4 @@
-﻿namespace PathFinder2D.Core.Domain
+﻿namespace PathFinder2D.Core.Domain.Finder
 {
     public abstract class FinderPoint
     {

@@ -1,27 +1,18 @@
-﻿using PathFinder2D.Core.Domain;
+﻿using PathFinder2D.Core.Domain.Finder;
+using PathFinder2D.Core.Domain.Map;
 
 namespace PathFinder2D.Core.Extensions
 {
     public static class FinderExtensions
     {
-        public static bool ValidateMapEdges(this Map map, int x, int y)
+        public static bool ValidateMapEdges(this MapDefinition mapDefinition, int x, int y)
         {
-            return !((x < 0 || x >= map.TerrainFieldWidth) || (y < 0 || y >= map.TerrainFieldHeight));
+            return !((x < 0 || x >= mapDefinition.Width) || (y < 0 || y >= mapDefinition.Height));
         }
 
-        public static bool ValidateMapEdges(this Map map, FinderPoint point)
+        public static bool ValidateMapEdges(this MapDefinition mapDefinition, FinderPoint point)
         {
-            return ValidateMapEdges(map, point.X, point.Y);
-        }
-
-        public static bool IsPointBlocked(this Map map, int x, int y)
-        {
-            return map.TerrainField[x, y].Blocked;
-        }
-
-        public static bool IsPointBlocked(this Map map, FinderPoint point)
-        {
-            return IsPointBlocked(map, point.X, point.Y);
+            return ValidateMapEdges(mapDefinition, point.X, point.Y);
         }
     }
 }

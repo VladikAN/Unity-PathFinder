@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace PathFinder2D.Core.Domain
+namespace PathFinder2D.Core.Domain.Finder
 {
     public class FinderResult
     {

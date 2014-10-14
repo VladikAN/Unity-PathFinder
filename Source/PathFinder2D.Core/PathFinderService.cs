@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Domain.Finder;
+using PathFinder2D.Core.Domain.Map;
+using PathFinder2D.Core.Domain.Terrain;
 using PathFinder2D.Core.Finder;
+using PathFinder2D.Core.Initializer;
 using UnityEngine;
 
 namespace PathFinder2D.Core
@@ -11,47 +14,57 @@ namespace PathFinder2D.Core
         #region Fields
 
         private readonly IFinder _finder;
-        private readonly IDictionary<int, Map> _registeredMaps;
+        private readonly IMapInitializer _mapInitializer;
+        private readonly IDictionary<int, MapDefinition> _registeredMaps;
 
         #endregion
 
         #region Constructors
 
-        public PathFinderService(IFinder finder)
+        public PathFinderService(IFinder finder, IMapInitializer mapInitializer)
         {
             if (finder == null)
             {
                 throw new ArgumentException("Null object not supported as Finder");
             }
 
+            if (mapInitializer == null)
+            {
+                throw new ArgumentException("Null object not supported as MapInitializer");
+            }
+
             _finder = finder;
-            _registeredMaps = new Dictionary<int, Map>();
+            _mapInitializer = mapInitializer;
+            _registeredMaps = new Dictionary<int, MapDefinition>();
         }
 
         #endregion
 
-        #region Finder Methods
+        #region Methods
 
-        public Map InitMap(GameObject terrain, float cellWidth)
+        public MapDefinition InitMap(ITerrain terrain, float cellSize)
         {
             if (terrain == null)
             {
                 throw new ArgumentException("Null object not supported as GameObject parameter");
             }
 
-            if (cellWidth <= 0)
+            if (cellSize <= 0)
             {
                 throw new ArgumentException("Cell width must be greater then 0");
             }
 
-            var terrainKey = terrain.GetInstanceID();
+            var terrainKey = terrain.Id();
             if (_registeredMaps.ContainsKey(terrainKey))
             {
                 throw new ArgumentException("This GameObject already initialized as map");
             }
 
-            _registeredMaps.Add(terrainKey, new Map(terrain, cellWidth));
-            return _registeredMaps[terrainKey];
+            var field = _mapInitializer.ParceMapCells(terrain, cellSize);
+            var mapDefinition = new MapDefinition(terrain, field, cellSize);
+            _registeredMaps.Add(terrainKey, mapDefinition);
+            
+            return mapDefinition;
         }
 
         public FinderResult Find(int terrainId, Vector3 start, Vector3 end)
@@ -61,9 +74,9 @@ namespace PathFinder2D.Core
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));
             }
 
-            var map = _registeredMaps[terrainId];
-            var result = _finder.Find(map, start, end);
-            map.LastFinderResult = result;
+            var mapDefinition = _registeredMaps[terrainId];
+            var result = _finder.Find(mapDefinition, start, end);
+            mapDefinition.LastFinderResult = result;
 
             return result;
         }

@@ -1,28 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Domain.Finder;
+using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
 using UnityEngine;
 
-namespace PathFinder2D.Core.Finder.JumpPoint
+namespace PathFinder2D.Core.Finder
 {
     public class JumpPointFinder : IFinder
     {
-        private Map _map;
+        private MapDefinition _mapDefinition;
         private IList<JumpPointPoint> _openset;
         private bool[,] _wallMap;
 
         private JumpPointPoint _start;
         private JumpPointPoint _end;
 
-        public FinderResult Find(Map map, Vector3 startVector3, Vector3 endVector3)
+        public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
-            _map = map;
+            _mapDefinition = mapDefinition;
             _openset = new List<JumpPointPoint>();
-            _wallMap = _map.ToBoolMap();
+            _wallMap = _mapDefinition.ToBoolMap();
 
-            _start = _map.ToPoint<JumpPointPoint>(startVector3);
-            _end = _map.ToPoint<JumpPointPoint>(endVector3);
+            _start = _mapDefinition.ToPoint<JumpPointPoint>(startVector3);
+            _end = _mapDefinition.ToPoint<JumpPointPoint>(endVector3);
 
             AddToStack(_start, null);
             JumpPointPoint investigate;
@@ -57,11 +58,11 @@ namespace PathFinder2D.Core.Finder.JumpPoint
 				var endPoint = _openset.First(point => point.X == _end.X & point.Y == _end.Y);
 				while (endPoint.Parent != null)
                 {
-					path.Add(map.ToVector3(endPoint));
+					path.Add(mapDefinition.ToVector3(endPoint));
 					endPoint = endPoint.Parent;
                 }
 
-                path.Add(map.ToVector3(endPoint));
+                path.Add(mapDefinition.ToVector3(endPoint));
                 path.Reverse();
             }
 
@@ -160,7 +161,7 @@ namespace PathFinder2D.Core.Finder.JumpPoint
             var stepH = goLeft ? -1 : 1;
             var stepV = goUp ? -1 : 1;
 
-            if (!_map.ValidateMapEdges(investigate.X + stepH, investigate.Y + stepV))
+            if (!_mapDefinition.ValidateMapEdges(investigate.X + stepH, investigate.Y + stepV))
             {
                 return false;
             }
@@ -210,7 +211,7 @@ namespace PathFinder2D.Core.Finder.JumpPoint
 
         private bool ValidateInvestigation(int x, int y)
         {
-            return _map.ValidateMapEdges(x, y) && !_wallMap[x, y];
+            return _mapDefinition.ValidateMapEdges(x, y) && !_wallMap[x, y];
         }
     }
 }

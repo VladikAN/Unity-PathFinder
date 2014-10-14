@@ -1,6 +1,4 @@
-﻿using PathFinder2D.Core.Domain;
-
-namespace PathFinder2D.Core.Finder.Wave
+﻿namespace PathFinder2D.Core.Domain.Finder
 {
     public class WavePoint : FinderPoint
     {

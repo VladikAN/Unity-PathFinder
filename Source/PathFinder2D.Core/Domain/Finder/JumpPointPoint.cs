@@ -1,6 +1,4 @@
-﻿using PathFinder2D.Core.Domain;
-
-namespace PathFinder2D.Core.Finder.JumpPoint
+﻿namespace PathFinder2D.Core.Domain.Finder
 {
     public class JumpPointPoint : FinderPoint
     {

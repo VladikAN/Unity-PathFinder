@@ -47,6 +47,7 @@
     <Compile Include="Components\Block\BlockComponent.cs" />
     <Compile Include="Components\FinderCamera.cs" />
     <Compile Include="Components\Terrain.cs" />
+    <Compile Include="Domain\TerrainGameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

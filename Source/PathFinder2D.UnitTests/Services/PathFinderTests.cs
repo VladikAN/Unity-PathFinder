@@ -8,27 +8,16 @@ namespace PathFinder2D.UnitTests.Services
     [TestFixture]
     public class PathFinderTests
     {
-        private IPathFinderService _target;
-
-        [SetUp]
-        public void SetUp()
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void Constructor_NullArgument_Exception()
         {
-            _target = new PathFinderService();
-        }
-
-        [Test, ExpectedException(typeof(NullReferenceException))]
-        public void RegisterFinder_NullArgument_Exception()
-        {
-            _target.RegisterFinder<FakeFinder>(null);
+            var target = new PathFinderService(null);
         }
 
         [Test]
-        public void RegisterFinder_InstanceArgument_Registered()
+        public void Constructor_FinderInstance_Success()
         {
-            _target.RegisterFinder(new FakeFinder());
-            var result = _target.ResolveFinder<FakeFinder>();
-
-            Assert.NotNull(result);
+            var target = new PathFinderService(new FakeFinder());
         }
     }
 }

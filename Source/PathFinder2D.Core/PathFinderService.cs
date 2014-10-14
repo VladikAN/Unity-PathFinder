@@ -10,44 +10,22 @@ namespace PathFinder2D.Core
     {
         #region Fields
 
+        private readonly IFinder _finder;
         private readonly IDictionary<int, Map> _registeredMaps;
-        private readonly IDictionary<Type, IFinder> _registeredFinders;
 
         #endregion
 
         #region Constructors
 
-        public PathFinderService()
+        public PathFinderService(IFinder finder)
         {
+            if (finder == null)
+            {
+                throw new ArgumentException("Null object not supported as Finder");
+            }
+
+            _finder = finder;
             _registeredMaps = new Dictionary<int, Map>();
-            _registeredFinders = new Dictionary<Type, IFinder>();
-        }
-
-        #endregion
-
-        #region Service Locator Methods
-
-        public void RegisterFinder<TFinder>(TFinder instance) where TFinder : class, IFinder
-        {
-            if (instance == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            if (!_registeredFinders.ContainsKey(typeof(TFinder)))
-            {
-                _registeredFinders.Add(typeof(TFinder), instance);
-            }
-        }
-
-        public TFinder ResolveFinder<TFinder>() where TFinder : class, IFinder
-        {
-            if (_registeredFinders == null || !_registeredFinders.ContainsKey(typeof (TFinder)))
-            {
-                return null;
-            }
-
-            return _registeredFinders[typeof(TFinder)] as TFinder;
         }
 
         #endregion
@@ -76,21 +54,15 @@ namespace PathFinder2D.Core
             return _registeredMaps[terrainKey];
         }
 
-        public FinderResult Find<TFinder>(int terrainId, Vector3 start, Vector3 end) where TFinder : class, IFinder
+        public FinderResult Find(int terrainId, Vector3 start, Vector3 end)
         {
             if (_registeredMaps == null || !_registeredMaps.ContainsKey(terrainId))
             {
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));
             }
 
-            var finder = ResolveFinder<TFinder>();
-            if (finder == null)
-            {
-                throw new ArgumentException(string.Format("{0} finder type not registered", typeof(TFinder).Name));
-            }
-
             var map = _registeredMaps[terrainId];
-            var result = finder.Find(map, start, end);
+            var result = _finder.Find(map, start, end);
             map.LastFinderResult = result;
 
             return result;

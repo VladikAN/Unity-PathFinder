@@ -1,4 +1,6 @@
-﻿using PathFinder2D.Core.Domain.Terrain;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PathFinder2D.Core.Domain.Terrain;
 using UnityEngine;
 
 namespace PathFinder2D.Unity.Domain
@@ -6,35 +8,79 @@ namespace PathFinder2D.Unity.Domain
     public class TerrainGameObject : ITerrain
     {
         private readonly GameObject _gameObject;
+        private readonly float _cellSize;
+        private readonly Bounds _bounds;
 
-        public TerrainGameObject(GameObject gameObject)
+        public TerrainGameObject(GameObject gameObject, float cellSize)
         {
             _gameObject = gameObject;
+            _cellSize = cellSize;
+            _bounds = new Bounds();
+
+            getTerrainBounds(_gameObject, ref _bounds);
         }
+
+        #region ITerrain
 
         public int Id() 
         {
             return _gameObject.GetInstanceID();
         }
 
-        public float TransformX()
+        public float X()
         {
-            return _gameObject.transform.position.x;
+            return _bounds.min.x;
         }
 
-        public float TransformZ()
+        public float Y()
         {
-            return _gameObject.transform.position.z;
+            return _bounds.min.z;
         }
 
-        public float RenderX()
+        public float Width()
         {
-            return _gameObject.renderer.bounds.extents.x * 2;
+            return _bounds.extents.x * 2;
         }
 
-        public float RenderZ()
+        public float Height()
         {
-            return _gameObject.renderer.bounds.extents.z * 2;
+            return _bounds.extents.z * 2;
         }
+
+        public float CellSize()
+        {
+            return _cellSize;
+        }
+
+        public IEnumerable<IBlock> GetBlocks()
+        {
+            var components = _gameObject.GetComponentsInChildren(typeof(IBlock));
+            if (components == null || !components.Any())
+            {
+                return null;
+            }
+            
+            return components.OfType<IBlock>();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void getTerrainBounds(GameObject gameObject, ref Bounds resuldBounds)
+        {
+            if (gameObject.renderer != null)
+            {
+                resuldBounds.Encapsulate(gameObject.renderer.bounds);
+            }
+
+            foreach (var child in gameObject.transform)
+            {
+                var childGameObject = ((Transform) child).gameObject;
+                getTerrainBounds(childGameObject, ref resuldBounds);
+            }
+        }
+
+        #endregion
     }
 }

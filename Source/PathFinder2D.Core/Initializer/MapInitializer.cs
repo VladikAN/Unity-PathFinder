@@ -1,5 +1,9 @@
-﻿using PathFinder2D.Core.Domain.Map;
+﻿using System.Collections.Generic;
+using PathFinder2D.Core.Domain.Finder;
+using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
+using System.Linq;
+using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Initializer
 {
@@ -7,15 +11,26 @@ namespace PathFinder2D.Core.Initializer
     {
         public MapCell[,] ParceMapCells(ITerrain terrain, float cellSize)
         {
-            var x = (int)(terrain.RenderX() / cellSize);
-            var z = (int)(terrain.RenderZ() / cellSize);
+            var x = (int)(terrain.Width() / cellSize);
+            var z = (int)(terrain.Height() / cellSize);
+
+            var blocks = terrain.GetBlocks();
+            var points = new List<FinderPoint>();
+            if (blocks != null && blocks.Any())
+            {
+                points = blocks
+                    .SelectMany(block => block.GetPoints(terrain))
+                    .Select(point => terrain.ToPoint<FinderPoint>(point))
+                    .ToList();
+            }
 
             var cellField = new MapCell[x, z];
             for (var i = 0; i < x; i++)
             {
                 for (var j = 0; j < z; j++)
                 {
-                    cellField[i, j] = new MapCell();
+                    var block = points.FirstOrDefault(point => point.X == i && point.Y == j);
+                    cellField[i, j] = new MapCell { Blocked = block != null };
                 }
             }
 

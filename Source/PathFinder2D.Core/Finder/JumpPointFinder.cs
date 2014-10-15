@@ -22,8 +22,8 @@ namespace PathFinder2D.Core.Finder
             _openset = new List<JumpPointPoint>();
             _wallMap = _mapDefinition.ToBoolMap();
 
-            _start = _mapDefinition.ToPoint<JumpPointPoint>(startVector3);
-            _end = _mapDefinition.ToPoint<JumpPointPoint>(endVector3);
+            _start = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(startVector3);
+            _end = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(endVector3);
 
             AddToStack(_start, null);
             JumpPointPoint investigate;
@@ -58,11 +58,11 @@ namespace PathFinder2D.Core.Finder
 				var endPoint = _openset.First(point => point.X == _end.X & point.Y == _end.Y);
 				while (endPoint.Parent != null)
                 {
-					path.Add(mapDefinition.ToVector3(endPoint));
+					path.Add(mapDefinition.Terrain.ToVector3(endPoint));
 					endPoint = endPoint.Parent;
                 }
 
-                path.Add(mapDefinition.ToVector3(endPoint));
+                path.Add(mapDefinition.Terrain.ToVector3(endPoint));
                 path.Reverse();
             }
 

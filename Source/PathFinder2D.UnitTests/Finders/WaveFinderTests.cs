@@ -28,11 +28,11 @@ namespace PathFinder2D.UnitTests.Finders
         [TestCase(5, 9, 5, 0, TestName = "(5, 9) => (5, 0)")]
         public void Find_ValidPoints_Success(int sX, int sY, int eX, int eY)
         {
-            var terrain = new FakeTerrain(1, 0, 0, 10, 10);
+            var terrain = new FakeTerrain(1, 0, 0, 10, 10, 1);
             var mapDefinition = _pathFinderService.InitMap(terrain, 1);
-            
-            var start = mapDefinition.ToVector3(sX, sY);
-            var end = mapDefinition.ToVector3(eX, eY);
+
+            var start = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = eX, Y = eY });
 
             var result = _pathFinderService.Find(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);

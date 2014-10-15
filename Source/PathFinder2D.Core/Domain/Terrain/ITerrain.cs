@@ -1,13 +1,18 @@
-﻿namespace PathFinder2D.Core.Domain.Terrain
+﻿using System.Collections.Generic;
+
+namespace PathFinder2D.Core.Domain.Terrain
 {
     public interface ITerrain
     {
         int Id();
 
-        float TransformX();
-        float TransformZ();
+        float X();
+        float Y();
+        float Width();
+        float Height();
 
-        float RenderX();
-        float RenderZ();
+        float CellSize();
+
+        IEnumerable<IBlock> GetBlocks();
     }
 }

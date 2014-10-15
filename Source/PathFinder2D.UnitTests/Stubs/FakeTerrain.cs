@@ -1,22 +1,25 @@
-﻿using PathFinder2D.Core.Domain.Terrain;
+﻿using System.Collections.Generic;
+using PathFinder2D.Core.Domain.Terrain;
 
 namespace PathFinder2D.UnitTests.Stubs
 {
     public class FakeTerrain : ITerrain
     {
         private readonly int _id;
-        private readonly float _tX;
-        private readonly float _tY;
-        private readonly float _rX;
-        private readonly float _rZ;
+        private readonly float _x;
+        private readonly float _y;
+        private readonly float _w;
+        private readonly float _h;
+        private readonly float _cSize;
 
-        public FakeTerrain(int id, float tX, float tY, float rX, float rZ)
+        public FakeTerrain(int id, float x, float y, float w, float h, float cSize)
         {
             _id = id;
-            _tX = tX;
-            _tY = tY;
-            _rX = rX;
-            _rZ = rZ;
+            _x = x;
+            _y = y;
+            _w = w;
+            _h = h;
+            _cSize = cSize;
         }
 
         public int Id()
@@ -24,24 +27,34 @@ namespace PathFinder2D.UnitTests.Stubs
             return _id;
         }
 
-        public float TransformX()
+        public float X()
         {
-            return _tX;
+            return _x;
         }
 
-        public float TransformZ()
+        public float Y()
         {
-            return _tY;
+            return _y;
         }
 
-        public float RenderX()
+        public float Width()
         {
-            return _rX;
+            return _w;
         }
 
-        public float RenderZ()
+        public float Height()
         {
-            return _rZ;
+            return _h;
+        }
+
+        public float CellSize()
+        {
+            return _cSize;
+        }
+
+        public IEnumerable<IBlock> GetBlocks()
+        {
+            return null;
         }
     }
 }

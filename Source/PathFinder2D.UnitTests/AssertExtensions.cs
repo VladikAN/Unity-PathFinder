@@ -2,6 +2,7 @@
 using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
+using PathFinder2D.UnitTests.Stubs;
 
 namespace PathFinder2D.UnitTests
 {
@@ -15,8 +16,8 @@ namespace PathFinder2D.UnitTests
 
             foreach (var vector3 in result.Path)
             {
-                var point = mapDefinition.ToPoint(vector3);
-                Assert.IsFalse(mapDefinition.Field[point[0], point[1]].Blocked);
+                var point = mapDefinition.Terrain.ToPoint<FakeFinderPoint>(vector3);
+                Assert.IsFalse(mapDefinition.Field[point.X, point.Y].Blocked);
             }
         }
     }

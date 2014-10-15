@@ -15,10 +15,10 @@ namespace PathFinder2D.Core.Finder
         public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
             _mapDefinition = mapDefinition;
-            _weightMap = new uint?[mapDefinition.Width, mapDefinition.Height];
+            _weightMap = new uint?[mapDefinition.FieldWidth, mapDefinition.FieldHeight];
 
-            var startPoint = mapDefinition.ToPoint<WavePoint>(startVector3);
-            var endPoint = mapDefinition.ToPoint<WavePoint>(endVector3);
+            var startPoint = mapDefinition.Terrain.ToPoint<WavePoint>(startVector3);
+            var endPoint = mapDefinition.Terrain.ToPoint<WavePoint>(endVector3);
 
             uint weight = 0;
             _weightMap[startPoint.X, startPoint.Y] = weight;
@@ -63,11 +63,11 @@ namespace PathFinder2D.Core.Finder
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(mapDefinition.ToVector3(endPoint));
+                    path.Add(mapDefinition.Terrain.ToVector3(endPoint));
                     endPoint = FindNearestPoints(endPoint, startPoint, _weightMap[endPoint.X, endPoint.Y].Value).First();
                 }
 
-                path.Add(mapDefinition.ToVector3(endPoint));
+                path.Add(mapDefinition.Terrain.ToVector3(endPoint));
                 path.Reverse();
             }
 

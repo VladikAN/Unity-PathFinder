@@ -7,7 +7,7 @@ namespace PathFinder2D.Core.Extensions
     {
         public static bool ValidateMapEdges(this MapDefinition mapDefinition, int x, int y)
         {
-            return !((x < 0 || x >= mapDefinition.Width) || (y < 0 || y >= mapDefinition.Height));
+            return !((x < 0 || x >= mapDefinition.FieldWidth) || (y < 0 || y >= mapDefinition.FieldHeight));
         }
 
         public static bool ValidateMapEdges(this MapDefinition mapDefinition, FinderPoint point)

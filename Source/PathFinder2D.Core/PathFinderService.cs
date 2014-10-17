@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using PathFinder2D.Core.Domain.Finder;
+﻿using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
 using PathFinder2D.Core.Finder;
 using PathFinder2D.Core.Initializer;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PathFinder2D.Core
@@ -13,9 +13,9 @@ namespace PathFinder2D.Core
     {
         #region Fields
 
+        private readonly IDictionary<int, MapDefinition> _registeredMaps;
         private readonly IFinder _finder;
         private readonly IMapInitializer _mapInitializer;
-        private readonly IDictionary<int, MapDefinition> _registeredMaps;
 
         #endregion
 
@@ -41,6 +41,11 @@ namespace PathFinder2D.Core
         #endregion
 
         #region Methods
+
+        public IDictionary<int, MapDefinition> RegisteredMaps()
+        {
+            return _registeredMaps;
+        }
 
         public MapDefinition InitMap(ITerrain terrain, float cellSize)
         {

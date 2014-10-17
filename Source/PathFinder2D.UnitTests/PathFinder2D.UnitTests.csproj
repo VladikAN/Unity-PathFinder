@@ -46,9 +46,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssertExtensions.cs" />
-    <Compile Include="Finders\JumpPointFinderTests.cs" />
-    <Compile Include="Finders\WaveFinderTests.cs" />
+    <Compile Include="Extensions\AssertExtensions.cs" />
+    <Compile Include="Extensions\TestCaseExtensions.cs" />
+    <Compile Include="Finders\FinderTests.cs" />
+    <Compile Include="Extensions\StringMapExtensions.cs" />
     <Compile Include="Stubs\FakeFinder.cs" />
     <Compile Include="Stubs\FakeFinderPoint.cs" />
     <Compile Include="Stubs\FakeMapInitializer.cs" />

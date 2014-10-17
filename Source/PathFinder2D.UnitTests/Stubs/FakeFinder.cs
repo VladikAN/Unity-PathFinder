@@ -9,7 +9,7 @@ namespace PathFinder2D.UnitTests.Stubs
     {
         public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
-            throw new System.NotImplementedException();
+            return new FinderResult(null);
         }
     }
 }

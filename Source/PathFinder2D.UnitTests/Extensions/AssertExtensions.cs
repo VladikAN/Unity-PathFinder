@@ -4,7 +4,7 @@ using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
 using PathFinder2D.UnitTests.Stubs;
 
-namespace PathFinder2D.UnitTests
+namespace PathFinder2D.UnitTests.Extensions
 {
     internal static class AssertExtensions
     {

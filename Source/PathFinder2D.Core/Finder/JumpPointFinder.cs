@@ -36,7 +36,6 @@ namespace PathFinder2D.Core.Finder
 
                 if (investigate == null)
                 {
-                    Debug.Log("Path not founded");
                     break;
                 }
 

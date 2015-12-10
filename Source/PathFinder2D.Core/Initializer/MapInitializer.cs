@@ -9,7 +9,7 @@ namespace PathFinder2D.Core.Initializer
 {
     public class MapInitializer : IMapInitializer
     {
-        public MapCell[,] ParceMapCells(ITerrain terrain, float cellSize)
+        public MapCell[,] ParseMapCells(ITerrain terrain, float cellSize)
         {
             var x = (int)(terrain.Width() / cellSize);
             var z = (int)(terrain.Height() / cellSize);

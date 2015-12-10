@@ -23,15 +23,8 @@ namespace PathFinder2D.Core
 
         public PathFinderService(IFinder finder, IMapInitializer initializer)
         {
-            if (finder == null)
-            {
-                throw new ArgumentException("Null object not supported as Finder");
-            }
-
-            if (initializer == null)
-            {
-                throw new ArgumentException("Null object not supported as MapInitializer");
-            }
+            if (finder == null) throw new ArgumentException("Null object not supported as Finder");
+            if (initializer == null) throw new ArgumentException("Null object not supported as MapInitializer");
 
             _finder = finder;
             _initializer = initializer;
@@ -49,15 +42,8 @@ namespace PathFinder2D.Core
 
         public MapDefinition InitMap(ITerrain terrain, float cellSize)
         {
-            if (terrain == null)
-            {
-                throw new ArgumentException("Null object not supported as terrain parameter");
-            }
-
-            if (cellSize <= 0)
-            {
-                throw new ArgumentException("Cell width must be greater then 0");
-            }
+            if (terrain == null) throw new ArgumentException("Null object not supported as terrain parameter");
+            if (cellSize <= 0) throw new ArgumentException("Cell width must be greater then 0");
 
             var terrainKey = terrain.Id();
             if (_maps.ContainsKey(terrainKey))
@@ -65,7 +51,7 @@ namespace PathFinder2D.Core
                 throw new ArgumentException("This GameObject already initialized as map");
             }
 
-            var field = _initializer.ParceMapCells(terrain, cellSize);
+            var field = _initializer.ParseMapCells(terrain, cellSize);
             var mapDefinition = new MapDefinition(terrain, field, cellSize);
             _maps.Add(terrainKey, mapDefinition);
             
@@ -75,9 +61,7 @@ namespace PathFinder2D.Core
         public FinderResult FindPath(int terrainId, Vector3 start, Vector3 end)
         {
             if (_maps == null || !_maps.ContainsKey(terrainId))
-            {
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));
-            }
 
             var mapDefinition = _maps[terrainId];
             var result = _finder.Find(mapDefinition, start, end);

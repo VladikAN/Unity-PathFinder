@@ -8,8 +8,8 @@ namespace PathFinder2D.Core
 {
     public interface IPathFinderService
     {
-        IDictionary<int, MapDefinition> RegisteredMaps();
+        IDictionary<int, MapDefinition> GetMaps();
         MapDefinition InitMap(ITerrain terrain, float cellSize);
-        FinderResult Find(int terrainId, Vector3 start, Vector3 end);
+        FinderResult FindPath(int terrainId, Vector3 start, Vector3 end);
     }
 }

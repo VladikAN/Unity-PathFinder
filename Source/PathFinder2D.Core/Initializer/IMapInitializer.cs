@@ -6,7 +6,7 @@ namespace PathFinder2D.Core.Initializer
     public interface IMapInitializer
     {
         /// <summary>
-        /// Parce terrain object to cell array
+        /// Parce terrain object into cell 2D array
         /// </summary>
         MapCell[,] ParceMapCells(ITerrain terrain, float cellSize);
     }

@@ -10,23 +10,23 @@ namespace PathFinder2D.Core.Finder
     public class JumpPointFinder : IFinder
     {
         private MapDefinition _mapDefinition;
-        private IList<JumpPointPoint> _openset;
+        private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
 
-        private JumpPointPoint _start;
-        private JumpPointPoint _end;
+        private JumpPoint _start;
+        private JumpPoint _end;
 
         public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
             _mapDefinition = mapDefinition;
-            _openset = new List<JumpPointPoint>();
+            _openset = new List<JumpPoint>();
             _wallMap = _mapDefinition.ToBoolMap();
 
-            _start = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(startVector3);
-            _end = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(endVector3);
+            _start = _mapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
+            _end = _mapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
 
             AddToStack(_start, null);
-            JumpPointPoint investigate;
+            JumpPoint investigate;
             while (true)
             {
                 investigate = _openset
@@ -69,12 +69,12 @@ namespace PathFinder2D.Core.Finder
             return result;
         }
 
-        private void MakeStep(JumpPointPoint start, bool goLeft, bool goUp)
+        private void MakeStep(JumpPoint start, bool goLeft, bool goUp)
         {
             var stepH = goLeft ? -1 : 1;
             var stepV = goUp ? -1 : 1;
 
-            var investigate = new JumpPointPoint(start.X, start.Y);
+            var investigate = new JumpPoint(start.X, start.Y);
             while (investigate != null)
             {
                 var gotHorizontally = GoHV(investigate, start.ToLeft, null);
@@ -104,12 +104,12 @@ namespace PathFinder2D.Core.Finder
             }
         }
 
-        private JumpPointPoint GoHV(JumpPointPoint start, bool? goLeft, bool? goUp)
+        private JumpPoint GoHV(JumpPoint start, bool? goLeft, bool? goUp)
         {
             var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
             var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
 
-            var investigate = new JumpPointPoint(start.X, start.Y);
+            var investigate = new JumpPoint(start.X, start.Y);
             while (investigate != null)
             {
                 if (investigate.X == _end.X && investigate.Y == _end.Y)
@@ -155,7 +155,7 @@ namespace PathFinder2D.Core.Finder
             return null;
         }
 
-        private bool HaveForcedNeighbor(JumpPointPoint investigate, bool horizontally, bool goLeft, bool goUp)
+        private bool HaveForcedNeighbor(JumpPoint investigate, bool horizontally, bool goLeft, bool goUp)
         {
             var stepH = goLeft ? -1 : 1;
             var stepV = goUp ? -1 : 1;
@@ -178,7 +178,7 @@ namespace PathFinder2D.Core.Finder
             return false;
         }
 
-        private JumpPointPoint GetNextInvestigation(JumpPointPoint investigation, int stepH, int stepV)
+        private JumpPoint GetNextInvestigation(JumpPoint investigation, int stepH, int stepV)
         {
             if (!ValidateInvestigation(investigation.X + stepH, investigation.Y + stepV))
             {
@@ -193,19 +193,19 @@ namespace PathFinder2D.Core.Finder
                 }
             }
 
-            var nextInvestigation = new JumpPointPoint(investigation.X + stepH, investigation.Y + stepV);
+            var nextInvestigation = new JumpPoint(investigation.X + stepH, investigation.Y + stepV);
             return AlreadyInStack(nextInvestigation) ? null : nextInvestigation;
         }
 
-        private bool AlreadyInStack(JumpPointPoint point)
+        private bool AlreadyInStack(JumpPoint point)
         {
             return _openset.Any(pt => pt.X == point.X && pt.Y == point.Y);
         }
 
-        private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
+        private void AddToStack(JumpPoint point, JumpPoint parent)
         {
             var cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
-            _openset.Add(new JumpPointPoint(point.X, point.Y, parent, cost));
+            _openset.Add(new JumpPoint(point.X, point.Y, parent, cost));
         }
 
         private bool ValidateInvestigation(int x, int y)

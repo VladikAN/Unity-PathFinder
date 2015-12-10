@@ -76,7 +76,7 @@ namespace PathFinder2D.UnitTests.Services
         public void Find_NotInitMap_Exception()
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.Find(1, Vector3.zero, Vector3.one);
+            target.FindPath(1, Vector3.zero, Vector3.one);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace PathFinder2D.UnitTests.Services
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
             target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
-            target.Find(1, Vector3.zero, Vector3.one);
+            target.FindPath(1, Vector3.zero, Vector3.one);
         }
 
         #endregion

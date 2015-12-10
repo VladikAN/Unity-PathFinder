@@ -1,24 +1,18 @@
 ﻿using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
-using PathFinder2D.Core.Domain.Terrain;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Extensions
 {
     public static class MapExtensions
     {
-        public static TPoint ToPoint<TPoint>(this ITerrain terrain, Vector3 vector) where TPoint : FinderPoint, new()
+        public static bool ValidateMapEdges(this MapDefinition mapDefinition, int x, int y)
         {
-            var x = (int)((vector.x - terrain.X()) / terrain.CellSize());
-            var y = (int)((vector.z - terrain.Y()) / terrain.CellSize());
-
-            return new TPoint { X = x, Y = y };
+            return !((x < 0 || x >= mapDefinition.FieldWidth) || (y < 0 || y >= mapDefinition.FieldHeight));
         }
 
-        public static Vector3 ToVector3<TPoint>(this ITerrain terrain, TPoint point) where TPoint : FinderPoint, new()
+        public static bool ValidateMapEdges(this MapDefinition mapDefinition, FinderPoint point)
         {
-            var cellCorrection = terrain.CellSize() / 2;
-            return new Vector3(point.X, 0, point.Y) * terrain.CellSize() + new Vector3(terrain.X() + cellCorrection, 0, terrain.Y() + cellCorrection);
+            return ValidateMapEdges(mapDefinition, point.X, point.Y);
         }
 
         public static bool[,] ToBoolMap(this MapDefinition mapDefinition)

@@ -14,7 +14,7 @@ namespace PathFinder2D.Core.Initializer
             var x = (int)(terrain.Width() / cellSize);
             var z = (int)(terrain.Height() / cellSize);
 
-            var blocks = terrain.GetBlocks();
+            var blocks = terrain.GetBlocks().ToList();
             var points = new List<FinderPoint>();
             if (blocks != null && blocks.Any())
             {

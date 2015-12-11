@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Extensions\AssertExtensions.cs" />
     <Compile Include="Extensions\TestCaseExtensions.cs" />
+    <Compile Include="Finders\FinderPerformanceTests.cs" />
     <Compile Include="Finders\FinderTests.cs" />
     <Compile Include="Extensions\StringMapExtensions.cs" />
     <Compile Include="Stubs\FakeFinder.cs" />

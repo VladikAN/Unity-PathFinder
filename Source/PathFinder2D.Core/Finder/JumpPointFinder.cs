@@ -13,8 +13,8 @@ namespace PathFinder2D.Core.Finder
         private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
 
-        private JumpPoint _start;
-        private JumpPoint _end;
+        private JumpPoint _startPoint;
+        private JumpPoint _endPoint;
 
         public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
@@ -22,27 +22,20 @@ namespace PathFinder2D.Core.Finder
             _openset = new List<JumpPoint>();
             _wallMap = _mapDefinition.ToBoolMap();
 
-            _start = _mapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
-            _end = _mapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
+            _startPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
+            _endPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
 
-            AddToStack(_start, null);
+            AddToStack(_startPoint, null);
             JumpPoint investigate;
             while (true)
             {
                 investigate = _openset
                     .Where(x => x.Step != 0)
-                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _end.X, 2) + Mathf.Pow(point.Y - _end.Y, 2)))
+                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _endPoint.X, 2) + Mathf.Pow(point.Y - _endPoint.Y, 2)))
                     .FirstOrDefault();
 
-                if (investigate == null)
-                {
-                    break;
-                }
-
-                if (investigate.X == _end.X && investigate.Y == _end.Y)
-                {
-                    break;
-                }
+                if (investigate == null) break;
+                if (investigate.X == _endPoint.X && investigate.Y == _endPoint.Y) break;
 
 				while (investigate.Step != 0)
                 {
@@ -54,7 +47,7 @@ namespace PathFinder2D.Core.Finder
             var path = new List<Vector3>();
             if (investigate != null)
             {
-				var endPoint = _openset.First(point => point.X == _end.X & point.Y == _end.Y);
+				var endPoint = _openset.First(point => point.X == _endPoint.X & point.Y == _endPoint.Y);
 				while (endPoint.Parent != null)
                 {
 					path.Add(mapDefinition.Terrain.ToVector3(endPoint));
@@ -112,7 +105,7 @@ namespace PathFinder2D.Core.Finder
             var investigate = new JumpPoint(start.X, start.Y);
             while (investigate != null)
             {
-                if (investigate.X == _end.X && investigate.Y == _end.Y)
+                if (investigate.X == _endPoint.X && investigate.Y == _endPoint.Y)
                 {
                     break;  /* Force exit */
                 }

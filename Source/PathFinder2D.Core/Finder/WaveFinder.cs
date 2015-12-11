@@ -32,44 +32,39 @@ namespace PathFinder2D.Core.Finder
             var startPoint = mapDefinition.Terrain.ToPoint<WavePoint>(startVector3);
             var endPoint = mapDefinition.Terrain.ToPoint<WavePoint>(endVector3);
 
-            uint weight = 0;
-            _weightMap[startPoint.X, startPoint.Y] = weight;
+            uint currentWeight = 0;
+            _weightMap[startPoint.X, startPoint.Y] = currentWeight;
 
-            var founded = false;
+            var completed = false;
             var lastIteration = new List<WavePoint> { startPoint };
-            while (!founded)
+            while (!completed && lastIteration.Any())
             {
-                if (!lastIteration.Any())
-                {
-                    break;
-                }
-
-                weight++;
+                currentWeight++;
                 var thisIteration = new List<WavePoint>();
 
                 foreach (var point in lastIteration)
                 {
                     if (point.X == endPoint.X && point.Y == endPoint.Y)
                     {
-                        founded = true;
+                        completed = true;
                         break;
                     }
 
-                    thisIteration.Add(CreateNextStep(point, -1, -1, weight));
-                    thisIteration.Add(CreateNextStep(point, 0, -1, weight));
-                    thisIteration.Add(CreateNextStep(point, 1, -1, weight));
-                    thisIteration.Add(CreateNextStep(point, 1, 0, weight));
-                    thisIteration.Add(CreateNextStep(point, 1, 1, weight));
-                    thisIteration.Add(CreateNextStep(point, 0, 1, weight));
-                    thisIteration.Add(CreateNextStep(point, -1, 1, weight));
-                    thisIteration.Add(CreateNextStep(point, -1, 0, weight));
+                    thisIteration.Add(CreateNextStep(point, -1, -1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, 0, -1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, 1, -1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, 1, 0, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, 1, 1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, 0, 1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, -1, 1, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, -1, 0, currentWeight));
                 }
 
                 lastIteration = thisIteration.Where(x => x != null).ToList();
             }
 
             IList<Vector3> path = null;
-            if (founded)
+            if (completed)
             {
                 path = new List<Vector3>();
 

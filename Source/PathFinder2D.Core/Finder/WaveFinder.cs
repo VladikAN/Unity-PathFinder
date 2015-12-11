@@ -12,6 +12,18 @@ namespace PathFinder2D.Core.Finder
         private uint?[,] _weightMap;
         private MapDefinition _mapDefinition;
 
+        private readonly IList<int[]> _movements = new List<int[]>()
+        {
+            new [] { 0, -1 }, /* center top */
+            new [] { 1, -1 }, /* center right */
+            new [] { 1, 0 },  /* right center */
+            new [] { 1, 1 },  /* right bottom */
+            new [] { 0, 1 },  /* center bottom */
+            new [] { -1, 1 }, /* left bottom */
+            new [] { -1, 0 }, /* left center */
+            new [] { -1, -1 } /* left top */
+        };
+        
         public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
         {
             _mapDefinition = mapDefinition;
@@ -78,160 +90,31 @@ namespace PathFinder2D.Core.Finder
         private IEnumerable<WavePoint> FindNearestPoints(WavePoint current, WavePoint target, uint weight)
         {
             var targetWeight = weight - 1;
-            
-            /* center top */
-            if (current.X == target.X && current.Y > target.Y)
+
+            var directionX = current.X == target.X ? 0 : (current.X < target.X ? 1 : -1);
+            var directionY = current.Y == target.Y ? 0 : (current.Y < target.Y ? 1 : -1);
+
+            var forwardIndex = _movements.First(x => x[0] == directionX && x[1] == directionY);
+            var index = _movements.IndexOf(forwardIndex);
+            var newMoves = new[] { index, index - 1, index + 1, index - 2, index + 2, index - 3, index + 3, index - 4 }
+                .Select(raw => raw < 0 ? raw + 8 : raw)
+                .Select(raw => raw > 7 ? raw - 8 : raw)
+                .ToArray();
+
+            var result = new List<WavePoint>
             {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                };
+                GetPoint(current.X + _movements[newMoves[0]][0], current.Y + _movements[newMoves[0]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[1]][0], current.Y + _movements[newMoves[1]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[2]][0], current.Y + _movements[newMoves[2]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[3]][0], current.Y + _movements[newMoves[3]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[4]][0], current.Y + _movements[newMoves[4]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[5]][0], current.Y + _movements[newMoves[5]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[6]][0], current.Y + _movements[newMoves[6]][1], targetWeight),
+                GetPoint(current.X + _movements[newMoves[7]][0], current.Y + _movements[newMoves[7]][1], targetWeight)
+            };
 
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* right top */
-            if (current.X < target.X && current.Y > target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* right center */
-            if (current.X < target.X && current.Y == target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* right bottom */
-            if (current.X < target.X && current.Y < target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* center bottom */
-            if (current.X == target.X && current.Y < target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* left bottom */
-            if (current.X > target.X && current.Y < target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* left center */
-            if (current.X > target.X && current.Y == target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            /* left top */
-            if (current.X > target.X && current.Y > target.Y)
-            {
-                var result = new List<WavePoint>
-                {
-                    GetPoint(current.X - 1, current.Y - 1, targetWeight),   /* left top */
-                    GetPoint(current.X, current.Y - 1, targetWeight),       /* center top */
-                    GetPoint(current.X - 1, current.Y, targetWeight),       /* left center */
-                    GetPoint(current.X + 1, current.Y - 1, targetWeight),   /* right top */
-                    GetPoint(current.X - 1, current.Y + 1, targetWeight),   /* left bottom */
-                    GetPoint(current.X + 1, current.Y,targetWeight),        /* right center */
-                    GetPoint(current.X, current.Y + 1, targetWeight),       /* center bottom */
-                    GetPoint(current.X + 1, current.Y + 1, targetWeight),   /* right bottom */
-                };
-
-                result = result.Where(item => item != null).ToList();
-                return result.ToArray();
-            }
-
-            return null;
+            result = result.Where(item => item != null).ToList();
+            return result.ToArray();
         }
 
         private WavePoint GetPoint(int x, int y, uint targetWeight)

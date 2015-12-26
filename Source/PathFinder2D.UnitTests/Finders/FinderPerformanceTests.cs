@@ -22,7 +22,7 @@ namespace PathFinder2D.UnitTests.Finders
         {
             var width = 128;
             var height = 128;
-            var walls = 128;
+            var walls = Math.Min(width, height);
 
             var field = new MapCell[width, height];
             for (var i = 0; i < width; i++)
@@ -31,8 +31,8 @@ namespace PathFinder2D.UnitTests.Finders
 
             for (var i = 0; i < walls; i++)
             {
-                var w = _random.Next(10, width - 10);
-                var h = _random.Next(10, height - 10);
+                var w = _random.Next(1, width - 1);
+                var h = _random.Next(1, height - 1);
                 field[w, h].Blocked = true;
             }
 
@@ -40,8 +40,8 @@ namespace PathFinder2D.UnitTests.Finders
             _testMap = new MapDefinition(terrain, field, 1);
         }
 
-        [TestCase(1, TestName = "Wave finder performance")]
-        [TestCase(2, TestName = "Jump finder performance")]
+        [TestCase(1, TestName = "Wave performance")]
+        [TestCase(2, TestName = "Jump point performance")]
         public void Wave_PerformanceTests(int finderNumber)
         {
             var finder = finderNumber == 1 ? (IFinder) new WaveFinder() : new JumpPointFinder();
@@ -50,7 +50,7 @@ namespace PathFinder2D.UnitTests.Finders
             pathFinderService.GetMaps().Add(1, _testMap);
 
             var start = _testMap.Terrain.ToVector3(new FakeFinderPoint { X = 0, Y = 0 });
-            var end = _testMap.Terrain.ToVector3(new FakeFinderPoint { X = _testMap.FieldWidth, Y = _testMap.FieldHeight - 1 });
+            var end = _testMap.Terrain.ToVector3(new FakeFinderPoint { X = _testMap.FieldWidth - 1, Y = _testMap.FieldHeight - 1 });
 
             var stopWatch = new Stopwatch();
 
@@ -58,7 +58,7 @@ namespace PathFinder2D.UnitTests.Finders
             var result = pathFinderService.FindPath(_testMap.Terrain.Id(), start, end);
             stopWatch.Stop();
 
-            Console.WriteLine("Time taken: {0:D4} ms", stopWatch.ElapsedMilliseconds);
+            Console.WriteLine("Time taken: {0:D5} ms", stopWatch.ElapsedMilliseconds);
             AssertExtensions.IsValidPath(result, _testMap);
         }
     }

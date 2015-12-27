@@ -20,8 +20,8 @@ namespace PathFinder2D.UnitTests.Finders
         [TestFixtureSetUp]
         public void Init()
         {
-            var width = 500;
-            var height = 500;
+            var width = 10;
+            var height = 10;
             var walls = Math.Min(width, height);
 
             var field = new MapCell[width, height];
@@ -44,7 +44,7 @@ namespace PathFinder2D.UnitTests.Finders
         [TestCase(2, TestName = "Jump point performance")]
         public void PerformanceTests(int finderNumber)
         {
-            var finder = finderNumber == 1 ? (IFinder) new WaveFinder() : new JumpPointFinder();
+            var finder = finderNumber == 1 ? (Finder) new WaveFinder() : new JumpPointFinder();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
             pathFinderService.GetMaps().Add(1, _testMap);

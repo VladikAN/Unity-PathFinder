@@ -47,14 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Terrain\IBlock.cs" />
+    <Compile Include="Finder\Finder.cs" />
     <Compile Include="Initializer\IMapInitializer.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />
     <Compile Include="Domain\Map\MapCell.cs" />
-    <Compile Include="Extensions\MapExtensions.cs" />
     <Compile Include="Extensions\TerrainExtensions.cs" />
     <Compile Include="Domain\Finder\FinderPoint.cs" />
     <Compile Include="Domain\Finder\FinderResult.cs" />
-    <Compile Include="Finder\IFinder.cs" />
     <Compile Include="Finder\JumpPointFinder.cs" />
     <Compile Include="Domain\Finder\JumpPoint.cs" />
     <Compile Include="Finder\WaveFinder.cs" />

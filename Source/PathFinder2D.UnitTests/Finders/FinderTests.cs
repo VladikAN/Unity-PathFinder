@@ -14,7 +14,7 @@ namespace PathFinder2D.UnitTests.Finders
     [TestFixture]
     public class FinderTests
     {
-        private static IEnumerable<IFinder> GlobalFinders
+        private static IEnumerable<Finder> GlobalFinders
         {
             get
             {
@@ -22,9 +22,9 @@ namespace PathFinder2D.UnitTests.Finders
                 var types = AppDomain.CurrentDomain.GetAssemblies()
                     .Where(x => x.FullName != typeof(FinderTests).Assembly.FullName)
                     .SelectMany(assembly => assembly.GetTypes())
-                    .Where(type => typeof(IFinder).IsAssignableFrom(type) && type.IsClass);
+                    .Where(type => typeof(Finder).IsAssignableFrom(type) && type.IsClass);
 
-                var finders = types.Select(type => Activator.CreateInstance(type)).OfType<IFinder>();
+                var finders = types.Select(type => Activator.CreateInstance(type)).OfType<Finder>();
                 return finders;
             }
         }
@@ -53,7 +53,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("SimpleMove")]
-        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, IFinder finder)
+        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[]
             {
@@ -75,7 +75,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("SimpleMove")]
-        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, IFinder finder)
+        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[]
             {
@@ -118,7 +118,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("BlockedMove")]
-        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, IFinder finder)
+        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[] { ".#." };
 

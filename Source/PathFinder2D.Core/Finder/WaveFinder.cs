@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
 using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class WaveFinder : IFinder
+    public class WaveFinder : Finder
     {
         private uint?[,] _weightMap;
-        private MapDefinition _mapDefinition;
 
         private readonly IList<int[]> _movements = new List<int[]>()
         {
@@ -23,14 +21,13 @@ namespace PathFinder2D.Core.Finder
             new [] { -1, 0 }, /* left center */
             new [] { -1, -1 } /* left top */
         };
-        
-        public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
-        {
-            _mapDefinition = mapDefinition;
-            _weightMap = new uint?[mapDefinition.FieldWidth, mapDefinition.FieldHeight];
 
-            var startPoint = mapDefinition.Terrain.ToPoint<WavePoint>(startVector3);
-            var endPoint = mapDefinition.Terrain.ToPoint<WavePoint>(endVector3);
+        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
+        {
+            _weightMap = new uint?[MapWidth, MapHeight];
+
+            var startPoint = MapDefinition.Terrain.ToPoint<WavePoint>(startVector3);
+            var endPoint = MapDefinition.Terrain.ToPoint<WavePoint>(endVector3);
 
             uint currentWeight = 0;
             _weightMap[startPoint.X, startPoint.Y] = currentWeight;
@@ -70,11 +67,11 @@ namespace PathFinder2D.Core.Finder
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+                    path.Add(MapDefinition.Terrain.ToVector3(endPoint));
                     endPoint = FindNearestPoints(endPoint, startPoint, _weightMap[endPoint.X, endPoint.Y].Value).First();
                 }
 
-                path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+                path.Add(MapDefinition.Terrain.ToVector3(endPoint));
                 path.Reverse();
             }
 
@@ -114,7 +111,7 @@ namespace PathFinder2D.Core.Finder
 
         private WavePoint GetPoint(int x, int y, uint targetWeight)
         {
-            if (!_mapDefinition.ValidateMapEdges(x, y) || _weightMap[x, y] != targetWeight)
+            if (!ValidateEdges(x, y) || _weightMap[x, y] != targetWeight)
             {
                 return null;
             }
@@ -127,8 +124,8 @@ namespace PathFinder2D.Core.Finder
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
 
-            if (!_mapDefinition.ValidateMapEdges(newX, newY)) return null;
-            if (_weightMap[newX, newY] != null || _mapDefinition.Field[newX, newY].Blocked) return null;
+            if (!ValidateEdges(newX, newY)) return null;
+            if (_weightMap[newX, newY] != null || MapDefinition.Field[newX, newY].Blocked) return null;
 
             if (xMove == 0 || yMove == 0)
             {
@@ -136,7 +133,7 @@ namespace PathFinder2D.Core.Finder
                 return new WavePoint(newX, newY);
             }
 
-            if (!_mapDefinition.Field[newX, parent.Y].Blocked || !_mapDefinition.Field[parent.X, newY].Blocked)
+            if (!MapDefinition.Field[newX, parent.Y].Blocked || !MapDefinition.Field[parent.X, newY].Blocked)
             {
                 _weightMap[newX, newY] = weight;
                 return new WavePoint(newX, newY);

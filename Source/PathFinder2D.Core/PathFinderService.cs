@@ -1,7 +1,6 @@
 ﻿using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
-using PathFinder2D.Core.Finder;
 using PathFinder2D.Core.Initializer;
 using System;
 using System.Collections.Generic;
@@ -14,14 +13,14 @@ namespace PathFinder2D.Core
         #region Fields
 
         private readonly IDictionary<int, MapDefinition> _maps;
-        private readonly IFinder _finder;
+        private readonly Finder.Finder _finder;
         private readonly IMapInitializer _initializer;
 
         #endregion
 
         #region Constructors
 
-        public PathFinderService(IFinder finder, IMapInitializer initializer)
+        public PathFinderService(Finder.Finder finder, IMapInitializer initializer)
         {
             if (finder == null) throw new ArgumentException("Null object not supported as Finder");
             if (initializer == null) throw new ArgumentException("Null object not supported as MapInitializer");

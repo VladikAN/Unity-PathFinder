@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
 using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class JumpPointFinder : IFinder
+    public class JumpPointFinder : Finder
     {
-        private MapDefinition _mapDefinition;
         private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
         private bool[,] _openSetMap;
@@ -17,15 +15,14 @@ namespace PathFinder2D.Core.Finder
         private JumpPoint _startPoint;
         private JumpPoint _endPoint;
 
-        public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
         {
-            _mapDefinition = mapDefinition;
             _openset = new List<JumpPoint>();
-            _wallMap = _mapDefinition.ToBoolMap();
-            _openSetMap = new bool[_mapDefinition.FieldWidth, _mapDefinition.FieldHeight];
+            _wallMap = GetBoolMap();
+            _openSetMap = new bool[MapWidth, MapHeight];
 
-            _startPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
-            _endPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
+            _startPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
+            _endPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
 
             AddToStack(_startPoint, null);
             JumpPoint investigate;
@@ -52,11 +49,11 @@ namespace PathFinder2D.Core.Finder
 				var endPoint = _openset.First(point => point.X == _endPoint.X & point.Y == _endPoint.Y);
 				while (endPoint.Parent != null)
                 {
-					path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+					path.Add(MapDefinition.Terrain.ToVector3(endPoint));
 					endPoint = endPoint.Parent;
                 }
 
-                path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+                path.Add(MapDefinition.Terrain.ToVector3(endPoint));
                 path.Reverse();
             }
 
@@ -115,14 +112,19 @@ namespace PathFinder2D.Core.Finder
                 /* Check neighbors */
                 if (goLeft.HasValue)
                 {
-                    if (!AlreadyInStack(investigate) && (HaveForcedNeighbor(investigate, true, goLeft.Value, true) || HaveForcedNeighbor(investigate, true, goLeft.Value, false)))
+                    if (!AlreadyInStack(investigate) 
+                        && (HaveForcedNeighbor(investigate, true, goLeft.Value, true)
+                            || HaveForcedNeighbor(investigate, true, goLeft.Value, false)))
                     {
 						break;
                     }
                 }
-                else
+
+                if (goUp.HasValue)
                 {
-                    if (!AlreadyInStack(investigate) && (HaveForcedNeighbor(investigate, false, true, goUp.Value) || HaveForcedNeighbor(investigate, false, false, goUp.Value)))
+                    if (!AlreadyInStack(investigate)
+                        && (HaveForcedNeighbor(investigate, false, true, goUp.Value) 
+                            || HaveForcedNeighbor(investigate, false, false, goUp.Value)))
                     {
 						break;
                     }
@@ -155,7 +157,7 @@ namespace PathFinder2D.Core.Finder
             var stepH = goLeft ? -1 : 1;
             var stepV = goUp ? -1 : 1;
 
-            if (!_mapDefinition.ValidateMapEdges(investigate.X + stepH, investigate.Y + stepV))
+            if (!ValidateEdges(investigate.X + stepH, investigate.Y + stepV))
             {
                 return false;
             }
@@ -206,7 +208,7 @@ namespace PathFinder2D.Core.Finder
 
         private bool ValidateInvestigation(int x, int y)
         {
-            return _mapDefinition.ValidateMapEdges(x, y) && !_wallMap[x, y];
+            return ValidateEdges(x, y) && !_wallMap[x, y];
         }
     }
 }

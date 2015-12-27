@@ -19,12 +19,12 @@ namespace PathFinder2D.UnitTests.Finders
             get
             {
                 /* Get all classes which realize IFinder */
-                var types = AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(x => x.FullName != typeof(FinderTests).Assembly.FullName)
-                    .SelectMany(assembly => assembly.GetTypes())
-                    .Where(type => typeof(Finder).IsAssignableFrom(type) && type.IsClass);
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(x => x.FullName != typeof (FinderTests).Assembly.FullName);
+                var types = assemblies.SelectMany(assembly => assembly.GetTypes())
+                    .Where(type => typeof(Finder).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
 
-                var finders = types.Select(type => Activator.CreateInstance(type)).OfType<Finder>();
+                var finders = types.Select(Activator.CreateInstance).OfType<Finder>();
                 return finders;
             }
         }

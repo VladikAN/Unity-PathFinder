@@ -12,6 +12,7 @@ namespace PathFinder2D.Core.Finder
         private MapDefinition _mapDefinition;
         private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
+        private bool[,] _openSetMap;
 
         private JumpPoint _startPoint;
         private JumpPoint _endPoint;
@@ -21,6 +22,7 @@ namespace PathFinder2D.Core.Finder
             _mapDefinition = mapDefinition;
             _openset = new List<JumpPoint>();
             _wallMap = _mapDefinition.ToBoolMap();
+            _openSetMap = new bool[_mapDefinition.FieldWidth, _mapDefinition.FieldHeight];
 
             _startPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
             _endPoint = _mapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
@@ -192,13 +194,14 @@ namespace PathFinder2D.Core.Finder
 
         private bool AlreadyInStack(JumpPoint point)
         {
-            return _openset.Any(pt => pt.X == point.X && pt.Y == point.Y);
+            return _openSetMap[point.X, point.Y];
         }
 
         private void AddToStack(JumpPoint point, JumpPoint parent)
         {
             var cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
             _openset.Add(new JumpPoint(point.X, point.Y, parent, cost));
+            _openSetMap[point.X, point.Y] = true;
         }
 
         private bool ValidateInvestigation(int x, int y)

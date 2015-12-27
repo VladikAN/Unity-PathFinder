@@ -50,14 +50,14 @@ namespace PathFinder2D.Core.Finder
                         break;
                     }
 
-                    thisIteration.Add(CreateNextStep(point, -1, -1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, 0, -1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, 1, -1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, 1, 0, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, 1, 1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, 0, 1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, -1, 1, currentWeight));
-                    thisIteration.Add(CreateNextStep(point, -1, 0, currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[0][0], _movements[0][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[1][0], _movements[1][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[2][0], _movements[2][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[3][0], _movements[3][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[4][0], _movements[4][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[5][0], _movements[5][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[6][0], _movements[6][1], currentWeight));
+                    thisIteration.Add(CreateNextStep(point, _movements[7][0], _movements[7][1], currentWeight));
                 }
 
                 lastIteration = thisIteration.Where(x => x != null).ToList();
@@ -127,28 +127,19 @@ namespace PathFinder2D.Core.Finder
             var newX = parent.X + xMove;
             var newY = parent.Y + yMove;
 
-            if (!_mapDefinition.ValidateMapEdges(newX, newY))
-            {
-                return null;
-            }
-
-            if (_weightMap[newX, newY] != null || _mapDefinition.Field[newX, newY].Blocked)
-            {
-                return null;
-            }
+            if (!_mapDefinition.ValidateMapEdges(newX, newY)) return null;
+            if (_weightMap[newX, newY] != null || _mapDefinition.Field[newX, newY].Blocked) return null;
 
             if (xMove == 0 || yMove == 0)
             {
                 _weightMap[newX, newY] = weight;
                 return new WavePoint(newX, newY);
             }
-            else
+
+            if (!_mapDefinition.Field[newX, parent.Y].Blocked || !_mapDefinition.Field[parent.X, newY].Blocked)
             {
-                if (!_mapDefinition.Field[newX, parent.Y].Blocked || !_mapDefinition.Field[parent.X, newY].Blocked)
-                {
-                    _weightMap[newX, newY] = weight;
-                    return new WavePoint(newX, newY);
-                }
+                _weightMap[newX, newY] = weight;
+                return new WavePoint(newX, newY);
             }
 
             return null;

@@ -23,7 +23,7 @@ namespace PathFinder2D.Core.Finder
 
         protected bool ValidateEdges(int x, int y)
         {
-            return !((x < 0 || x >= MapWidth) || (y < 0 || y >= MapHeight));
+            return x >= 0 && x < MapWidth && y >= 0 && y < MapHeight;
         }
 
         protected bool[,] GetBoolMap()

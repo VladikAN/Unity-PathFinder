@@ -63,150 +63,148 @@ namespace PathFinder2D.Core.Finder
 
         private void MakeStep(JumpPoint start, bool goLeft, bool goUp)
         {
-            var stepH = goLeft ? -1 : 1;
-            var stepV = goUp ? -1 : 1;
-
             var investigate = new JumpPoint(start.X, start.Y);
             while (investigate != null)
             {
-                var gotHorizontally = GoHV(investigate, start.ToLeft, null);
-                var gotVertically = GoHV(investigate, null, start.ToUp);
+                var gotHorizontally = GoNext(investigate, start.ToLeft, null);
+                var gotVertically = GoNext(investigate, null, start.ToUp);
                 if (gotHorizontally != null || gotVertically != null)
                 {
-                    if (!AlreadyInStack(investigate))
+                    if (!SkipPoint(investigate.X, investigate.Y))
                     {
                         AddToStack(investigate, start);
 						return;
                     }
 
                     var parent = _openset.First(point => point.X == investigate.X && point.Y == investigate.Y);
-                    if (gotHorizontally != null && !AlreadyInStack(gotHorizontally))
+                    if (gotHorizontally != null && !SkipPoint(gotHorizontally.X, gotHorizontally.Y))
                     {
                         AddToStack(gotHorizontally, parent);
                     }
 
-                    if (gotVertically != null && !AlreadyInStack(gotVertically))
+                    if (gotVertically != null && !SkipPoint(gotVertically.X, gotVertically.Y))
                     {
                         AddToStack(gotVertically, parent);
                     }
                 }
 
                 /* Next step */
-                investigate = GetNextInvestigation(investigate, stepH, stepV);
+                var stepH = goLeft ? -1 : 1;
+                var stepV = goUp ? -1 : 1;
+                investigate = GetNextInvestigation(investigate.X, investigate.Y, stepH, stepV);
             }
         }
 
-        private JumpPoint GoHV(JumpPoint start, bool? goLeft, bool? goUp)
+        private JumpPoint GoNext(JumpPoint start, bool? left, bool? up)
         {
-            var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
-            var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
+            var stepH = left.HasValue ? (left.Value ? -1 : 1) : 0;
+            var stepV = up.HasValue ? (up.Value ? -1 : 1) : 0;
 
-            var investigate = new JumpPoint(start.X, start.Y);
-            while (investigate != null)
+            var next = new JumpPoint(start.X, start.Y);
+            while (next != null)
             {
-                if (investigate.X == _endPoint.X && investigate.Y == _endPoint.Y)
+                if (next.X == _endPoint.X && next.Y == _endPoint.Y)
                 {
                     break;  /* Force exit */
                 }
 
                 /* Check neighbors */
-                if (goLeft.HasValue)
+                if (left.HasValue)
                 {
-                    if (!AlreadyInStack(investigate) 
-                        && (HaveForcedNeighbor(investigate, true, goLeft.Value, true)
-                            || HaveForcedNeighbor(investigate, true, goLeft.Value, false)))
+                    if (!SkipPoint(next.X, next.Y) 
+                        && (HaveForcedNeighbor(next.X, next.Y, true, left.Value, true)
+                            || HaveForcedNeighbor(next.X, next.Y, true, left.Value, false)))
                     {
 						break;
                     }
                 }
 
-                if (goUp.HasValue)
+                if (up.HasValue)
                 {
-                    if (!AlreadyInStack(investigate)
-                        && (HaveForcedNeighbor(investigate, false, true, goUp.Value) 
-                            || HaveForcedNeighbor(investigate, false, false, goUp.Value)))
+                    if (!SkipPoint(next.X, next.Y)
+                        && (HaveForcedNeighbor(next.X, next.Y, false, true, up.Value) 
+                            || HaveForcedNeighbor(next.X, next.Y, false, false, up.Value)))
                     {
 						break;
                     }
                 }
 
                 /* Next step */
-                investigate = GetNextInvestigation(investigate, stepH, stepV);
+                next = GetNextInvestigation(next.X, next.Y, stepH, stepV);
             }
 
-            if (investigate == null)
+            if (next == null)
             {
                 return null;    /* found nothing */
             }
 
-            if (!AlreadyInStack(start))
+            if (!SkipPoint(start.X, start.Y))
             {
                 return start;   /* add diagonal to stack */
             }
 
-            if (!AlreadyInStack(investigate))
+            if (!SkipPoint(next.X, next.Y))
             {
-                return investigate; /* add horizontal/vertical to stack */
+                return next; /* add horizontal/vertical to stack */
             }
 
             return null;
         }
 
-        private bool HaveForcedNeighbor(JumpPoint investigate, bool horizontally, bool goLeft, bool goUp)
+        private bool HaveForcedNeighbor(int x, int y, bool hor, bool left, bool up)
         {
-            var stepH = goLeft ? -1 : 1;
-            var stepV = goUp ? -1 : 1;
+            var stepH = left ? -1 : 1;
+            var stepV = up ? -1 : 1;
 
-            if (!ValidateEdges(investigate.X + stepH, investigate.Y + stepV))
+            if (!ValidateEdges(x + stepH, y + stepV))
             {
                 return false;
             }
 
-            if (horizontally && _wallMap[investigate.X, investigate.Y + stepV])
+            if (hor && _wallMap[x, y + stepV])
             {
-                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X + stepH, investigate.Y];
+                return !_wallMap[x + stepH, y + stepV] && !_wallMap[x + stepH, y];
             }
             
-            if (!horizontally && _wallMap[investigate.X + stepH, investigate.Y])
+            if (!hor && _wallMap[x + stepH, y])
             {
-                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X, investigate.Y + stepV];
+                return !_wallMap[x + stepH, y + stepV] && !_wallMap[x, y + stepV];
             }
 
             return false;
         }
 
-        private JumpPoint GetNextInvestigation(JumpPoint investigation, int stepH, int stepV)
+        private JumpPoint GetNextInvestigation(int x, int y, int ax, int ay)
         {
-            if (!ValidateInvestigation(investigation.X + stepH, investigation.Y + stepV))
+            if (!ValidatePoint(x + ax, y + ay))
             {
                 return null;
             }
 
-            if (stepH != 0 && stepV != 0)
+            if (ax != 0 && ay != 0)
             {
-                if (!ValidateInvestigation(investigation.X + stepH, investigation.Y) && !ValidateInvestigation(investigation.X, investigation.Y + stepV))
+                if (!ValidatePoint(x + ax, y) && !ValidatePoint(x, y + ay))
                 {
                     return null; /* Diagonal blocked */
                 }
             }
 
-            var nextInvestigation = new JumpPoint(investigation.X + stepH, investigation.Y + stepV);
-            return AlreadyInStack(nextInvestigation) ? null : nextInvestigation;
+            var next = new JumpPoint(x + ax, y + ay);
+            return SkipPoint(next.X, next.Y) ? null : next;
         }
 
-        private bool AlreadyInStack(JumpPoint point)
+        private bool SkipPoint(int x, int y)
         {
-            return _openSetMap[point.X, point.Y];
+            return _openSetMap[x, y];
         }
 
         private void AddToStack(JumpPoint point, JumpPoint parent)
         {
-            var cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
-            _openset.Add(new JumpPoint(point.X, point.Y, parent, cost));
+            _openset.Add(new JumpPoint(point, parent));
             _openSetMap[point.X, point.Y] = true;
         }
 
-        private bool ValidateInvestigation(int x, int y)
+        private bool ValidatePoint(int x, int y)
         {
             return ValidateEdges(x, y) && !_wallMap[x, y];
         }

@@ -20,8 +20,8 @@ namespace PathFinder2D.UnitTests.Finders
         [TestFixtureSetUp]
         public void Init()
         {
-            var width = 10;
-            var height = 10;
+            var width = 500;
+            var height = 500;
             var walls = Math.Min(width, height);
 
             var field = new MapCell[width, height];

@@ -8,7 +8,7 @@ namespace PathFinder2D.Core.Domain.Finder
         private readonly double _cost;
         private readonly JumpPoint _parent;
 
-        public JumpPoint() : base()
+        public JumpPoint()
         {
         }
 
@@ -19,7 +19,7 @@ namespace PathFinder2D.Core.Domain.Finder
         public JumpPoint(JumpPoint point, JumpPoint parent) : base(point.X, point.Y)
         {
             _parent = parent;
-            _cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2)); ;
+            _cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
         }
 
         public int Step { get { return _step; } }

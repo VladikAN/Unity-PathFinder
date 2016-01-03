@@ -68,7 +68,7 @@ namespace PathFinder2D.Core.Finder
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
                     path.Add(MapDefinition.Terrain.ToVector3(endPoint));
-                    endPoint = FindNearestPoints(endPoint, startPoint, _weightMap[endPoint.X, endPoint.Y].Value).First();
+                    endPoint = FindNearestPoints(endPoint, startPoint, _weightMap[endPoint.X, endPoint.Y].Value);
                 }
 
                 path.Add(MapDefinition.Terrain.ToVector3(endPoint));
@@ -79,7 +79,7 @@ namespace PathFinder2D.Core.Finder
             return result;
         }
 
-        private IEnumerable<WavePoint> FindNearestPoints(WavePoint current, WavePoint target, uint weight)
+        private WavePoint FindNearestPoints(WavePoint current, WavePoint target, uint weight)
         {
             var targetWeight = weight - 1;
 
@@ -93,20 +93,13 @@ namespace PathFinder2D.Core.Finder
                 .Select(raw => raw > 7 ? raw - 8 : raw)
                 .ToArray();
 
-            var result = new List<WavePoint>
+            foreach (var newMove in newMoves)
             {
-                GetPoint(current.X + _movements[newMoves[0]][0], current.Y + _movements[newMoves[0]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[1]][0], current.Y + _movements[newMoves[1]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[2]][0], current.Y + _movements[newMoves[2]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[3]][0], current.Y + _movements[newMoves[3]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[4]][0], current.Y + _movements[newMoves[4]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[5]][0], current.Y + _movements[newMoves[5]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[6]][0], current.Y + _movements[newMoves[6]][1], targetWeight),
-                GetPoint(current.X + _movements[newMoves[7]][0], current.Y + _movements[newMoves[7]][1], targetWeight)
-            };
+                var point = GetPoint(current.X + _movements[newMove][0], current.Y + _movements[newMove][1], targetWeight);
+                if (point != null) return point;
+            }
 
-            result = result.Where(item => item != null).ToList();
-            return result.ToArray();
+            return null;
         }
 
         private WavePoint GetPoint(int x, int y, uint targetWeight)

@@ -6,7 +6,7 @@ namespace PathFinder2D.UnitTests.Stubs
 {
     public class FakeMapInitializer : IMapInitializer
     {
-        public MapCell[,] ParceMapCells(ITerrain terrain, float cellSize)
+        public MapCell[,] ParseMapCells(ITerrain terrain, float cellSize)
         {
             return new MapCell[10, 10];
         }

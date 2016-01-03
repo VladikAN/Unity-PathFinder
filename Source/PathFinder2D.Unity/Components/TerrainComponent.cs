@@ -21,9 +21,9 @@ namespace PathFinder2D.Unity.Components
         public void InitMap(IPathFinderService pathFinderService, int cellSize)
         {
             Terrain = Terrain ?? new TerrainGameObject(gameObject, cellSize);
-            MapDefinition = !pathFinderService.RegisteredMaps().ContainsKey(Terrain.Id())
+            MapDefinition = !pathFinderService.GetMaps().ContainsKey(Terrain.Id())
                 ? pathFinderService.InitMap(Terrain, cellSize)
-                : pathFinderService.RegisteredMaps()[Terrain.Id()];
+                : pathFinderService.GetMaps()[Terrain.Id()];
         }
 
         public void OnDrawGizmosSelected()

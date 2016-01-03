@@ -19,6 +19,7 @@ namespace PathFinder2D.Core.Domain.Map
         public float CellSize;
         public FinderResult LastFinderResult;
 
+        public virtual int Id { get { return Terrain.Id(); } }
         public virtual MapCell[,] Field { get; private set; }
         public virtual int FieldWidth { get { return Field.GetLength(0); } }
         public virtual int FieldHeight { get { return Field.GetLength(1); } }

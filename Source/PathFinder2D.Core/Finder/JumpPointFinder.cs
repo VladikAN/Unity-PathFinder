@@ -1,48 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Extensions;
 using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class JumpPointFinder : IFinder
+    public class JumpPointFinder : Finder
     {
-        private MapDefinition _mapDefinition;
-        private IList<JumpPointPoint> _openset;
+        private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
+        private bool[,] _openSetMap;
 
-        private JumpPointPoint _start;
-        private JumpPointPoint _end;
+        private JumpPoint _startPoint;
+        private JumpPoint _endPoint;
 
-        public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
         {
-            _mapDefinition = mapDefinition;
-            _openset = new List<JumpPointPoint>();
-            _wallMap = _mapDefinition.ToBoolMap();
+            _openset = new List<JumpPoint>();
+            _wallMap = GetBoolMap();
+            _openSetMap = new bool[MapWidth, MapHeight];
 
-            _start = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(startVector3);
-            _end = _mapDefinition.Terrain.ToPoint<JumpPointPoint>(endVector3);
+            _startPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
+            _endPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
 
-            AddToStack(_start, null);
-            JumpPointPoint investigate;
+            AddToStack(_startPoint, null);
+            JumpPoint investigate;
             while (true)
             {
                 investigate = _openset
                     .Where(x => x.Step != 0)
-                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _end.X, 2) + Mathf.Pow(point.Y - _end.Y, 2)))
+                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _endPoint.X, 2) + Mathf.Pow(point.Y - _endPoint.Y, 2)))
                     .FirstOrDefault();
 
-                if (investigate == null)
-                {
-                    break;
-                }
-
-                if (investigate.X == _end.X && investigate.Y == _end.Y)
-                {
-                    break;
-                }
+                if (investigate == null) break;
+                if (investigate.X == _endPoint.X && investigate.Y == _endPoint.Y) break;
 
 				while (investigate.Step != 0)
                 {
@@ -54,14 +46,14 @@ namespace PathFinder2D.Core.Finder
             var path = new List<Vector3>();
             if (investigate != null)
             {
-				var endPoint = _openset.First(point => point.X == _end.X & point.Y == _end.Y);
+				var endPoint = _openset.First(point => point.X == _endPoint.X & point.Y == _endPoint.Y);
 				while (endPoint.Parent != null)
                 {
-					path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+					path.Add(MapDefinition.Terrain.ToVector3(endPoint));
 					endPoint = endPoint.Parent;
                 }
 
-                path.Add(mapDefinition.Terrain.ToVector3(endPoint));
+                path.Add(MapDefinition.Terrain.ToVector3(endPoint));
                 path.Reverse();
             }
 
@@ -69,148 +61,152 @@ namespace PathFinder2D.Core.Finder
             return result;
         }
 
-        private void MakeStep(JumpPointPoint start, bool goLeft, bool goUp)
+        private void MakeStep(JumpPoint start, bool goLeft, bool goUp)
         {
-            var stepH = goLeft ? -1 : 1;
-            var stepV = goUp ? -1 : 1;
-
-            var investigate = new JumpPointPoint(start.X, start.Y);
+            var investigate = new JumpPoint(start.X, start.Y);
             while (investigate != null)
             {
-                var gotHorizontally = GoHV(investigate, start.ToLeft, null);
-                var gotVertically = GoHV(investigate, null, start.ToUp);
+                var gotHorizontally = GoNext(investigate, start.ToLeft, null);
+                var gotVertically = GoNext(investigate, null, start.ToUp);
                 if (gotHorizontally != null || gotVertically != null)
                 {
-                    if (!AlreadyInStack(investigate))
+                    if (!SkipPoint(investigate.X, investigate.Y))
                     {
                         AddToStack(investigate, start);
 						return;
                     }
 
                     var parent = _openset.First(point => point.X == investigate.X && point.Y == investigate.Y);
-                    if (gotHorizontally != null && !AlreadyInStack(gotHorizontally))
+                    if (gotHorizontally != null && !SkipPoint(gotHorizontally.X, gotHorizontally.Y))
                     {
                         AddToStack(gotHorizontally, parent);
                     }
 
-                    if (gotVertically != null && !AlreadyInStack(gotVertically))
+                    if (gotVertically != null && !SkipPoint(gotVertically.X, gotVertically.Y))
                     {
                         AddToStack(gotVertically, parent);
                     }
                 }
 
                 /* Next step */
-                investigate = GetNextInvestigation(investigate, stepH, stepV);
+                var stepH = goLeft ? -1 : 1;
+                var stepV = goUp ? -1 : 1;
+                investigate = GetNextInvestigation(investigate.X, investigate.Y, stepH, stepV);
             }
         }
 
-        private JumpPointPoint GoHV(JumpPointPoint start, bool? goLeft, bool? goUp)
+        private JumpPoint GoNext(JumpPoint start, bool? left, bool? up)
         {
-            var stepH = goLeft.HasValue ? (goLeft.Value ? -1 : 1) : 0;
-            var stepV = goUp.HasValue ? (goUp.Value ? -1 : 1) : 0;
+            var stepH = left.HasValue ? (left.Value ? -1 : 1) : 0;
+            var stepV = up.HasValue ? (up.Value ? -1 : 1) : 0;
 
-            var investigate = new JumpPointPoint(start.X, start.Y);
-            while (investigate != null)
+            var next = new JumpPoint(start.X, start.Y);
+            while (next != null)
             {
-                if (investigate.X == _end.X && investigate.Y == _end.Y)
+                if (next.X == _endPoint.X && next.Y == _endPoint.Y)
                 {
                     break;  /* Force exit */
                 }
 
                 /* Check neighbors */
-                if (goLeft.HasValue)
+                if (left.HasValue)
                 {
-                    if (!AlreadyInStack(investigate) && (HaveForcedNeighbor(investigate, true, goLeft.Value, true) || HaveForcedNeighbor(investigate, true, goLeft.Value, false)))
+                    if (!SkipPoint(next.X, next.Y) 
+                        && (HaveForcedNeighbor(next.X, next.Y, true, left.Value, true)
+                            || HaveForcedNeighbor(next.X, next.Y, true, left.Value, false)))
                     {
 						break;
                     }
                 }
-                else
+
+                if (up.HasValue)
                 {
-                    if (!AlreadyInStack(investigate) && (HaveForcedNeighbor(investigate, false, true, goUp.Value) || HaveForcedNeighbor(investigate, false, false, goUp.Value)))
+                    if (!SkipPoint(next.X, next.Y)
+                        && (HaveForcedNeighbor(next.X, next.Y, false, true, up.Value) 
+                            || HaveForcedNeighbor(next.X, next.Y, false, false, up.Value)))
                     {
 						break;
                     }
                 }
 
                 /* Next step */
-                investigate = GetNextInvestigation(investigate, stepH, stepV);
+                next = GetNextInvestigation(next.X, next.Y, stepH, stepV);
             }
 
-            if (investigate == null)
+            if (next == null)
             {
                 return null;    /* found nothing */
             }
 
-            if (!AlreadyInStack(start))
+            if (!SkipPoint(start.X, start.Y))
             {
                 return start;   /* add diagonal to stack */
             }
 
-            if (!AlreadyInStack(investigate))
+            if (!SkipPoint(next.X, next.Y))
             {
-                return investigate; /* add horizontal/vertical to stack */
+                return next; /* add horizontal/vertical to stack */
             }
 
             return null;
         }
 
-        private bool HaveForcedNeighbor(JumpPointPoint investigate, bool horizontally, bool goLeft, bool goUp)
+        private bool HaveForcedNeighbor(int x, int y, bool hor, bool left, bool up)
         {
-            var stepH = goLeft ? -1 : 1;
-            var stepV = goUp ? -1 : 1;
+            var stepH = left ? -1 : 1;
+            var stepV = up ? -1 : 1;
 
-            if (!_mapDefinition.ValidateMapEdges(investigate.X + stepH, investigate.Y + stepV))
+            if (!ValidateEdges(x + stepH, y + stepV))
             {
                 return false;
             }
 
-            if (horizontally && _wallMap[investigate.X, investigate.Y + stepV])
+            if (hor && _wallMap[x, y + stepV])
             {
-                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X + stepH, investigate.Y];
+                return !_wallMap[x + stepH, y + stepV] && !_wallMap[x + stepH, y];
             }
             
-            if (!horizontally && _wallMap[investigate.X + stepH, investigate.Y])
+            if (!hor && _wallMap[x + stepH, y])
             {
-                return !_wallMap[investigate.X + stepH, investigate.Y + stepV] && !_wallMap[investigate.X, investigate.Y + stepV];
+                return !_wallMap[x + stepH, y + stepV] && !_wallMap[x, y + stepV];
             }
 
             return false;
         }
 
-        private JumpPointPoint GetNextInvestigation(JumpPointPoint investigation, int stepH, int stepV)
+        private JumpPoint GetNextInvestigation(int x, int y, int ax, int ay)
         {
-            if (!ValidateInvestigation(investigation.X + stepH, investigation.Y + stepV))
+            if (!ValidatePoint(x + ax, y + ay))
             {
                 return null;
             }
 
-            if (stepH != 0 && stepV != 0)
+            if (ax != 0 && ay != 0)
             {
-                if (!ValidateInvestigation(investigation.X + stepH, investigation.Y) && !ValidateInvestigation(investigation.X, investigation.Y + stepV))
+                if (!ValidatePoint(x + ax, y) && !ValidatePoint(x, y + ay))
                 {
                     return null; /* Diagonal blocked */
                 }
             }
 
-            var nextInvestigation = new JumpPointPoint(investigation.X + stepH, investigation.Y + stepV);
-            return AlreadyInStack(nextInvestigation) ? null : nextInvestigation;
+            var next = new JumpPoint(x + ax, y + ay);
+            return SkipPoint(next.X, next.Y) ? null : next;
         }
 
-        private bool AlreadyInStack(JumpPointPoint point)
+        private bool SkipPoint(int x, int y)
         {
-            return _openset.Any(pt => pt.X == point.X && pt.Y == point.Y);
+            return _openSetMap[x, y];
         }
 
-        private void AddToStack(JumpPointPoint point, JumpPointPoint parent)
+        private void AddToStack(JumpPoint point, JumpPoint parent)
         {
-            var cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
-            _openset.Add(new JumpPointPoint(point.X, point.Y, parent, cost));
+            _openset.Add(new JumpPoint(point, parent));
+            _openSetMap[point.X, point.Y] = true;
         }
 
-        private bool ValidateInvestigation(int x, int y)
+        private bool ValidatePoint(int x, int y)
         {
-            return _mapDefinition.ValidateMapEdges(x, y) && !_wallMap[x, y];
+            return ValidateEdges(x, y) && !_wallMap[x, y];
         }
     }
 }

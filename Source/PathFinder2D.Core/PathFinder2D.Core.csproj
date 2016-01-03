@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PathFinder2D.Core</RootNamespace>
     <AssemblyName>PathFinder2D.Core</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,16 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Terrain\IBlock.cs" />
+    <Compile Include="Finder\Finder.cs" />
     <Compile Include="Initializer\IMapInitializer.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />
     <Compile Include="Domain\Map\MapCell.cs" />
-    <Compile Include="Extensions\FinderExtensions.cs" />
-    <Compile Include="Extensions\MapExtensions.cs" />
+    <Compile Include="Extensions\TerrainExtensions.cs" />
     <Compile Include="Domain\Finder\FinderPoint.cs" />
     <Compile Include="Domain\Finder\FinderResult.cs" />
-    <Compile Include="Finder\IFinder.cs" />
     <Compile Include="Finder\JumpPointFinder.cs" />
-    <Compile Include="Domain\Finder\JumpPointPoint.cs" />
+    <Compile Include="Domain\Finder\JumpPoint.cs" />
     <Compile Include="Finder\WaveFinder.cs" />
     <Compile Include="Domain\Finder\WavePoint.cs" />
     <Compile Include="IPathFinderService.cs" />

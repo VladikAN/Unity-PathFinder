@@ -14,17 +14,17 @@ namespace PathFinder2D.UnitTests.Finders
     [TestFixture]
     public class FinderTests
     {
-        private static IEnumerable<IFinder> GlobalFinders
+        private static IEnumerable<Finder> GlobalFinders
         {
             get
             {
                 /* Get all classes which realize IFinder */
-                var types = AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(x => x.FullName != typeof(FinderTests).Assembly.FullName)
-                    .SelectMany(assembly => assembly.GetTypes())
-                    .Where(type => typeof(IFinder).IsAssignableFrom(type) && type.IsClass);
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(x => x.FullName != typeof (FinderTests).Assembly.FullName);
+                var types = assemblies.SelectMany(assembly => assembly.GetTypes())
+                    .Where(type => typeof(Finder).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
 
-                var finders = types.Select(type => Activator.CreateInstance(type)).OfType<IFinder>();
+                var finders = types.Select(Activator.CreateInstance).OfType<Finder>();
                 return finders;
             }
         }
@@ -53,7 +53,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("SimpleMove")]
-        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, IFinder finder)
+        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[]
             {
@@ -65,17 +65,17 @@ namespace PathFinder2D.UnitTests.Finders
             var mapDefinition = raw.ParseDefinition();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
-            pathFinderService.RegisteredMaps().Add(1, mapDefinition);
+            pathFinderService.GetMaps().Add(1, mapDefinition);
 
             var start = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = sX, Y = sY });
             var end = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = eX, Y = eY });
 
-            var result = pathFinderService.Find(mapDefinition.Terrain.Id(), start, end);
+            var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
         }
 
         [TestCaseSource("SimpleMove")]
-        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, IFinder finder)
+        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[]
             {
@@ -87,12 +87,12 @@ namespace PathFinder2D.UnitTests.Finders
             var mapDefinition = raw.ParseDefinition();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
-            pathFinderService.RegisteredMaps().Add(1, mapDefinition);
+            pathFinderService.GetMaps().Add(1, mapDefinition);
 
             var start = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = sX, Y = sY });
             var end = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = eX, Y = eY });
 
-            var result = pathFinderService.Find(mapDefinition.Terrain.Id(), start, end);
+            var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
         }
 
@@ -118,19 +118,19 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("BlockedMove")]
-        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, IFinder finder)
+        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, Finder finder)
         {
             var raw = new[] { ".#." };
 
             var mapDefinition = raw.ParseDefinition();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
-            pathFinderService.RegisteredMaps().Add(1, mapDefinition);
+            pathFinderService.GetMaps().Add(1, mapDefinition);
 
             var start = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = sX, Y = sY });
             var end = mapDefinition.Terrain.ToVector3(new FakeFinderPoint { X = eX, Y = eY });
 
-            var result = pathFinderService.Find(mapDefinition.Terrain.Id(), start, end);
+            var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Path == null || !result.Path.Any());
         }

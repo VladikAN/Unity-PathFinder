@@ -2,7 +2,7 @@
 {
     public class WavePoint : FinderPoint
     {
-        public WavePoint() : base()
+        public WavePoint()
         {
         }
 

@@ -6,7 +6,7 @@ namespace PathFinder2D.UnitTests.Extensions
 {
     public static class TestCaseExtensions
     {
-        public static IEnumerable<TestCaseData> CombineArguments(this IEnumerable<TestCaseData> testCases, object[] args)
+        public static IEnumerable<TestCaseData> CombineArguments(this IList<TestCaseData> testCases, object[] args)
         {
             var result = new List<TestCaseData>();
             foreach (var arg in args)

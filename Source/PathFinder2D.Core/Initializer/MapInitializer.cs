@@ -14,13 +14,13 @@ namespace PathFinder2D.Core.Initializer
             var x = (int)(terrain.Width() / cellSize);
             var z = (int)(terrain.Height() / cellSize);
 
-            var blocks = terrain.GetBlocks().ToList();
+            var blocks = (terrain.GetBlocks() ?? Enumerable.Empty<IBlock>()).ToList();
             var points = new List<FinderPoint>();
-            if (blocks != null && blocks.Any())
+            if (blocks.Any())
             {
                 points = blocks
                     .SelectMany(block => block.GetPoints(terrain))
-                    .Select(point => terrain.ToPoint<FinderPoint>(point))
+                    .Select(terrain.ToPoint<FinderPoint>)
                     .ToList();
             }
 

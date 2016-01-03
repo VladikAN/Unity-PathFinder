@@ -68,11 +68,12 @@ namespace PathFinder2D.Core.Finder
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
                     path.Add(MapDefinition.Terrain.ToVector3(endPoint));
-                    endPoint = FindNearestPoints(endPoint, startPoint, _weightMap[endPoint.X, endPoint.Y].Value);
+                    var weight = _weightMap[endPoint.X, endPoint.Y];
+                    endPoint = FindNearestPoints(endPoint, startPoint, weight ?? 0);
                 }
 
                 path.Add(MapDefinition.Terrain.ToVector3(endPoint));
-                path.Reverse();
+                path = path.Reverse().ToList();
             }
 
             var result = new FinderResult(path);

@@ -24,6 +24,7 @@ namespace PathFinder2D.Core.Finder
             _startPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(startVector3);
             _endPoint = MapDefinition.Terrain.ToPoint<JumpPoint>(endVector3);
 
+            /* Search */
             AddToStack(_startPoint, null);
             JumpPoint investigate;
             while (true)
@@ -43,6 +44,7 @@ namespace PathFinder2D.Core.Finder
                 }
             }
 
+            /* End */
             var path = new List<Vector3>();
             if (investigate != null)
             {
@@ -181,12 +183,9 @@ namespace PathFinder2D.Core.Finder
                 return null;
             }
 
-            if (ax != 0 && ay != 0)
+            if (ax != 0 && ay != 0 && !ValidatePoint(x + ax, y) && !ValidatePoint(x, y + ay))
             {
-                if (!ValidatePoint(x + ax, y) && !ValidatePoint(x, y + ay))
-                {
-                    return null; /* Diagonal blocked */
-                }
+                return null; /* Diagonal blocked */
             }
 
             var next = new JumpPoint(x + ax, y + ay);

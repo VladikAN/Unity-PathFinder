@@ -1,3 +1,6 @@
+Source/packages/*
+!Source/packages/repositories.config
+
 Source/PathFinder2D.Core/bin/*
 Source/PathFinder2D.Core/obj/*
 Source/PathFinder2D.UnitTests/bin/*

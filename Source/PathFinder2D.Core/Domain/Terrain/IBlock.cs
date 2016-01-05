@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Domain.Terrain
 {
@@ -8,6 +7,6 @@ namespace PathFinder2D.Core.Domain.Terrain
         /// <summary>
         /// Initiate single obstacle position by set of points. This points will be used to create map
         /// </summary>
-        IEnumerable<Vector3> GetPoints(ITerrain terrain);
+        IEnumerable<WorldPosition> GetPoints(ITerrain terrain);
     }
 }

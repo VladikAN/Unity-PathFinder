@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Extensions;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
@@ -15,7 +16,7 @@ namespace PathFinder2D.Core.Finder
         private JumpPoint _startPoint;
         private JumpPoint _endPoint;
 
-        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(WorldPosition startVector3, WorldPosition endVector3)
         {
             _openset = new List<JumpPoint>();
             _wallMap = GetBoolMap();
@@ -31,7 +32,7 @@ namespace PathFinder2D.Core.Finder
             {
                 investigate = _openset
                     .Where(x => x.Step != 0)
-                    .OrderBy(point => point.Cost + Mathf.Sqrt(Mathf.Pow(point.X - _endPoint.X, 2) + Mathf.Pow(point.Y - _endPoint.Y, 2)))
+                    .OrderBy(point => point.Cost + Math.Sqrt(Math.Pow(point.X - _endPoint.X, 2) + Math.Pow(point.Y - _endPoint.Y, 2)))
                     .FirstOrDefault();
 
                 if (investigate == null) break;
@@ -45,7 +46,7 @@ namespace PathFinder2D.Core.Finder
             }
 
             /* End */
-            var path = new List<Vector3>();
+            var path = new List<WorldPosition>();
             if (investigate != null)
             {
 				var endPoint = _openset.First(point => point.X == _endPoint.X & point.Y == _endPoint.Y);

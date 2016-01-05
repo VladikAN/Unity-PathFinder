@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using PathFinder2D.Core;
 using PathFinder2D.UnitTests.Stubs;
-using UnityEngine;
 
 namespace PathFinder2D.UnitTests.Services
 {

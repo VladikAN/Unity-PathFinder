@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Extensions;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
@@ -22,7 +22,7 @@ namespace PathFinder2D.Core.Finder
             new [] { -1, -1 } /* left top */
         };
 
-        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(WorldPosition startVector3, WorldPosition endVector3)
         {
             _weightMap = new uint?[MapWidth, MapHeight];
 
@@ -60,10 +60,10 @@ namespace PathFinder2D.Core.Finder
                 lastIteration = thisIteration.Where(x => x != null).ToList();
             }
 
-            IList<Vector3> path = null;
+            IList<WorldPosition> path = null;
             if (completed)
             {
-                path = new List<Vector3>();
+                path = new List<WorldPosition>();
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {

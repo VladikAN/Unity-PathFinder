@@ -1,6 +1,6 @@
-﻿using PathFinder2D.Core.Domain.Finder;
+﻿using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
@@ -10,7 +10,7 @@ namespace PathFinder2D.Core.Finder
         protected int MapWidth;
         protected int MapHeight;
 
-        public FinderResult Find(MapDefinition mapDefinition, Vector3 startVector3, Vector3 endVector3)
+        public FinderResult Find(MapDefinition mapDefinition, WorldPosition startVector3, WorldPosition endVector3)
         {
             MapDefinition = mapDefinition;
             MapWidth = mapDefinition.FieldWidth;
@@ -19,7 +19,7 @@ namespace PathFinder2D.Core.Finder
             return Find(startVector3, endVector3);
         }
 
-        protected abstract FinderResult Find(Vector3 startVector3, Vector3 endVector3);
+        protected abstract FinderResult Find(WorldPosition startVector3, WorldPosition endVector3);
 
         protected bool ValidateEdges(int x, int y)
         {

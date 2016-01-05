@@ -4,7 +4,7 @@ using PathFinder2D.Core.Domain.Terrain;
 using PathFinder2D.Core.Initializer;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using PathFinder2D.Core.Domain;
 
 namespace PathFinder2D.Core
 {
@@ -57,7 +57,7 @@ namespace PathFinder2D.Core
             return mapDefinition;
         }
 
-        public FinderResult FindPath(int terrainId, Vector3 start, Vector3 end)
+        public FinderResult FindPath(int terrainId, WorldPosition start, WorldPosition end)
         {
             if (_maps == null || !_maps.ContainsKey(terrainId))
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));

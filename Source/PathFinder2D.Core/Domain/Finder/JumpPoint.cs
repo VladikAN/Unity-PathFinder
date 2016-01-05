@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System;
 
 namespace PathFinder2D.Core.Domain.Finder
 {
@@ -19,7 +19,7 @@ namespace PathFinder2D.Core.Domain.Finder
         public JumpPoint(JumpPoint point, JumpPoint parent) : base(point.X, point.Y)
         {
             _parent = parent;
-            _cost = parent == null ? 0 : parent.Cost + Mathf.Sqrt(Mathf.Pow(point.X - parent.X, 2) + Mathf.Pow(point.Y - parent.Y, 2));
+            _cost = parent == null ? 0 : parent.Cost + Math.Sqrt(Math.Pow(point.X - parent.X, 2) + Math.Pow(point.Y - parent.Y, 2));
         }
 
         public int Step { get { return _step; } }

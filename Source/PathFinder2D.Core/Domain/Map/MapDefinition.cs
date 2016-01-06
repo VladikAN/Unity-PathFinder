@@ -5,10 +5,7 @@ namespace PathFinder2D.Core.Domain.Map
 {
     public class MapDefinition
     {
-        public MapDefinition(
-            ITerrain terrain,
-            MapCell[,] field,
-            float cellSize)
+        public MapDefinition(ITerrain terrain, MapCell[,] field, float cellSize)
         {
             Terrain = terrain;
             Field = field;

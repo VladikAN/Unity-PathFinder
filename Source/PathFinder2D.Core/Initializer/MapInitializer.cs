@@ -26,13 +26,11 @@ namespace PathFinder2D.Core.Initializer
 
             var cellField = new MapCell[x, z];
             for (var i = 0; i < x; i++)
-            {
                 for (var j = 0; j < z; j++)
                 {
                     var block = points.FirstOrDefault(point => point.X == i && point.Y == j);
                     cellField[i, j] = new MapCell { Blocked = block != null };
                 }
-            }
 
             return cellField;
         }

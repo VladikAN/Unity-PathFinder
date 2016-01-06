@@ -72,16 +72,16 @@ namespace PathFinder2D.Unity.Components
                     {
                         /* Draw start/end points */
                         Gizmos.color = Color.blue;
-                        Gizmos.DrawWireSphere(finderResult.Path.First(), .4f);
-                        Gizmos.DrawWireSphere(finderResult.Path.Last(), .4f);
+                        Gizmos.DrawWireSphere(new Vector3(finderResult.Path.First().X, 0, finderResult.Path.First().Y), .4f);
+                        Gizmos.DrawWireSphere(new Vector3(finderResult.Path.Last().X, 0, finderResult.Path.Last().Y), .4f);
 
                         /* Draw control points */
                         Gizmos.color = Color.red;
                         var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
                         {
-                            Gizmos.DrawWireSphere(point, .35f);
-                            Gizmos.DrawLine(prev, point);
+                            Gizmos.DrawWireSphere(new Vector3(point.X, 0, point.Y), .35f);
+                            Gizmos.DrawLine(new Vector3(prev.X, 0, prev.Y), new Vector3(point.X, 0, point.Y));
                             prev = point;
                         }
                     }

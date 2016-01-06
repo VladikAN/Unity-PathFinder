@@ -6,15 +6,15 @@ namespace PathFinder2D.Core.Extensions
 {
     public static class TerrainExtensions
     {
-        public static TPoint ToPoint<TPoint>(this ITerrain terrain, WorldPosition vector) where TPoint : FinderPoint, new()
+        public static TPoint ToPoint<TPoint>(this ITerrain terrain, WorldPosition position) where TPoint : FinderPoint, new()
         {
-            var x = (int)((vector.X - terrain.X()) / terrain.CellSize());
-            var y = (int)((vector.Y - terrain.Y()) / terrain.CellSize());
+            var x = (int)((position.X - terrain.X()) / terrain.CellSize());
+            var y = (int)((position.Y - terrain.Y()) / terrain.CellSize());
 
             return new TPoint { X = x, Y = y };
         }
 
-        public static WorldPosition ToVector3<TPoint>(this ITerrain terrain, TPoint point) where TPoint : FinderPoint, new()
+        public static WorldPosition ToWorld<TPoint>(this ITerrain terrain, TPoint point) where TPoint : FinderPoint, new()
         {
             var cellCorrection = terrain.CellSize() / 2;
             var x = point.X * terrain.CellSize() + terrain.X() + cellCorrection;

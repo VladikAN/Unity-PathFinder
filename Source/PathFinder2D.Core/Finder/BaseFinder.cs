@@ -4,22 +4,22 @@ using PathFinder2D.Core.Domain.Map;
 
 namespace PathFinder2D.Core.Finder
 {
-    public abstract class Finder
+    public abstract class BaseFinder
     {
         protected MapDefinition MapDefinition;
         protected int MapWidth;
         protected int MapHeight;
 
-        public FinderResult Find(MapDefinition mapDefinition, WorldPosition startVector3, WorldPosition endVector3)
+        public FinderResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end)
         {
             MapDefinition = mapDefinition;
             MapWidth = mapDefinition.FieldWidth;
             MapHeight = mapDefinition.FieldHeight;
 
-            return Find(startVector3, endVector3);
+            return Find(start, end);
         }
 
-        protected abstract FinderResult Find(WorldPosition startVector3, WorldPosition endVector3);
+        protected abstract FinderResult Find(WorldPosition start, WorldPosition end);
 
         protected bool ValidateEdges(int x, int y)
         {

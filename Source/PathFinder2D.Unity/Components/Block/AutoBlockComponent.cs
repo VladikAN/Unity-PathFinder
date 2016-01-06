@@ -10,7 +10,7 @@ namespace PathFinder2D.Unity.Components.Block
     {
         public IEnumerable<WorldPosition> GetPoints(ITerrain terrain)
         {
-            var result = new List<Vector3>();
+            var result = new List<WorldPosition>();
             var scale = transform.localScale;
             var quality = terrain.CellSize() / 2;
 
@@ -24,7 +24,7 @@ namespace PathFinder2D.Unity.Components.Block
                     position = transform.TransformDirection(position);
                     position = position + transform.position;
                         
-                    result.Add(position);
+                    result.Add(new WorldPosition(position.x, position.z));
                 }
             }
 

@@ -1,12 +1,12 @@
-﻿using PathFinder2D.Core.Domain.Finder;
+﻿using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Finder;
-using UnityEngine;
 
 namespace PathFinder2D.UnitTests.Stubs
 {
-    public class FakeFinder : Finder
+    public class FakeFinder : BaseFinder
     {
-        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(WorldPosition start, WorldPosition end)
         {
             return new FinderResult(null);
         }

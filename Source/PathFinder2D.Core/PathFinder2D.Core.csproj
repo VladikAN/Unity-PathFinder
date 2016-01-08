@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PathFinder2D.Core</RootNamespace>
     <AssemblyName>PathFinder2D.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -41,13 +41,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Terrain\IBlock.cs" />
-    <Compile Include="Finder\Finder.cs" />
+    <Compile Include="Domain\WorldPosition.cs" />
+    <Compile Include="Finder\BaseFinder.cs" />
     <Compile Include="Initializer\IMapInitializer.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />
     <Compile Include="Domain\Map\MapCell.cs" />

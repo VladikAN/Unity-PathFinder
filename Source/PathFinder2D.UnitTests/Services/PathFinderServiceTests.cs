@@ -1,8 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using PathFinder2D.Core;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.UnitTests.Stubs;
-using UnityEngine;
 
 namespace PathFinder2D.UnitTests.Services
 {
@@ -11,22 +11,22 @@ namespace PathFinder2D.UnitTests.Services
     {
         #region Constructors
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void Constructor_AllNullArgument_Exception()
         {
-            var target = new PathFinderService(null, null);
+            Assert.Throws<ArgumentException>(() => new PathFinderService(null, null));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void Constructor_InitializerNullArgument_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), null);
+            Assert.Throws<ArgumentException>(() => new PathFinderService(new FakeFinder(), null));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void Constructor_FinderNullArgument_Exception()
         {
-            var target = new PathFinderService(null, new FakeMapInitializer());
+            Assert.Throws<ArgumentException>(() => new PathFinderService(null, new FakeMapInitializer()));
         }
 
         [Test]
@@ -39,18 +39,18 @@ namespace PathFinder2D.UnitTests.Services
 
         #region InitMap
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void InitMap_NullTerrain_Exception()
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.InitMap(null, 1);
+            Assert.Throws<ArgumentException>(() => target.InitMap(null, 1));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void InitMap_NegativeCellSize_Exception()
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 0), 0);
+            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 0), 0));
         }
 
         [Test]
@@ -60,23 +60,23 @@ namespace PathFinder2D.UnitTests.Services
             target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void InitMap_InitTwice_Exception()
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
             target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
-            target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
+            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1));
         }
 
         #endregion
 
         #region Find
 
-        [Test, ExpectedException(typeof (ArgumentException))]
+        [Test]
         public void Find_NotInitMap_Exception()
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.FindPath(1, Vector3.zero, Vector3.one);
+            Assert.Throws<ArgumentException>(() => target.FindPath(1, new WorldPosition(0, 0), new WorldPosition(1, 1)));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace PathFinder2D.UnitTests.Services
         {
             var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
             target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
-            target.FindPath(1, Vector3.zero, Vector3.one);
+            target.FindPath(1, new WorldPosition(0, 0), new WorldPosition(1, 1));
         }
 
         #endregion

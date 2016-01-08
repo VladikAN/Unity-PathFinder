@@ -44,13 +44,13 @@ namespace PathFinder2D.UnitTests.Finders
         [TestCase(2, TestName = "Jump point performance")]
         public void PerformanceTests(int finderNumber)
         {
-            var finder = finderNumber == 1 ? (Finder) new WaveFinder() : new JumpPointFinder();
+            var finder = finderNumber == 1 ? (BaseFinder) new WaveFinder() : new JumpPointFinder();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
             pathFinderService.GetMaps().Add(1, _testMap);
 
-            var start = _testMap.Terrain.ToVector3(new FakeFinderPoint { X = 0, Y = 0 });
-            var end = _testMap.Terrain.ToVector3(new FakeFinderPoint { X = _testMap.FieldWidth - 1, Y = _testMap.FieldHeight - 1 });
+            var start = _testMap.Terrain.ToWorld(new FakeFinderPoint { X = 0, Y = 0 });
+            var end = _testMap.Terrain.ToWorld(new FakeFinderPoint { X = _testMap.FieldWidth - 1, Y = _testMap.FieldHeight - 1 });
 
             var stopWatch = new Stopwatch();
 

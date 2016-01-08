@@ -69,9 +69,10 @@ namespace PathFinder2D.Unity.Domain
 
         private void getTerrainBounds(GameObject gameObject, ref Bounds resuldBounds)
         {
-            if (gameObject.renderer != null)
+            var renderer = gameObject.GetComponent<Renderer>();
+            if (renderer != null)
             {
-                resuldBounds.Encapsulate(gameObject.renderer.bounds);
+                resuldBounds.Encapsulate(renderer.bounds);
             }
 
             foreach (var child in gameObject.transform)

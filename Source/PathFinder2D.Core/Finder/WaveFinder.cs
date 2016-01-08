@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Extensions;
-using UnityEngine;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class WaveFinder : Finder
+    public class WaveFinder : BaseFinder
     {
         private uint?[,] _weightMap;
-
         private readonly IList<int[]> _movements = new List<int[]>()
         {
             new [] { 0, -1 }, /* center top */
@@ -22,12 +21,12 @@ namespace PathFinder2D.Core.Finder
             new [] { -1, -1 } /* left top */
         };
 
-        protected override FinderResult Find(Vector3 startVector3, Vector3 endVector3)
+        protected override FinderResult Find(WorldPosition start, WorldPosition end)
         {
             _weightMap = new uint?[MapWidth, MapHeight];
 
-            var startPoint = MapDefinition.Terrain.ToPoint<WavePoint>(startVector3);
-            var endPoint = MapDefinition.Terrain.ToPoint<WavePoint>(endVector3);
+            var startPoint = MapDefinition.Terrain.ToPoint<WavePoint>(start);
+            var endPoint = MapDefinition.Terrain.ToPoint<WavePoint>(end);
 
             uint currentWeight = 0;
             _weightMap[startPoint.X, startPoint.Y] = currentWeight;
@@ -60,19 +59,19 @@ namespace PathFinder2D.Core.Finder
                 lastIteration = thisIteration.Where(x => x != null).ToList();
             }
 
-            IList<Vector3> path = null;
+            IList<WorldPosition> path = null;
             if (completed)
             {
-                path = new List<Vector3>();
+                path = new List<WorldPosition>();
 
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(MapDefinition.Terrain.ToVector3(endPoint));
+                    path.Add(MapDefinition.Terrain.ToWorld(endPoint));
                     var weight = _weightMap[endPoint.X, endPoint.Y];
                     endPoint = FindNearestPoints(endPoint, startPoint, weight ?? 0);
                 }
 
-                path.Add(MapDefinition.Terrain.ToVector3(endPoint));
+                path.Add(MapDefinition.Terrain.ToWorld(endPoint));
                 path = path.Reverse().ToList();
             }
 

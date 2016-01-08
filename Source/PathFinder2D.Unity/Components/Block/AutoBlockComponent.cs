@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Domain.Terrain;
 using UnityEngine;
 
@@ -7,9 +8,9 @@ namespace PathFinder2D.Unity.Components.Block
     [AddComponentMenu("Modules/PathFinder2D/Blocks/Auto Block")]
     public class AutoBlockComponent : MonoBehaviour, IBlock
     {
-        public IEnumerable<Vector3> GetPoints(ITerrain terrain)
+        public IEnumerable<WorldPosition> GetPoints(ITerrain terrain)
         {
-            var result = new List<Vector3>();
+            var result = new List<WorldPosition>();
             var scale = transform.localScale;
             var quality = terrain.CellSize() / 2;
 
@@ -23,7 +24,7 @@ namespace PathFinder2D.Unity.Components.Block
                     position = transform.TransformDirection(position);
                     position = position + transform.position;
                         
-                    result.Add(position);
+                    result.Add(new WorldPosition(position.x, position.z));
                 }
             }
 

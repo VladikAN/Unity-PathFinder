@@ -55,10 +55,7 @@ namespace PathFinder2D.Unity.Domain
         public IEnumerable<IBlock> GetBlocks()
         {
             var components = _gameObject.GetComponentsInChildren(typeof(IBlock));
-            if (components == null || !components.Any())
-            {
-                return null;
-            }
+            if (components == null || !components.Any()) return null;
             
             return components.OfType<IBlock>();
         }

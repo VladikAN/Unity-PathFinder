@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\Components\CoinComponent.cs" />
     <Compile Include="Assets\Script\Components\UnitComponent.cs" />
     <Compile Include="Assets\Script\Global.cs" />
   </ItemGroup>

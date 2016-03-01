@@ -55,23 +55,17 @@ namespace Assets.Script.Components
 
         private IList<Vector3> getRandomPath()
         {
-            if (_map == null)
-            {
-                return null;
-            }
+            if (_map == null) return null;
             
-            var targetX = Random.Range(0, _map.MapDefinition.FieldWidth);
-            var targetY = Random.Range(0, _map.MapDefinition.FieldHeight);
+            var coins = FindObjectsOfType<CoinComponent>();
+            if (coins == null || !coins.Any()) return null;
 
-            if (_map.MapDefinition.Field[targetX, targetY].Blocked)
-            {
-                return null;
-            }
+            var index = Random.Range(0, coins.Length);
 
             var start = new WorldPosition(transform.position.x, transform.position.z);
-            var end = _map.Terrain.ToWorld(new FinderPoint(targetX, targetY));
-            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end);
+            var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);
 
+            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end);
             return result.Path.Select(x => new Vector3(x.X, 0, x.Y)).ToList();
         }
     }

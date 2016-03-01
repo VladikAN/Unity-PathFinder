@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using PathFinder2D.Core;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
@@ -18,6 +17,8 @@ namespace PathFinder2D.Unity.Components
         public ITerrain Terrain;
         public MapDefinition MapDefinition;
 
+        private readonly Vector3 _defaultSize = new Vector3(.5f, .5f, .5f);
+
         public void InitMap(IPathFinderService pathFinderService, int cellSize)
         {
             Terrain = Terrain ?? new TerrainGameObject(gameObject, cellSize);
@@ -33,6 +34,11 @@ namespace PathFinder2D.Unity.Components
                 return;
             }
             
+            var gizmoSize = new Vector3(
+                    Mathf.Min(_defaultSize.x, MapDefinition.CellSize),
+                    Mathf.Min(_defaultSize.y, MapDefinition.CellSize),
+                    Mathf.Min(_defaultSize.z, MapDefinition.CellSize)) * .8f;
+
             if (DisplayEmptyCells || DisplayBlockedCells)
             {
                 var startX = MapDefinition.Terrain.X();
@@ -40,7 +46,6 @@ namespace PathFinder2D.Unity.Components
                 var fieldWidth = MapDefinition.FieldWidth;
                 var fieldHeight = MapDefinition.FieldHeight;
 
-                var gizmoSize = new Vector3(MapDefinition.CellSize, Math.Min(.1f, MapDefinition.CellSize), MapDefinition.CellSize) * 0.9f;
                 var gizmoCorrection = new Vector3(MapDefinition.CellSize / 2, gizmoSize.y / 2, MapDefinition.CellSize / 2);
 
                 for (var i = 0; i < fieldWidth; i++)
@@ -57,7 +62,7 @@ namespace PathFinder2D.Unity.Components
                         var z = startZ + MapDefinition.CellSize * j;
 
                         var gizmoPosition = new Vector3(x, 0, z) + gizmoCorrection;
-                        Gizmos.color = blocked ? new Color(125, 0, 0, .5f) : new Color(0, 125, 0, .5f);
+                        Gizmos.color = blocked ? new Color(125, 0, 0, .15f) : new Color(0, 125, 0, .15f);
                         Gizmos.DrawCube(gizmoPosition, gizmoSize);
                     }
                 }
@@ -70,18 +75,18 @@ namespace PathFinder2D.Unity.Components
                 {
                     if (DisplayFullPath && (finderResult.Path != null && finderResult.Path.Any()))
                     {
-                        /* Draw start/end points */
-                        Gizmos.color = new Color(0, 0, 125, .5f);
-                        Gizmos.DrawCube(new Vector3(finderResult.Path.First().X, 0, finderResult.Path.First().Y), Vector3.one);
-                        Gizmos.DrawCube(new Vector3(finderResult.Path.Last().X, 0, finderResult.Path.Last().Y), Vector3.one);
+                        Gizmos.color = new Color(125, 0, 0, .25f);
+                        var yCorrection = gizmoSize.y / 2;
+                        foreach (var point in finderResult.Path)
+                        {
+                            Gizmos.DrawCube(new Vector3(point.X, yCorrection, point.Y), gizmoSize);
+                        }
 
-                        /* Draw control points */
-                        Gizmos.color = new Color(125, 0, 0, .5f);
+                        Gizmos.color = new Color(225, 0, 0, .5f);
                         var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
                         {
-                            Gizmos.DrawCube(new Vector3(point.X, 0, point.Y), Vector3.one);
-                            Gizmos.DrawLine(new Vector3(prev.X, 0, prev.Y), new Vector3(point.X, 0, point.Y));
+                            Gizmos.DrawLine(new Vector3(prev.X, yCorrection, prev.Y), new Vector3(point.X, yCorrection, point.Y));
                             prev = point;
                         }
                     }

@@ -33,7 +33,7 @@ public class CoinComponent : MonoBehaviour
         if (target.gameObject.CompareTag("Player"))
         {
             _meshRenderer.enabled = false;
-            _timeout = 4f;
+            _timeout = 6f;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PathFinder2D.Core.Domain;
-using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Extensions;
 using PathFinder2D.Unity.Components;
 using UnityEngine;
 
@@ -30,7 +28,7 @@ namespace Assets.Script.Components
 
         public void Update()
         {
-            _path = _path ?? getRandomPath();
+            _path = _path ?? GetRandomPath();
             if (_path != null)
             {
                 _nextMoveTimeout -= Time.deltaTime;
@@ -53,14 +51,17 @@ namespace Assets.Script.Components
             }
         }
 
-        private IList<Vector3> getRandomPath()
+        private IList<Vector3> GetRandomPath()
         {
             if (_map == null) return null;
             
-            var coins = FindObjectsOfType<CoinComponent>();
-            if (coins == null || !coins.Any()) return null;
+            var coins = FindObjectsOfType<CoinComponent>()
+                .Where(x => x.GetComponent<MeshRenderer>().enabled)
+                .ToList();
 
-            var index = Random.Range(0, coins.Length);
+            if (!coins.Any()) return null;
+
+            var index = Random.Range(0, coins.Count);
 
             var start = new WorldPosition(transform.position.x, transform.position.z);
             var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);

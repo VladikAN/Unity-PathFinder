@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Extensions;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Unity.Components;
 using UnityEngine;
 
@@ -15,7 +14,7 @@ namespace Assets.Script.Components
 
         private TerrainComponent _map;
 
-        private IEnumerable<Vector3> _path;
+        private IList<Vector3> _path;
         private float _nextMoveTimeout;
 
         public void Start()
@@ -29,21 +28,22 @@ namespace Assets.Script.Components
 
         public void Update()
         {
-            _path = _path ?? getRandomPath();
+            _path = _path ?? GetRandomPath();
             if (_path != null)
             {
                 _nextMoveTimeout -= Time.deltaTime;
                 if (_nextMoveTimeout <= 0)
                 {
-                    if (Vector3.Distance(transform.position, _path.First()) < .1)
+                    var target = _path.First() + new Vector3(0, transform.position.y, 0);
+                    if (Vector3.Distance(transform.position, target) < .1)
                     {
-                        _path = _path.Except(new[] { _path.First() });
+                        _path = _path.Except(new[] { _path.First() }).ToList();
                         _path = !_path.Any() ? null : _path;
                     }
                     else
                     {
                         var step = MoveSpeed * Time.deltaTime;
-                        transform.position = Vector3.MoveTowards(transform.position, _path.First(), step);
+                        transform.position = Vector3.MoveTowards(transform.position, target, step);
                     }
 
                     _nextMoveTimeout = MoveTimeout;
@@ -51,26 +51,23 @@ namespace Assets.Script.Components
             }
         }
 
-        private IEnumerable<Vector3> getRandomPath()
+        private IList<Vector3> GetRandomPath()
         {
-            if (_map == null)
-            {
-                return null;
-            }
+            if (_map == null) return null;
             
-            var endX = Random.Range(0, _map.MapDefinition.FieldWidth);
-            var endY = Random.Range(0, _map.MapDefinition.FieldHeight);
+            var coins = FindObjectsOfType<CoinComponent>()
+                .Where(x => x.GetComponent<MeshRenderer>().enabled)
+                .ToList();
 
-            if (_map.MapDefinition.Field[endX, endY].Blocked)
-            {
-                return null;
-            }
+            if (!coins.Any()) return null;
 
-            var start = transform.position;
-            var end = _map.Terrain.ToVector3(new FinderPoint(endX, endY));
-            var result = Global.PathFinderService.Find(_map.Terrain.Id(), start, end);
+            var index = Random.Range(0, coins.Count);
 
-            return result.Path;
+            var start = new WorldPosition(transform.position.x, transform.position.z);
+            var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);
+
+            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end);
+            return result.Path.Select(x => new Vector3(x.X, 0, x.Y)).ToList();
         }
     }
 }

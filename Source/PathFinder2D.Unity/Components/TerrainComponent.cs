@@ -11,9 +11,9 @@ namespace PathFinder2D.Unity.Components
     [AddComponentMenu("Modules/PathFinder2D/Terrain")]
     public class TerrainComponent : MonoBehaviour
     {
-        public bool DisplayFreeCells = false;
-        public bool DisplayBlockCells = false;
-        public bool DisplayPath = false;
+        public bool DisplayEmptyCells = false;
+        public bool DisplayBlockedCells = false;
+        public bool DisplayFullPath = false;
         
         public ITerrain Terrain;
         public MapDefinition MapDefinition;
@@ -33,7 +33,7 @@ namespace PathFinder2D.Unity.Components
                 return;
             }
             
-            if (DisplayFreeCells || DisplayBlockCells)
+            if (DisplayEmptyCells || DisplayBlockedCells)
             {
                 var startX = MapDefinition.Terrain.X();
                 var startZ = MapDefinition.Terrain.Y();
@@ -49,7 +49,7 @@ namespace PathFinder2D.Unity.Components
                     for (var j = 0; j < fieldHeight; j++)
                     {
                         var blocked = MapDefinition.Field[i, j] != null && MapDefinition.Field[i, j].Blocked;
-                        if ((!blocked && !DisplayFreeCells) || (blocked && !DisplayBlockCells))
+                        if ((!blocked && !DisplayEmptyCells) || (blocked && !DisplayBlockedCells))
                         {
                             continue;
                         }
@@ -57,30 +57,30 @@ namespace PathFinder2D.Unity.Components
                         var z = startZ + MapDefinition.CellSize * j;
 
                         var gizmoPosition = new Vector3(x, 0, z) + gizmoCorrection;
-                        Gizmos.color = blocked ? new Color(125, 0, 0) : new Color(0, 125, 0);
-                        Gizmos.DrawWireCube(gizmoPosition, gizmoSize);
+                        Gizmos.color = blocked ? new Color(125, 0, 0, .5f) : new Color(0, 125, 0, .5f);
+                        Gizmos.DrawCube(gizmoPosition, gizmoSize);
                     }
                 }
             }
 
-            if (DisplayPath)
+            if (DisplayFullPath)
             {
                 var finderResult = MapDefinition.LastFinderResult;
                 if (finderResult != null)
                 {
-                    if (DisplayPath && (finderResult.Path != null && finderResult.Path.Any()))
+                    if (DisplayFullPath && (finderResult.Path != null && finderResult.Path.Any()))
                     {
                         /* Draw start/end points */
-                        Gizmos.color = Color.blue;
-                        Gizmos.DrawWireSphere(new Vector3(finderResult.Path.First().X, 0, finderResult.Path.First().Y), .4f);
-                        Gizmos.DrawWireSphere(new Vector3(finderResult.Path.Last().X, 0, finderResult.Path.Last().Y), .4f);
+                        Gizmos.color = new Color(0, 0, 125, .5f);
+                        Gizmos.DrawCube(new Vector3(finderResult.Path.First().X, 0, finderResult.Path.First().Y), Vector3.one);
+                        Gizmos.DrawCube(new Vector3(finderResult.Path.Last().X, 0, finderResult.Path.Last().Y), Vector3.one);
 
                         /* Draw control points */
-                        Gizmos.color = Color.red;
+                        Gizmos.color = new Color(125, 0, 0, .5f);
                         var prev = finderResult.Path.First();
                         foreach (var point in finderResult.Path)
                         {
-                            Gizmos.DrawWireSphere(new Vector3(point.X, 0, point.Y), .35f);
+                            Gizmos.DrawCube(new Vector3(point.X, 0, point.Y), Vector3.one);
                             Gizmos.DrawLine(new Vector3(prev.X, 0, prev.Y), new Vector3(point.X, 0, point.Y));
                             prev = point;
                         }

@@ -52,6 +52,7 @@
     <Compile Include="Finders\FinderPerformanceTests.cs" />
     <Compile Include="Finders\FinderTests.cs" />
     <Compile Include="Extensions\StringMapExtensions.cs" />
+    <Compile Include="Services\PathExtentionsTest.cs" />
     <Compile Include="Stubs\FakeFinder.cs" />
     <Compile Include="Stubs\FakeFinderPoint.cs" />
     <Compile Include="Stubs\FakeMapInitializer.cs" />

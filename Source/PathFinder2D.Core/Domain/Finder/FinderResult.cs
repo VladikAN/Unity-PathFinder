@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace PathFinder2D.Core.Domain.Finder
+﻿namespace PathFinder2D.Core.Domain.Finder
 {
     public class FinderResult
     {
-        public IEnumerable<WorldPosition> Path;
+        public WorldPosition[] Path;
 
-        public FinderResult(IEnumerable<WorldPosition> path)
+        public FinderResult(WorldPosition[] path)
         {
             Path = path;
         }

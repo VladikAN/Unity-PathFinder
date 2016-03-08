@@ -63,7 +63,6 @@ namespace PathFinder2D.Core.Finder
             if (completed)
             {
                 path = new List<WorldPosition>();
-
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
                     path.Add(MapDefinition.Terrain.ToWorld(endPoint));
@@ -75,7 +74,7 @@ namespace PathFinder2D.Core.Finder
                 path = path.Reverse().ToList();
             }
 
-            var result = new FinderResult(path);
+            var result = new FinderResult(path.ToArray());
             return result;
         }
 

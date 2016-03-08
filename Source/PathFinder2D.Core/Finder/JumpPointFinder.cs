@@ -60,7 +60,7 @@ namespace PathFinder2D.Core.Finder
                 path.Reverse();
             }
 
-            var result = new FinderResult(path);
+            var result = new FinderResult(path.ToArray());
             return result;
         }
 

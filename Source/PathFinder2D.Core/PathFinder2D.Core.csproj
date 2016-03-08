@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Domain\Terrain\IBlock.cs" />
     <Compile Include="Domain\WorldPosition.cs" />
+    <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Finder\BaseFinder.cs" />
     <Compile Include="Initializer\IMapInitializer.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />

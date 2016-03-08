@@ -1,5 +1,11 @@
 fileFormatVersion: 2
-guid: 7e28422fab9d26d499236da869ed6de3
+guid: 380aa5d314ad932469fe3bbc0ffb281e
+labels:
+- PathFinder3D
 folderAsset: yes
+timeCreated: 1456932548
+licenseType: Free
 DefaultImporter:
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

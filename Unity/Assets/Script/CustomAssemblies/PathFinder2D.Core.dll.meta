@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: ddfbfb8fe39c1d0439f9fd5d79616745
+labels:
+- PathFinder3D
 timeCreated: 1456763149
 licenseType: Free
 PluginImporter:

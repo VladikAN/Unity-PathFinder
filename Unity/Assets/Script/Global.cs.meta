@@ -1,8 +1,12 @@
 fileFormatVersion: 2
 guid: 3b1f4a056d2a1974997ca5a9e22a2e15
+labels:
+- PathFinder3D
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

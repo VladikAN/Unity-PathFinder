@@ -6,7 +6,7 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class WaveFinder : BaseFinder
+    public class WaveFinder : BaseFinder<WavePoint>
     {
         private uint?[,] _weightMap;
         private readonly IList<int[]> _movements = new List<int[]>()
@@ -21,7 +21,7 @@ namespace PathFinder2D.Core.Finder
             new [] { -1, -1 } /* left top */
         };
 
-        protected override FinderResult Find(WorldPosition start, WorldPosition end)
+        protected override WavePoint[] Find(WorldPosition start, WorldPosition end, SearchOptions options)
         {
             _weightMap = new uint?[MapWidth, MapHeight];
 
@@ -59,23 +59,21 @@ namespace PathFinder2D.Core.Finder
                 lastIteration = thisIteration.Where(x => x != null).ToList();
             }
 
-            IList<WorldPosition> path = null;
+            var path = new List<WavePoint>();
             if (completed)
             {
-                path = new List<WorldPosition>();
                 while (endPoint.X != startPoint.X || endPoint.Y != startPoint.Y)
                 {
-                    path.Add(MapDefinition.Terrain.ToWorld(endPoint));
+                    path.Add(endPoint);
                     var weight = _weightMap[endPoint.X, endPoint.Y];
                     endPoint = FindNearestPoints(endPoint, startPoint, weight ?? 0);
                 }
 
-                path.Add(MapDefinition.Terrain.ToWorld(endPoint));
-                path = path.Reverse().ToList();
+                path.Add(endPoint);
+                path.Reverse();
             }
 
-            var result = new FinderResult(path.ToArray());
-            return result;
+            return path.ToArray();
         }
 
         private WavePoint FindNearestPoints(WavePoint current, WavePoint target, uint weight)

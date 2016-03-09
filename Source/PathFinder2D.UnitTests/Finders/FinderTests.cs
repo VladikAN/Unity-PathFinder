@@ -14,14 +14,14 @@ namespace PathFinder2D.UnitTests.Finders
     [TestFixture]
     public class FinderTests
     {
-        private static IEnumerable<BaseFinder> GlobalFinders
+        private static IEnumerable<IFinder> GlobalFinders
         {
             get
             {
                 /* Get all classes which realize IFinder */
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName != typeof (FinderTests).Assembly.FullName);
-                var types = assemblies.SelectMany(assembly => assembly.GetTypes()).Where(type => typeof(BaseFinder).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
-                var finders = types.Select(Activator.CreateInstance).OfType<BaseFinder>();
+                var types = assemblies.SelectMany(assembly => assembly.GetTypes()).Where(type => typeof(IFinder).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
+                var finders = types.Select(Activator.CreateInstance).OfType<IFinder>();
                 
                 return finders;
             }
@@ -51,7 +51,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("SimpleMoveSource")]
-        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, BaseFinder finder)
+        public void SimpleMove_Empty_Success(int sX, int sY, int eX, int eY, IFinder finder)
         {
             var raw = new[]
             {
@@ -73,7 +73,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("SimpleMoveSource")]
-        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, BaseFinder finder)
+        public void SimpleMove_SingleWall_Success(int sX, int sY, int eX, int eY, IFinder finder)
         {
             var raw = new[]
             {
@@ -212,7 +212,7 @@ namespace PathFinder2D.UnitTests.Finders
         }
 
         [TestCaseSource("BlockedMoveSource")]
-        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, BaseFinder finder)
+        public void BlockedMove_SingleWall_PathNotFounded(int sX, int sY, int eX, int eY, IFinder finder)
         {
             var raw = new[] { ".#." };
 

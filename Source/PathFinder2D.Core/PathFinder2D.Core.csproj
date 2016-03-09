@@ -47,6 +47,8 @@
     <Compile Include="Domain\WorldPosition.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Finder\BaseFinder.cs" />
+    <Compile Include="Finder\IFinder.cs" />
+    <Compile Include="Finder\SearchOptions.cs" />
     <Compile Include="Initializer\IMapInitializer.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />
     <Compile Include="Domain\Map\MapCell.cs" />

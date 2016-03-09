@@ -1,25 +1,44 @@
-﻿using PathFinder2D.Core.Domain;
+﻿using System;
+using System.Linq;
+using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
+using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public abstract class BaseFinder
+    public abstract class BaseFinder<T> : IFinder where T : FinderPoint, new()
     {
         protected MapDefinition MapDefinition;
         protected int MapWidth;
         protected int MapHeight;
 
-        public FinderResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end)
+        public FinderResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
             MapDefinition = mapDefinition;
             MapWidth = mapDefinition.FieldWidth;
             MapHeight = mapDefinition.FieldHeight;
 
-            return Find(start, end);
+            var points = Find(start, end, options);
+            var results = (ApplySettings(options, points) ?? Enumerable.Empty<T>())
+                .Select(x => mapDefinition.Terrain.ToWorld(x))
+                .ToArray();
+
+            return new FinderResult(results);
         }
 
-        protected abstract FinderResult Find(WorldPosition start, WorldPosition end);
+        protected abstract T[] Find(WorldPosition start, WorldPosition end, SearchOptions options);
+
+        protected T[] ApplySettings(SearchOptions options, T[] points)
+        {
+            switch (options)
+            {
+                case SearchOptions.None: return points;
+                case SearchOptions.Minimum: return points.ToMinimum();
+                case SearchOptions.Maximum: return points.ToMaximum();
+                default: throw new NotSupportedException("This search option currently not supported");
+            } 
+        }
 
         protected bool ValidateEdges(int x, int y)
         {

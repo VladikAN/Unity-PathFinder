@@ -1,14 +1,13 @@
 ﻿using PathFinder2D.Core.Domain;
-using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Finder;
 
 namespace PathFinder2D.UnitTests.Stubs
 {
-    public class FakeFinder : BaseFinder
+    public class FakeFinder : BaseFinder<FakeFinderPoint>
     {
-        protected override FinderResult Find(WorldPosition start, WorldPosition end)
+        protected override FakeFinderPoint[] Find(WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
-            return new FinderResult(null);
+            return null;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace PathFinder2D.UnitTests.Finders
         [TestCase(2, TestName = "Jump point performance")]
         public void PerformanceTests(int finderNumber)
         {
-            var finder = finderNumber == 1 ? (BaseFinder) new WaveFinder() : new JumpPointFinder();
+            var finder = finderNumber == 1 ? (IFinder) new WaveFinder() : new JumpPointFinder();
 
             var pathFinderService = new PathFinderService(finder, new MapInitializer());
             pathFinderService.GetMaps().Add(1, _testMap);

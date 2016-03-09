@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Finder;
 using PathFinder2D.Unity.Components;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Assets.Script.Components
 {
     public class UnitComponent : MonoBehaviour
     {
+        public bool DetectObstacles;
         public GameObject TerrainObject;
         public float MoveTimeout;
         public float MoveSpeed;
@@ -66,7 +68,7 @@ namespace Assets.Script.Components
             var start = new WorldPosition(transform.position.x, transform.position.z);
             var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);
 
-            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end);
+            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, SearchOptions.Maximum);
             return result.Path.Select(x => new Vector3(x.X, 0, x.Y)).ToList();
         }
     }

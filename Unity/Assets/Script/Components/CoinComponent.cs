@@ -8,6 +8,7 @@ public class CoinComponent : MonoBehaviour
     public void Start()
     {
         _meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        transform.Rotate(Vector3.up, Random.Range(0, 180));
     }
 
 	public void Update()

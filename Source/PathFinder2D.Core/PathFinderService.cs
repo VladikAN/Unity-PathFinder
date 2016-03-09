@@ -53,13 +53,13 @@ namespace PathFinder2D.Core
             return mapDefinition;
         }
 
-        public FinderResult FindPath(int terrainId, WorldPosition start, WorldPosition end)
+        public FinderResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
             if (_maps == null || !_maps.ContainsKey(terrainId))
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));
 
             var mapDefinition = _maps[terrainId];
-            var result = _finder.Find(mapDefinition, start, end);
+            var result = _finder.Find(mapDefinition, start, end, options);
             mapDefinition.LastFinderResult = result;
 
             return result;

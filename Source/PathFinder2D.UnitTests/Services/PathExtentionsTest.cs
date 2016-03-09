@@ -8,10 +8,10 @@ namespace PathFinder2D.UnitTests.Services
     [TestFixture]
     public class PathExtentionsTest
     {
-        #region ToGeneral
+        #region ToMinimum
 
         [Test]
-        public void ToGeneral_Horizontal_LeftToRight()
+        public void ToMinimum_Horizontal_LeftToRight()
         {
             var points = new[]
             {
@@ -21,7 +21,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(3, 0)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -30,7 +30,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToGeneral_Horizontal_RightToLeft()
+        public void ToMinimum_Horizontal_RightToLeft()
         {
             var points = new[]
             {
@@ -40,7 +40,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(3));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -48,7 +48,7 @@ namespace PathFinder2D.UnitTests.Services
             Assert.That(newPoints[1].Y, Is.EqualTo(0));
         }
         [Test]
-        public void ToGeneral_Vertical_UpToDown()
+        public void ToMinimum_Vertical_UpToDown()
         {
             var points = new[]
             {
@@ -58,7 +58,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 3)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -67,7 +67,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToGeneral_Vertical_DownToUp()
+        public void ToMinimum_Vertical_DownToUp()
         {
             var points = new[]
             {
@@ -77,7 +77,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(3));
@@ -86,7 +86,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToGeneral_Diagonal_DownToUp()
+        public void ToMinimum_Diagonal_DownToUp()
         {
             var points = new[]
             {
@@ -96,7 +96,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(3));
             Assert.That(newPoints[0].Y, Is.EqualTo(3));
@@ -105,7 +105,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToGeneral_Diagonal_UpToDown()
+        public void ToMinimum_Diagonal_UpToDown()
         {
             var points = new[]
             {
@@ -115,7 +115,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(3, 3)
             };
 
-            var newPoints = points.ToGeneral();
+            var newPoints = points.ToMinimum();
             Assert.That(newPoints.Count(), Is.EqualTo(2));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -125,10 +125,10 @@ namespace PathFinder2D.UnitTests.Services
 
         #endregion
 
-        #region ToDetailed
+        #region ToMaximum
 
         [Test]
-        public void ToDetailed_Horizontal_LeftToRight()
+        public void ToMaximum_Horizontal_LeftToRight()
         {
             var points = new[]
             {
@@ -136,7 +136,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(3, 0)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -149,7 +149,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToDetailed_Horizontal_RightToLeft()
+        public void ToMaximum_Horizontal_RightToLeft()
         {
             var points = new[]
             {
@@ -157,7 +157,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(3));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -170,7 +170,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToDetailed_Vertical_UpToDown()
+        public void ToMaximum_Vertical_UpToDown()
         {
             var points = new[]
             {
@@ -178,7 +178,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 3)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));
@@ -191,7 +191,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToDetailed_Vertical_DownToUp()
+        public void ToMaximum_Vertical_DownToUp()
         {
             var points = new[]
             {
@@ -199,7 +199,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(3));
@@ -212,7 +212,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToDetailed_Diagonal_DownToUp()
+        public void ToMaximum_Diagonal_DownToUp()
         {
             var points = new[]
             {
@@ -220,7 +220,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(0, 0)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(3));
             Assert.That(newPoints[0].Y, Is.EqualTo(3));
@@ -233,7 +233,7 @@ namespace PathFinder2D.UnitTests.Services
         }
 
         [Test]
-        public void ToDetailed_Diagonal_UpToDown()
+        public void ToMaximum_Diagonal_UpToDown()
         {
             var points = new[]
             {
@@ -241,7 +241,7 @@ namespace PathFinder2D.UnitTests.Services
                 new FinderPoint(3, 3)
             };
 
-            var newPoints = points.ToDetailed();
+            var newPoints = points.ToMaximum();
             Assert.That(newPoints.Count(), Is.EqualTo(4));
             Assert.That(newPoints[0].X, Is.EqualTo(0));
             Assert.That(newPoints[0].Y, Is.EqualTo(0));

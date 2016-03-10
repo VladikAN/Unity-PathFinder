@@ -13,13 +13,19 @@
         <div class="container">
             <h1>Introduction</h1>
             <p>This is Unity 3D assets for path finding. Assets will look up a valid path through 2D/3D maze. For this moment project includes Wave and Jump Point search algorithms. Assets are good for games prototyping, turn based games development, 2D puzzles and any single-floor 3D games. Possible implementations: Lines, XCom, Hard West, Heroes and others. Ready to improve product and add more features. Please support to get more features.</p>
-            <hr/>
+            <hr/> <!-- links -->
             
             <h1>Setup</h1>
-            This chapter contains general information of the assets setup into your Unity 3D.
+            <p>This chapter contains general information of the assets setup into your Unity 3D.</p>
             <h2>Unit</h2>
+            <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required.</p>
+            <p>UnitComponent has only one setting: Detect Obstacles. Set this settigs to <code>true</code> (check) and unit will validate each new step if its free and not blocked by obstacle. Set this setting to <code>false</code> (uncheck) and unit will move by detected path even if its already blocked by some obstacle.</p>
+
             <h2>Walls</h2>
-            <hr/>
+            <p>Assets contains <code>BlockComponent</code> and <code>AutoBlockComponent</code>. This components are compiled and distributed with assembly.</p>
+            <p><code>BlockComponent</code> is used for small obstacles with 1x1 size. This component should be used for such <code>gameObjects</code> like: rocks, trees, barrels and others.</p>
+            <p><code>AutoBlockComponent</code> is used for obstacles with complex shape. This component should be used with non-trivial <code>gameObjects</code>.</p>
+            <hr/> <!-- Images -->
         </div>
     </body>
 </html>

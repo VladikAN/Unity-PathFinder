@@ -16,12 +16,37 @@
             <hr/> <!-- links -->
             
             <h1>Setup</h1>
-            <p>This chapter contains general information of the assets setup into your Unity 3D.</p>
-            <h2>Unit</h2>
-            <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required.</p>
-            <p>UnitComponent has only one setting: Detect Obstacles. Set this settigs to <code>true</code> (check) and unit will validate each new step if its free and not blocked by obstacle. Set this setting to <code>false</code> (uncheck) and unit will move by detected path even if its already blocked by some obstacle.</p>
+            <p>This chapter contains general information of the assets setup into your Unity 3D project. Full developer flow is next:</p>
+            <ul>
+            	<li>Create <code>gameObject</code> which covers full level and add <code>TerrainComponent</code>.</li>
+            	<li>To your units, target objects to be moved, add <code>UnitComponent</code>.</li>
+            	<li>To your obstacles, objects whick will block units movements, add <code>BlockComponent</code>.</li>
+            </ul>
 
-            <h2>Walls</h2>
+            <!-- Level -->
+            <h2>Level</h2>
+            <p><code>TerrainComponent</code> is used to initialize your level <code>gameObject</code>. This component distributed with compiled assembly. This component has next gizmo settings:</p>
+            <ul>
+            	<li><i>Display Empty Cells</i>. If checked then all not blocked positions will be displayed by green cubes in <b>scene</b> viewport.</li>
+            	<li><i>Display Blocked Cells</i>. If checked then all blocked positions will be displayed by red cubes in <b>scene</b> viewport.</li>
+            	<li><i>Display Full Path</i>. If checked then latest search result will be displayed in <b>scene</b> viewport</li>
+            </ul>
+
+			<!-- Units -->            
+            <h2>Unit</h2>
+            <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required:</p>
+            <pre>
+/* Init level by calling .InitMap() */
+TerrainComponent _map = null;
+_map = TerrainObject.GetComponent(typeof(TerrainComponent));
+_map.InitMap(Global.PathFinderService, 1);
+
+/* Search valid path from start to end */
+var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, SearchOptions.Maximum);</pre>
+            <p>UnitComponent has only one setting: <i>Detect Obstacles</i>. Set this settigs to <code>true</code> (check) and unit will validate each new step if its free and not blocked by obstacle. Set this setting to <code>false</code> (uncheck) and unit will move by detected path even if its already blocked by some obstacle.</p>
+
+            <!-- Obstacles -->
+            <h2>Obstacles</h2>
             <p>Assets contains <code>BlockComponent</code> and <code>AutoBlockComponent</code>. This components are compiled and distributed with assembly.</p>
             <p><code>BlockComponent</code> is used for small obstacles with 1x1 size. This component should be used for such <code>gameObjects</code> like: rocks, trees, barrels and others.</p>
             <p><code>AutoBlockComponent</code> is used for obstacles with complex shape. This component should be used with non-trivial <code>gameObjects</code>.</p>

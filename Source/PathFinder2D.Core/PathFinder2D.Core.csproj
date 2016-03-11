@@ -52,7 +52,7 @@
     <Compile Include="Initializer\IMap.cs" />
     <Compile Include="Domain\Map\MapDefinition.cs" />
     <Compile Include="Domain\Map\MapCell.cs" />
-    <Compile Include="Extensions\TerrainExtensions.cs" />
+    <Compile Include="Extensions\FloorExtensions.cs" />
     <Compile Include="Domain\Finder\PathPoint.cs" />
     <Compile Include="Domain\Finder\PathResult.cs" />
     <Compile Include="Finder\JumpPointFinder.cs" />

@@ -8,7 +8,7 @@ namespace Assets.Script
     {
         static Global()
         {
-            PathService = new PathService(new JumpPointFinder(), new Map());
+            PathService = new PathService(new WaveFinder(), new Map());
         }
 
         public static IPathService PathService { get; private set; }

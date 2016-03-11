@@ -40,25 +40,25 @@ namespace PathFinder2D.Core
             return _maps;
         }
 
-        public MapDefinition InitMap(IFloor terrain, float cellSize)
+        public MapDefinition InitMap(IFloor floor, float cellSize)
         {
-            if (terrain == null) throw new ArgumentException("Null object not supported as terrain parameter");
+            if (floor == null) throw new ArgumentException("Null object not supported as terrain parameter");
             if (cellSize <= 0) throw new ArgumentException("Cell width must be greater then 0");
-            if (_maps.ContainsKey(terrain.Id())) throw new ArgumentException("This GameObject already initialized as map");
+            if (_maps.ContainsKey(floor.Id())) throw new ArgumentException("This GameObject already initialized as map");
 
-            var field = _initializer.ParseMapCells(terrain, cellSize);
-            var mapDefinition = new MapDefinition(terrain, field, cellSize);
-            _maps.Add(terrain.Id(), mapDefinition);
+            var field = _initializer.ParseMapCells(floor, cellSize);
+            var mapDefinition = new MapDefinition(floor, field, cellSize);
+            _maps.Add(floor.Id(), mapDefinition);
             
             return mapDefinition;
         }
 
-        public PathResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
+        public PathResult FindPath(int floorId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
-            if (_maps == null || !_maps.ContainsKey(terrainId))
-                throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));
+            if (_maps == null || !_maps.ContainsKey(floorId))
+                throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", floorId));
 
-            var mapDefinition = _maps[terrainId];
+            var mapDefinition = _maps[floorId];
             var result = _finder.Find(mapDefinition, start, end, options);
             mapDefinition.LastFinderResult = result;
 

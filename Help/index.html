@@ -18,6 +18,7 @@
             <h1>Introduction</h1>
             <p>This is Unity 3D assets for path finding. Assets will look up a valid path through 2D/3D maze. For this moment project includes <a href="https://en.wikipedia.org/wiki/Lee_algorithm">Wave</a> and <a href="https://en.wikipedia.org/wiki/Jump_point_search">Jump Point</a> search algorithms. Assets are good for games prototyping, turn based games development, 2D puzzles and any single-floor 3D games. Possible implementations: <a href="https://en.wikipedia.org/wiki/Color_Lines">Color Lines</a>, <a href="https://en.wikipedia.org/wiki/XCOM_2">X-Com</a>, <a href="https://en.wikipedia.org/wiki/Might_%26_Magic_Heroes_VII">Heroes Of Might and Magic</a> and others.</p>
             <p>We are ready to improve product and add more good features. Please share your support to get more features.</p>
+            <p>Currently all source code is available on <a href="https://github.com/VladikAN/Unity3D-Path-Finder">GitHub</a></p>
             <hr/>
             
             <h1>Setup</h1>
@@ -43,7 +44,7 @@
             <div class="col-sm-12 text-center"><img src="pics/help_unit.jpg" /></div>
             <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required:</p>
             <pre>
-/* Init level by calling .InitMap() */
+/* Init level by calling .InitMap() 
 TerrainComponent _map = null;
 _map = TerrainObject.GetComponent(typeof(TerrainComponent));
 _map.InitMap(Global.PathFinderService, 1);

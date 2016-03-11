@@ -17,7 +17,7 @@
         	</div>
             <h1>Introduction</h1>
             <p>This is Unity 3D assets for path finding. Assets will look up a valid path through 2D/3D maze. For this moment project includes <a href="https://en.wikipedia.org/wiki/Lee_algorithm">Wave</a> and <a href="https://en.wikipedia.org/wiki/Jump_point_search">Jump Point</a> search algorithms. Assets are good for games prototyping, turn based games development, 2D puzzles and any single-floor 3D games. Possible implementations: <a href="https://en.wikipedia.org/wiki/Color_Lines">Color Lines</a>, <a href="https://en.wikipedia.org/wiki/XCOM_2">X-Com</a>, <a href="https://en.wikipedia.org/wiki/Might_%26_Magic_Heroes_VII">Heroes Of Might and Magic</a> and others.</p>
-            <p>We are ready to improve product and add more good features. Please support to get more features.</p>
+            <p>We are ready to improve product and add more good features. Please share your support to get more features.</p>
             <hr/>
             
             <h1>Setup</h1>
@@ -50,7 +50,7 @@ _map.InitMap(Global.PathFinderService, 1);
 
 /* Search valid path from start to end */
 var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, SearchOptions.Maximum);</pre>
-            <p>UnitComponent has only one setting: <i>Detect Obstacles</i>. Set this settigs to <code>true</code> (check) and unit will validate each new step if its free and not blocked by obstacle. Set this setting to <code>false</code> (uncheck) and unit will move by detected path even if its already blocked by some obstacle.</p>
+			<p><code>UnitComponent</code> implementation is for demo scene and it needs to collect the coins placed around the level.</p>
 
             <!-- Obstacles -->
             <h2>Obstacles</h2>

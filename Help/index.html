@@ -30,6 +30,7 @@
 
             <!-- Level -->
             <h2>Level</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_floor.jpg" /></div>
             <p><code>FloorComponent</code> is used to initialize your level <code>gameObject</code>. This component distributed with compiled assembly. This component has next gizmo settings:</p>
             <ul>
             	<li><i>Display Empty Cells</i>. If checked then all not blocked positions will be displayed by green cubes in <b>scene</b> viewport.</li>
@@ -39,6 +40,7 @@
 
 			<!-- Units -->            
             <h2>Unit</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_unit.jpg" /></div>
             <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required:</p>
             <pre>
 /* Init level by calling .InitMap() */
@@ -52,6 +54,7 @@ var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, Se
 
             <!-- Obstacles -->
             <h2>Obstacles</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_block.jpg" /></div>
             <p>Assets contains <code>BlockComponent</code> and <code>AutoBlockComponent</code>. This components are compiled and distributed with assembly.</p>
             <p><code>BlockComponent</code> is used for small obstacles with 1x1 size. This component should be used for such <code>gameObjects</code> like: rocks, trees, barrels and others.</p>
             <p><code>AutoBlockComponent</code> is used for obstacles with complex shape. This component should be used with non-trivial <code>gameObjects</code>.</p>

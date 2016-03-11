@@ -3,22 +3,17 @@ using PathFinder2D.Core.Finder;
 using PathFinder2D.Unity.Components;
 using System.Collections.Generic;
 using System.Linq;
-using PathFinder2D.Core.Domain.Finder;
-using PathFinder2D.Core.Domain.Map;
-using PathFinder2D.Core.Extensions;
 using UnityEngine;
 
 namespace Assets.Script.Components
 {
     public class UnitComponent : MonoBehaviour
     {
-        public bool DetectObstacles;
         public GameObject FloorObject;
         public float MoveTimeout;
         public float MoveSpeed;
 
         private FloorComponent _floor;
-        private MapDefinition _map;
 
         private IList<Vector3> _path;
         private Vector3 _nextPoint;
@@ -30,7 +25,6 @@ namespace Assets.Script.Components
             {
                 _floor = FloorObject.GetComponent<FloorComponent>();
                 _floor.InitMap(Global.PathService, 1);
-                _map = _floor.MapDefinition;
             }
         }
 
@@ -53,15 +47,6 @@ namespace Assets.Script.Components
                 if (_nextPoint != null)
                 {
                     _nextPoint += new Vector3(0, transform.position.y, 0);
-                    if (DetectObstacles)
-                    {
-                        var next = _floor.Floor.ToPoint<PathPoint>(new WorldPosition(_nextPoint.x, _nextPoint.z));
-                        if (_map.GetCell(next.X, next.Y).Blocked)
-                        {
-                            _path = null;
-                            return;
-                        }
-                    }
                 }
             }
             else
@@ -88,8 +73,7 @@ namespace Assets.Script.Components
             var start = new WorldPosition(transform.position.x, transform.position.z);
             var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);
 
-            var searchOptions = DetectObstacles ? SearchOptions.Maximum : SearchOptions.None;
-            var result = Global.PathService.FindPath(_floor.Floor.Id(), start, end, searchOptions);
+            var result = Global.PathService.FindPath(_floor.Floor.Id(), start, end, SearchOptions.Minimum);
             return result.Path.Select(x => new Vector3(x.X, 0, x.Y)).ToList();
         }
     }

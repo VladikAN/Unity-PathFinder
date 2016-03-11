@@ -6,9 +6,9 @@ namespace PathFinder2D.UnitTests.Extensions
 {
     public static class StringMapExtensions
     {
-        public static ITerrain ParseTerrain(this string[] raw)
+        public static IFloor ParseTerrain(this string[] raw)
         {
-            var terrain = new FakeTerrain(1, 0, 0, raw[0].Length, raw.Length, 1);
+            var terrain = new FakeFloor(1, 0, 0, raw[0].Length, raw.Length, 1);
             return terrain;
         }
 

@@ -54,11 +54,11 @@
     <Compile Include="Extensions\StringMapExtensions.cs" />
     <Compile Include="Services\PathExtentionsTest.cs" />
     <Compile Include="Stubs\FakeFinder.cs" />
-    <Compile Include="Stubs\FakeFinderPoint.cs" />
-    <Compile Include="Stubs\FakeMapInitializer.cs" />
+    <Compile Include="Stubs\FakePoint.cs" />
+    <Compile Include="Stubs\FakeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\PathFinderServiceTests.cs" />
-    <Compile Include="Stubs\FakeTerrain.cs" />
+    <Compile Include="Services\PathServiceTests.cs" />
+    <Compile Include="Stubs\FakeFloor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PathFinder2D.Core\PathFinder2D.Core.csproj">

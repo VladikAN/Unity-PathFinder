@@ -3,7 +3,7 @@ using PathFinder2D.Core.Domain.Terrain;
 
 namespace PathFinder2D.UnitTests.Stubs
 {
-    public class FakeTerrain : ITerrain
+    public class FakeFloor : IFloor
     {
         private readonly int _id;
         private readonly float _x;
@@ -12,7 +12,7 @@ namespace PathFinder2D.UnitTests.Stubs
         private readonly float _h;
         private readonly float _cSize;
 
-        public FakeTerrain(int id, float x, float y, float w, float h, float cSize)
+        public FakeFloor(int id, float x, float y, float w, float h, float cSize)
         {
             _id = id;
             _x = x;

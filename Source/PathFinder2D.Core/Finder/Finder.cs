@@ -7,13 +7,13 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public abstract class BaseFinder<T> : IFinder where T : FinderPoint, new()
+    public abstract class Finder<T> : IFinder where T : PathPoint, new()
     {
         protected MapDefinition MapDefinition;
         protected int MapWidth;
         protected int MapHeight;
 
-        public FinderResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
+        public PathResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
             MapDefinition = mapDefinition;
             MapWidth = mapDefinition.FieldWidth;
@@ -24,7 +24,7 @@ namespace PathFinder2D.Core.Finder
                 .Select(x => mapDefinition.Terrain.ToWorld(x))
                 .ToArray();
 
-            return new FinderResult(results);
+            return new PathResult(results);
         }
 
         protected abstract T[] Find(WorldPosition start, WorldPosition end, SearchOptions options);

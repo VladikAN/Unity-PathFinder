@@ -8,11 +8,11 @@ namespace PathFinder2D.Unity.Components.Block
     [AddComponentMenu("Modules/PathFinder2D/Blocks/Auto Block")]
     public class AutoBlockComponent : MonoBehaviour, IBlock
     {
-        public IEnumerable<WorldPosition> GetPoints(ITerrain terrain)
+        public IEnumerable<WorldPosition> GetPoints(IFloor floor)
         {
             var result = new List<WorldPosition>();
             var scale = transform.localScale;
-            var quality = terrain.CellSize() / 2;
+            var quality = floor.CellSize() / 2;
 
             var width = (int)(scale.x / quality);
             var height = (int)(scale.z / quality);

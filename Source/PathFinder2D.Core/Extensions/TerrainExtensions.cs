@@ -6,7 +6,7 @@ namespace PathFinder2D.Core.Extensions
 {
     public static class TerrainExtensions
     {
-        public static TPoint ToPoint<TPoint>(this ITerrain terrain, WorldPosition position) where TPoint : FinderPoint, new()
+        public static TPoint ToPoint<TPoint>(this IFloor terrain, WorldPosition position) where TPoint : PathPoint, new()
         {
             var x = (int)((position.X - terrain.X()) / terrain.CellSize());
             var y = (int)((position.Y - terrain.Y()) / terrain.CellSize());
@@ -14,7 +14,7 @@ namespace PathFinder2D.Core.Extensions
             return new TPoint { X = x, Y = y };
         }
 
-        public static WorldPosition ToWorld<TPoint>(this ITerrain terrain, TPoint point) where TPoint : FinderPoint, new()
+        public static WorldPosition ToWorld<TPoint>(this IFloor terrain, TPoint point) where TPoint : PathPoint, new()
         {
             var cellCorrection = terrain.CellSize() / 2;
             var x = point.X * terrain.CellSize() + terrain.X() + cellCorrection;

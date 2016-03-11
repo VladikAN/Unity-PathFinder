@@ -5,16 +5,16 @@ namespace PathFinder2D.Core.Domain.Map
 {
     public class MapDefinition
     {
-        public MapDefinition(ITerrain terrain, MapCell[,] field, float cellSize)
+        public MapDefinition(IFloor terrain, MapCell[,] field, float cellSize)
         {
             Terrain = terrain;
             Field = field;
             CellSize = cellSize;
         }
 
-        public ITerrain Terrain;
+        public IFloor Terrain;
         public float CellSize;
-        public FinderResult LastFinderResult;
+        public PathResult LastFinderResult;
 
         public virtual int Id { get { return Terrain.Id(); } }
         public virtual MapCell[,] Field { get; private set; }

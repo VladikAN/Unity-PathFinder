@@ -7,10 +7,10 @@ using PathFinder2D.Core.Finder;
 
 namespace PathFinder2D.Core
 {
-    public interface IPathFinderService
+    public interface IPathService
     {
         IDictionary<int, MapDefinition> GetMaps();
-        MapDefinition InitMap(ITerrain terrain, float cellSize);
-        FinderResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None);
+        MapDefinition InitMap(IFloor terrain, float cellSize);
+        PathResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None);
     }
 }

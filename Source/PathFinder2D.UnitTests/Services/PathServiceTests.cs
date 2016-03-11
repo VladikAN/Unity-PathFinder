@@ -7,32 +7,32 @@ using PathFinder2D.UnitTests.Stubs;
 namespace PathFinder2D.UnitTests.Services
 {
     [TestFixture]
-    public class PathFinderServiceTests
+    public class PathServiceTests
     {
         #region Constructors
 
         [Test]
         public void Constructor_AllNullArgument_Exception()
         {
-            Assert.Throws<ArgumentException>(() => new PathFinderService(null, null));
+            Assert.Throws<ArgumentException>(() => new PathService(null, null));
         }
 
         [Test]
         public void Constructor_InitializerNullArgument_Exception()
         {
-            Assert.Throws<ArgumentException>(() => new PathFinderService(new FakeFinder(), null));
+            Assert.Throws<ArgumentException>(() => new PathService(new FakeFinder(), null));
         }
 
         [Test]
         public void Constructor_FinderNullArgument_Exception()
         {
-            Assert.Throws<ArgumentException>(() => new PathFinderService(null, new FakeMapInitializer()));
+            Assert.Throws<ArgumentException>(() => new PathService(null, new FakeMap()));
         }
 
         [Test]
         public void Constructor_Instances_Success()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
+            var target = new PathService(new FakeFinder(), new FakeMap());
         }
 
         #endregion
@@ -42,30 +42,30 @@ namespace PathFinder2D.UnitTests.Services
         [Test]
         public void InitMap_NullTerrain_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
+            var target = new PathService(new FakeFinder(), new FakeMap());
             Assert.Throws<ArgumentException>(() => target.InitMap(null, 1));
         }
 
         [Test]
         public void InitMap_NegativeCellSize_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 0), 0));
+            var target = new PathService(new FakeFinder(), new FakeMap());
+            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeFloor(1, 0, 0, 0, 0, 0), 0));
         }
 
         [Test]
         public void InitMap_ValidArgs_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
+            var target = new PathService(new FakeFinder(), new FakeMap());
+            target.InitMap(new FakeFloor(1, 0, 0, 0, 0, 1), 1);
         }
 
         [Test]
         public void InitMap_InitTwice_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
-            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1));
+            var target = new PathService(new FakeFinder(), new FakeMap());
+            target.InitMap(new FakeFloor(1, 0, 0, 0, 0, 1), 1);
+            Assert.Throws<ArgumentException>(() => target.InitMap(new FakeFloor(1, 0, 0, 0, 0, 1), 1));
         }
 
         #endregion
@@ -75,15 +75,15 @@ namespace PathFinder2D.UnitTests.Services
         [Test]
         public void Find_NotInitMap_Exception()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
+            var target = new PathService(new FakeFinder(), new FakeMap());
             Assert.Throws<ArgumentException>(() => target.FindPath(1, new WorldPosition(0, 0), new WorldPosition(1, 1)));
         }
 
         [Test]
         public void Find_InitMap_Success()
         {
-            var target = new PathFinderService(new FakeFinder(), new FakeMapInitializer());
-            target.InitMap(new FakeTerrain(1, 0, 0, 0, 0, 1), 1);
+            var target = new PathService(new FakeFinder(), new FakeMap());
+            target.InitMap(new FakeFloor(1, 0, 0, 0, 0, 1), 1);
             target.FindPath(1, new WorldPosition(0, 0), new WorldPosition(1, 1));
         }
 

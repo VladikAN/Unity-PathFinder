@@ -1,38 +1,35 @@
-﻿using System.Linq;
-using PathFinder2D.Core;
+﻿using PathFinder2D.Core;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
 using PathFinder2D.Unity.Domain;
+using System.Linq;
 using UnityEngine;
 
 namespace PathFinder2D.Unity.Components
 {
-    [AddComponentMenu("Modules/PathFinder2D/Terrain")]
-    public class TerrainComponent : MonoBehaviour
+    [AddComponentMenu("Modules/PathFinder2D/Floor")]
+    public class FloorComponent : MonoBehaviour
     {
         public bool DisplayEmptyCells = false;
         public bool DisplayBlockedCells = false;
         public bool DisplayFullPath = false;
         
-        public ITerrain Terrain;
+        public IFloor Floor;
         public MapDefinition MapDefinition;
 
         private readonly Vector3 _defaultSize = new Vector3(.5f, .5f, .5f);
 
-        public void InitMap(IPathFinderService pathFinderService, int cellSize)
+        public void InitMap(IPathService pathFinderService, int cellSize)
         {
-            Terrain = Terrain ?? new TerrainGameObject(gameObject, cellSize);
-            MapDefinition = !pathFinderService.GetMaps().ContainsKey(Terrain.Id())
-                ? pathFinderService.InitMap(Terrain, cellSize)
-                : pathFinderService.GetMaps()[Terrain.Id()];
+            Floor = Floor ?? new TerrainGameObject(gameObject, cellSize);
+            MapDefinition = !pathFinderService.GetMaps().ContainsKey(Floor.Id())
+                ? pathFinderService.InitMap(Floor, cellSize)
+                : pathFinderService.GetMaps()[Floor.Id()];
         }
 
         public void OnDrawGizmosSelected()
         {
-            if (MapDefinition == null)
-            {
-                return;
-            }
+            if (MapDefinition == null) return;
             
             var gizmoSize = new Vector3(
                     Mathf.Min(_defaultSize.x, MapDefinition.CellSize),

@@ -7,7 +7,7 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class JumpPointFinder : BaseFinder<JumpPoint>
+    public class JumpPointFinder : Finder<JumpPoint>
     {
         private IList<JumpPoint> _openset;
         private bool[,] _wallMap;

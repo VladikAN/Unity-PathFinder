@@ -2,7 +2,7 @@
 
 namespace PathFinder2D.UnitTests.Stubs
 {
-    public class FakeFinderPoint : FinderPoint
+    public class FakePoint : PathPoint
     {
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using PathFinder2D.Core.Domain;
+﻿using PathFinder2D.Core.Domain;
 using PathFinder2D.Core.Finder;
 using PathFinder2D.Unity.Components;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Script.Components
@@ -14,7 +14,7 @@ namespace Assets.Script.Components
         public float MoveTimeout;
         public float MoveSpeed;
 
-        private TerrainComponent _map;
+        private FloorComponent _map;
 
         private IList<Vector3> _path;
         private float _nextMoveTimeout;
@@ -23,8 +23,8 @@ namespace Assets.Script.Components
         {
             if (TerrainObject != null)
             {
-                _map = TerrainObject.GetComponent<TerrainComponent>();
-                _map.InitMap(Global.PathFinderService, 1);
+                _map = TerrainObject.GetComponent<FloorComponent>();
+                _map.InitMap(Global.PathService, 1);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Assets.Script.Components
             var start = new WorldPosition(transform.position.x, transform.position.z);
             var end = new WorldPosition(coins[index].transform.position.x, coins[index].transform.position.z);
 
-            var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, SearchOptions.Maximum);
+            var result = Global.PathService.FindPath(_map.Floor.Id(), start, end, SearchOptions.Maximum);
             return result.Path.Select(x => new Vector3(x.X, 0, x.Y)).ToList();
         }
     }

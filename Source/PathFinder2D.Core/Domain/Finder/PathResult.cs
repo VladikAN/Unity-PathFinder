@@ -1,10 +1,10 @@
 ﻿namespace PathFinder2D.Core.Domain.Finder
 {
-    public class FinderResult
+    public class PathResult
     {
         public WorldPosition[] Path;
 
-        public FinderResult(WorldPosition[] path)
+        public PathResult(WorldPosition[] path)
         {
             Path = path;
         }

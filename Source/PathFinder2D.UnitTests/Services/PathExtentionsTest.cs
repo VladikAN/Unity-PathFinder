@@ -15,10 +15,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(1, 0),
-                new FinderPoint(2, 0),
-                new FinderPoint(3, 0)
+                new PathPoint(0, 0),
+                new PathPoint(1, 0),
+                new PathPoint(2, 0),
+                new PathPoint(3, 0)
             };
 
             var newPoints = points.ToMinimum();
@@ -34,10 +34,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(3, 0),
-                new FinderPoint(2, 0),
-                new FinderPoint(1, 0),
-                new FinderPoint(0, 0)
+                new PathPoint(3, 0),
+                new PathPoint(2, 0),
+                new PathPoint(1, 0),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMinimum();
@@ -52,10 +52,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(0, 1),
-                new FinderPoint(0, 2),
-                new FinderPoint(0, 3)
+                new PathPoint(0, 0),
+                new PathPoint(0, 1),
+                new PathPoint(0, 2),
+                new PathPoint(0, 3)
             };
 
             var newPoints = points.ToMinimum();
@@ -71,10 +71,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 3),
-                new FinderPoint(0, 2),
-                new FinderPoint(0, 1),
-                new FinderPoint(0, 0)
+                new PathPoint(0, 3),
+                new PathPoint(0, 2),
+                new PathPoint(0, 1),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMinimum();
@@ -90,10 +90,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(3, 3),
-                new FinderPoint(2, 2),
-                new FinderPoint(1, 1),
-                new FinderPoint(0, 0)
+                new PathPoint(3, 3),
+                new PathPoint(2, 2),
+                new PathPoint(1, 1),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMinimum();
@@ -109,10 +109,10 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(1, 1),
-                new FinderPoint(2, 2),
-                new FinderPoint(3, 3)
+                new PathPoint(0, 0),
+                new PathPoint(1, 1),
+                new PathPoint(2, 2),
+                new PathPoint(3, 3)
             };
 
             var newPoints = points.ToMinimum();
@@ -132,8 +132,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(3, 0)
+                new PathPoint(0, 0),
+                new PathPoint(3, 0)
             };
 
             var newPoints = points.ToMaximum();
@@ -153,8 +153,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(3, 0),
-                new FinderPoint(0, 0)
+                new PathPoint(3, 0),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMaximum();
@@ -174,8 +174,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(0, 3)
+                new PathPoint(0, 0),
+                new PathPoint(0, 3)
             };
 
             var newPoints = points.ToMaximum();
@@ -195,8 +195,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 3),
-                new FinderPoint(0, 0)
+                new PathPoint(0, 3),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMaximum();
@@ -216,8 +216,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(3, 3),
-                new FinderPoint(0, 0)
+                new PathPoint(3, 3),
+                new PathPoint(0, 0)
             };
 
             var newPoints = points.ToMaximum();
@@ -237,8 +237,8 @@ namespace PathFinder2D.UnitTests.Services
         {
             var points = new[]
             {
-                new FinderPoint(0, 0),
-                new FinderPoint(3, 3)
+                new PathPoint(0, 0),
+                new PathPoint(3, 3)
             };
 
             var newPoints = points.ToMaximum();

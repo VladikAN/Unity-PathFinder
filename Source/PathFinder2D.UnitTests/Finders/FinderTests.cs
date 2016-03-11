@@ -62,11 +62,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(finder, new MapInitializer());
+            var pathFinderService = new PathService(finder, new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -84,11 +84,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(finder, new MapInitializer());
+            var pathFinderService = new PathService(finder, new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -110,11 +110,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(new WaveFinder(), new MapInitializer());
+            var pathFinderService = new PathService(new WaveFinder(), new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -134,11 +134,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(new WaveFinder(), new MapInitializer());
+            var pathFinderService = new PathService(new WaveFinder(), new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -156,11 +156,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(new JumpPointFinder(), new MapInitializer());
+            var pathFinderService = new PathService(new JumpPointFinder(), new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -180,11 +180,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(new JumpPointFinder(), new MapInitializer());
+            var pathFinderService = new PathService(new JumpPointFinder(), new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             AssertExtensions.IsValidPath(result, mapDefinition);
@@ -218,11 +218,11 @@ namespace PathFinder2D.UnitTests.Finders
 
             var mapDefinition = raw.ParseDefinition();
 
-            var pathFinderService = new PathFinderService(finder, new MapInitializer());
+            var pathFinderService = new PathService(finder, new Map());
             pathFinderService.GetMaps().Add(1, mapDefinition);
 
-            var start = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = sX, Y = sY });
-            var end = mapDefinition.Terrain.ToWorld(new FakeFinderPoint { X = eX, Y = eY });
+            var start = mapDefinition.Terrain.ToWorld(new FakePoint { X = sX, Y = sY });
+            var end = mapDefinition.Terrain.ToWorld(new FakePoint { X = eX, Y = eY });
 
             var result = pathFinderService.FindPath(mapDefinition.Terrain.Id(), start, end);
             Assert.IsNotNull(result);

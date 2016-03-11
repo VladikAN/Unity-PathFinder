@@ -2,7 +2,7 @@
 
 namespace PathFinder2D.Core.Domain.Terrain
 {
-    public interface ITerrain
+    public interface IFloor
     {
         int Id();
 

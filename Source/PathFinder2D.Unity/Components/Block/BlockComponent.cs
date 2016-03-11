@@ -10,7 +10,7 @@ namespace PathFinder2D.Unity.Components.Block
     {
         public bool UpdatePosition;
 
-        public IEnumerable<WorldPosition> GetPoints(ITerrain terrain)
+        public IEnumerable<WorldPosition> GetPoints(IFloor floor)
         {
             return new[] { new WorldPosition(transform.position.x, transform.position.z) };
         }

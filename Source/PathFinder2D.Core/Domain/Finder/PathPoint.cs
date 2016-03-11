@@ -1,15 +1,15 @@
 ﻿namespace PathFinder2D.Core.Domain.Finder
 {
-    public class FinderPoint
+    public class PathPoint
     {
         public int X;
         public int Y;
 
-        public FinderPoint()
+        public PathPoint()
         {
         }
 
-        public FinderPoint(int x, int y)
+        public PathPoint(int x, int y)
         {
             X = x;
             Y = y;

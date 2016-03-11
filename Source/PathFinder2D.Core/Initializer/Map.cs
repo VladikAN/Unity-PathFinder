@@ -7,20 +7,20 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Initializer
 {
-    public class MapInitializer : IMapInitializer
+    public class Map : IMap
     {
-        public MapCell[,] ParseMapCells(ITerrain terrain, float cellSize)
+        public MapCell[,] ParseMapCells(IFloor terrain, float cellSize)
         {
             var x = (int)(terrain.Width() / cellSize);
             var z = (int)(terrain.Height() / cellSize);
 
             var blocks = (terrain.GetBlocks() ?? Enumerable.Empty<IBlock>()).ToList();
-            var points = new List<FinderPoint>();
+            var points = new List<PathPoint>();
             if (blocks.Any())
             {
                 points = blocks
                     .SelectMany(block => block.GetPoints(terrain))
-                    .Select(terrain.ToPoint<FinderPoint>)
+                    .Select(terrain.ToPoint<PathPoint>)
                     .ToList();
             }
 

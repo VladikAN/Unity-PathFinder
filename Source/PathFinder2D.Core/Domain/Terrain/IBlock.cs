@@ -7,6 +7,6 @@ namespace PathFinder2D.Core.Domain.Terrain
         /// <summary>
         /// Initiate single obstacle position by set of points. This points will be used to create map
         /// </summary>
-        IEnumerable<WorldPosition> GetPoints(ITerrain terrain);
+        IEnumerable<WorldPosition> GetPoints(IFloor floor);
     }
 }

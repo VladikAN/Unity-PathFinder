@@ -4,9 +4,9 @@ using PathFinder2D.Core.Initializer;
 
 namespace PathFinder2D.UnitTests.Stubs
 {
-    public class FakeMapInitializer : IMapInitializer
+    public class FakeMap : IMap
     {
-        public MapCell[,] ParseMapCells(ITerrain terrain, float cellSize)
+        public MapCell[,] ParseMapCells(IFloor terrain, float cellSize)
         {
             return new MapCell[10, 10];
         }

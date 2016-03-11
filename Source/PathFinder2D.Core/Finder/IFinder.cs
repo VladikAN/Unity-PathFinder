@@ -6,6 +6,6 @@ namespace PathFinder2D.Core.Finder
 {
     public interface IFinder
     {
-        FinderResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None);
+        PathResult Find(MapDefinition mapDefinition, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None);
     }
 }

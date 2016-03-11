@@ -6,7 +6,7 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class WaveFinder : BaseFinder<WavePoint>
+    public class WaveFinder : Finder<WavePoint>
     {
         private uint?[,] _weightMap;
         private readonly IList<int[]> _movements = new List<int[]>()

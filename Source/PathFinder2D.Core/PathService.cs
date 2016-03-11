@@ -1,27 +1,27 @@
-﻿using PathFinder2D.Core.Domain.Finder;
+﻿using PathFinder2D.Core.Domain;
+using PathFinder2D.Core.Domain.Finder;
 using PathFinder2D.Core.Domain.Map;
 using PathFinder2D.Core.Domain.Terrain;
+using PathFinder2D.Core.Finder;
 using PathFinder2D.Core.Initializer;
 using System;
 using System.Collections.Generic;
-using PathFinder2D.Core.Domain;
-using PathFinder2D.Core.Finder;
 
 namespace PathFinder2D.Core
 {
-    public class PathFinderService : IPathFinderService
+    public class PathService : IPathService
     {
         #region Fields
 
         private readonly IDictionary<int, MapDefinition> _maps;
         private readonly IFinder _finder;
-        private readonly IMapInitializer _initializer;
+        private readonly IMap _initializer;
 
         #endregion
 
         #region Constructors
 
-        public PathFinderService(IFinder finder, IMapInitializer initializer)
+        public PathService(IFinder finder, IMap initializer)
         {
             if (finder == null) throw new ArgumentException("Null object not supported as Finder");
             if (initializer == null) throw new ArgumentException("Null object not supported as MapInitializer");
@@ -40,7 +40,7 @@ namespace PathFinder2D.Core
             return _maps;
         }
 
-        public MapDefinition InitMap(ITerrain terrain, float cellSize)
+        public MapDefinition InitMap(IFloor terrain, float cellSize)
         {
             if (terrain == null) throw new ArgumentException("Null object not supported as terrain parameter");
             if (cellSize <= 0) throw new ArgumentException("Cell width must be greater then 0");
@@ -53,7 +53,7 @@ namespace PathFinder2D.Core
             return mapDefinition;
         }
 
-        public FinderResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
+        public PathResult FindPath(int terrainId, WorldPosition start, WorldPosition end, SearchOptions options = SearchOptions.None)
         {
             if (_maps == null || !_maps.ContainsKey(terrainId))
                 throw new ArgumentException(string.Format("Map with id = '{0}' not initialized", terrainId));

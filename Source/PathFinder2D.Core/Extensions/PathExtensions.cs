@@ -7,7 +7,7 @@ namespace PathFinder2D.Core.Extensions
 {
     public static class PathExtensions
     {
-        public static T[] ToMinimum<T>(this T[] points) where T : FinderPoint, new()
+        public static T[] ToMinimum<T>(this T[] points) where T : PathPoint, new()
         {
             if (points == null || points.Count() <= 1) return points;
 
@@ -36,7 +36,7 @@ namespace PathFinder2D.Core.Extensions
             return newPoints.ToArray();
         }
 
-        public static T[] ToMaximum<T>(this T[] points) where T : FinderPoint, new()
+        public static T[] ToMaximum<T>(this T[] points) where T : PathPoint, new()
         {
             if (points == null || points.Count() <= 1) return points;
 

@@ -7,8 +7,8 @@ namespace PathFinder2D.Unity.Components.Block
 {
     [AddComponentMenu("Modules/PathFinder2D/Blocks/Block")]
     public class BlockComponent : MonoBehaviour, IBlock
-	{
-        public IEnumerable<WorldPosition> GetPoints(ITerrain terrain)
+    {
+        public IEnumerable<WorldPosition> GetPoints(IFloor floor)
         {
             return new[] { new WorldPosition(transform.position.x, transform.position.z) };
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PathFinder2D.Unity.Domain
 {
-    public class TerrainGameObject : ITerrain
+    public class TerrainGameObject : IFloor
     {
         private readonly GameObject _gameObject;
         private readonly float _cellSize;

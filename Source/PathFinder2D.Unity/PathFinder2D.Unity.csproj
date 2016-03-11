@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Components\Block\AutoBlockComponent.cs" />
     <Compile Include="Components\Block\BlockComponent.cs" />
-    <Compile Include="Components\TerrainComponent.cs" />
+    <Compile Include="Components\FloorComponent.cs" />
     <Compile Include="Domain\TerrainGameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

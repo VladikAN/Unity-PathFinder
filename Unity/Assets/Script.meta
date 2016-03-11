@@ -1,5 +1,9 @@
 fileFormatVersion: 2
 guid: 49ea310c400dd79468b7db41a88a359a
+labels:
+- PathFinder3D
 folderAsset: yes
 DefaultImporter:
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

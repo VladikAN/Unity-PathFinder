@@ -7,7 +7,7 @@ using PathFinder2D.Core.Extensions;
 
 namespace PathFinder2D.Core.Finder
 {
-    public class JumpPointFinder : BaseFinder
+    public class JumpPointFinder : Finder<JumpPoint>
     {
         private IList<JumpPoint> _openset;
         private bool[,] _wallMap;
@@ -16,7 +16,7 @@ namespace PathFinder2D.Core.Finder
         private JumpPoint _start;
         private JumpPoint _end;
 
-        protected override FinderResult Find(WorldPosition start, WorldPosition end)
+        protected override JumpPoint[] Find(WorldPosition start, WorldPosition end, SearchOptions options)
         {
             _openset = new List<JumpPoint>();
             _wallMap = GetBoolMap();
@@ -46,22 +46,21 @@ namespace PathFinder2D.Core.Finder
             }
 
             /* End */
-            var path = new List<WorldPosition>();
+            var path = new List<JumpPoint>();
             if (investigate != null)
             {
 				var endPoint = _openset.First(point => point.X == _end.X & point.Y == _end.Y);
 				while (endPoint.Parent != null)
                 {
-					path.Add(MapDefinition.Terrain.ToWorld(endPoint));
+					path.Add(endPoint);
 					endPoint = endPoint.Parent;
                 }
 
-                path.Add(MapDefinition.Terrain.ToWorld(endPoint));
+                path.Add(endPoint);
                 path.Reverse();
             }
 
-            var result = new FinderResult(path);
-            return result;
+            return path.ToArray();
         }
 
         private void MakeStep(JumpPoint start, bool goLeft, bool goUp)

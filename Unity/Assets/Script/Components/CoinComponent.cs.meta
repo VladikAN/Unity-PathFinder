@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: e90d25572d9da3043a71a0efb024fe2b
+labels:
+- PathFinder3D
 timeCreated: 1456843350
 licenseType: Free
 MonoImporter:

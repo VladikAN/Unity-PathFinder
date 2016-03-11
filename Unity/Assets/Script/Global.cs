@@ -8,9 +8,9 @@ namespace Assets.Script
     {
         static Global()
         {
-            PathFinderService = new PathFinderService(new JumpPointFinder(), new MapInitializer());
+            PathService = new PathService(new WaveFinder(), new Map());
         }
 
-        public static IPathFinderService PathFinderService { get; private set; }
+        public static IPathService PathService { get; private set; }
     }
 }

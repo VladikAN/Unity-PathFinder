@@ -1,6 +1,6 @@
 ﻿namespace PathFinder2D.Core.Domain.Finder
 {
-    public class WavePoint : FinderPoint
+    public class WavePoint : PathPoint
     {
         public WavePoint()
         {

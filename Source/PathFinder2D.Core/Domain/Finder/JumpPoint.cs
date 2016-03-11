@@ -2,7 +2,7 @@
 
 namespace PathFinder2D.Core.Domain.Finder
 {
-    public class JumpPoint : FinderPoint
+    public class JumpPoint : PathPoint
     {
         private int _step = 4;
         private readonly double _cost;

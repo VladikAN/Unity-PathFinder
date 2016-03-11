@@ -8,6 +8,7 @@ public class CoinComponent : MonoBehaviour
     public void Start()
     {
         _meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        transform.Rotate(Vector3.up, Random.Range(0, 180));
     }
 
 	public void Update()
@@ -19,11 +20,11 @@ public class CoinComponent : MonoBehaviour
 	        {
 	            _meshRenderer.enabled = true;
 	        }
+
+	        return;
 	    }
-	    else
-	    {
-            transform.RotateAround(transform.position, Vector3.up, 180 * Time.deltaTime);
-        }
+
+        transform.RotateAround(transform.position, Vector3.up, 360 * Time.deltaTime);
 	}
 
     public void OnTriggerEnter(Collider target)
@@ -33,7 +34,7 @@ public class CoinComponent : MonoBehaviour
         if (target.gameObject.CompareTag("Player"))
         {
             _meshRenderer.enabled = false;
-            _timeout = 6f;
+            _timeout = 5f;
         }
     }
 }

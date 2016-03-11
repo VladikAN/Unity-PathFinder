@@ -36,7 +36,7 @@ namespace PathFinder2D.UnitTests.Finders
                 field[w, h].Blocked = true;
             }
 
-            var terrain = new FakeTerrain(1, 0, 0, width, height, 1);
+            var terrain = new FakeFloor(1, 0, 0, width, height, 1);
             _testMap = new MapDefinition(terrain, field, 1);
         }
 
@@ -44,13 +44,13 @@ namespace PathFinder2D.UnitTests.Finders
         [TestCase(2, TestName = "Jump point performance")]
         public void PerformanceTests(int finderNumber)
         {
-            var finder = finderNumber == 1 ? (BaseFinder) new WaveFinder() : new JumpPointFinder();
+            var finder = finderNumber == 1 ? (IFinder) new WaveFinder() : new JumpPointFinder();
 
-            var pathFinderService = new PathFinderService(finder, new MapInitializer());
+            var pathFinderService = new PathService(finder, new Map());
             pathFinderService.GetMaps().Add(1, _testMap);
 
-            var start = _testMap.Terrain.ToWorld(new FakeFinderPoint { X = 0, Y = 0 });
-            var end = _testMap.Terrain.ToWorld(new FakeFinderPoint { X = _testMap.FieldWidth - 1, Y = _testMap.FieldHeight - 1 });
+            var start = _testMap.Terrain.ToWorld(new FakePoint { X = 0, Y = 0 });
+            var end = _testMap.Terrain.ToWorld(new FakePoint { X = _testMap.FieldWidth - 1, Y = _testMap.FieldHeight - 1 });
 
             var stopWatch = new Stopwatch();
 

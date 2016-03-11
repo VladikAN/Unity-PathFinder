@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>Path Finder 3D Help</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <style>
+            hr { border:0; border-top:1px solid #ccc; width:200px; }
+            a { font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        	<div class="col-sm-12 text-center" style="margin:12px 0;">
+        		<img class="img-rounded" style="max-width:100%;height:auto;" src="pics/help_main.jpg" />
+        	</div>
+            <h1>Introduction</h1>
+            <p>This is Unity 3D assets for path finding. Assets will look up a valid path through 2D/3D maze. For this moment project includes <a href="https://en.wikipedia.org/wiki/Lee_algorithm">Wave</a> and <a href="https://en.wikipedia.org/wiki/Jump_point_search">Jump Point</a> search algorithms. Assets are good for games prototyping, turn based games development, 2D puzzles and any single-floor 3D games. Possible implementations: <a href="https://en.wikipedia.org/wiki/Color_Lines">Color Lines</a>, <a href="https://en.wikipedia.org/wiki/XCOM_2">X-Com</a>, <a href="https://en.wikipedia.org/wiki/Might_%26_Magic_Heroes_VII">Heroes Of Might and Magic</a> and others.</p>
+            <p>We are ready to improve product and add more good features. Please share your support to get more features.</p>
+            <p>Currently all source code is available on <a href="https://github.com/VladikAN/Unity3D-Path-Finder">GitHub</a></p>
+            <hr/>
+            
+            <h1>Setup</h1>
+            <p>This chapter contains general information of the assets setup into your Unity 3D project. Full developer flow are next:</p>
+            <ul>
+            	<li>Create <code>gameObject</code> which covers full level and add <code>TerrainComponent</code>.</li>
+            	<li>To your units, target objects to be moved, add <code>UnitComponent</code>.</li>
+            	<li>To your obstacles, objects whick will block units movements, add <code>BlockComponent</code>.</li>
+            </ul>
+
+            <!-- Level -->
+            <h2>Level</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_floor.jpg" /></div>
+            <p><code>FloorComponent</code> is used to initialize your level <code>gameObject</code>. This component distributed with compiled assembly. This component has next gizmo settings:</p>
+            <ul>
+            	<li><i>Display Empty Cells</i>. If checked then all not blocked positions will be displayed by green cubes in <b>scene</b> viewport.</li>
+            	<li><i>Display Blocked Cells</i>. If checked then all blocked positions will be displayed by red cubes in <b>scene</b> viewport.</li>
+            	<li><i>Display Full Path</i>. If checked then latest search result will be displayed in <b>scene</b> viewport</li>
+            </ul>
+
+			<!-- Units -->            
+            <h2>Unit</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_unit.jpg" /></div>
+            <p>Assets contains <code>UnitComponent</code> for setup your units. Currently UnitComponent not included into compiled assembly and distributed with assets as separate CSharp file. This component uses <code>IPathFinderInterface</code> to register required search algorithm and use it then required:</p>
+            <pre>
+/* Init level by calling .InitMap() 
+TerrainComponent _map = null;
+_map = TerrainObject.GetComponent(typeof(TerrainComponent));
+_map.InitMap(Global.PathFinderService, 1);
+
+/* Search valid path from start to end */
+var result = Global.PathFinderService.FindPath(_map.Terrain.Id(), start, end, SearchOptions.Maximum);</pre>
+			<p><code>UnitComponent</code> implementation is for demo scene and it needs to collect the coins placed around the level.</p>
+
+            <!-- Obstacles -->
+            <h2>Obstacles</h2>
+            <div class="col-sm-12 text-center"><img src="pics/help_block.jpg" /></div>
+            <p>Assets contains <code>BlockComponent</code> and <code>AutoBlockComponent</code>. This components are compiled and distributed with assembly.</p>
+            <p><code>BlockComponent</code> is used for small obstacles with 1x1 size. This component should be used for such <code>gameObjects</code> like: rocks, trees, barrels and others.</p>
+            <p><code>AutoBlockComponent</code> is used for obstacles with complex shape. This component should be used with non-trivial <code>gameObjects</code>.</p>
+            <hr/> <!-- Images -->
+        </div>
+    </body>
+</html>

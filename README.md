@@ -1,6 +1,7 @@
 ## Unity3D-Path-Finder
 
-![build status](https://ci.appveyor.com/api/projects/status/github/VladikAN/Unity3D-Path-Finder?branch=master&svg=true "build status")
+![build status](https://img.shields.io/badge/build-success-green.svg "build status")
+![tests status](https://img.shields.io/badge/tests-passed-green.svg "tests status")
 
 Unity 3D path found project, assets will look up a valid path through 2d maze. For this moment project includes **Wave** and **Jump Point** search algorithms.
 
